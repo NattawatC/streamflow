@@ -53,7 +53,8 @@ const config: Config = {
   			}
   		},
   		fontFamily: {
-  			satoshi: ['var(--font-satoshi)', 'sans-serif']
+  			satoshi: ['var(--font-satoshi)', 'sans-serif'],
+  			subjectivity: ['var(--font-subjectivity)', 'sans-serif']
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
