@@ -58,9 +58,6 @@ export function LoginOwnerForm() {
                   />
                 </>
               </FormControl>
-              <FormDescription className="text-xs">
-                This is your firstname when you created an account
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
