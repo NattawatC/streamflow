@@ -17,7 +17,7 @@ const login: NextPage = () => {
           </h1>
           <p className="text-sm">
             Don't have an account?{" "}
-            <Link href={"/"} className="underline">
+            <Link href={"/register"} className="underline">
               Create an account
             </Link>{" "}
             <br />
