@@ -4,24 +4,20 @@ import { NextPage } from "next"
 import Link from "next/link"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { MainLayout } from "@/components/layout"
-import { LoginOwnerForm } from "@/components/login/ownerForm"
-import { LoginResidentForm } from "@/components/login/residentForm"
+import { RegOwnerForm } from "@/components/register/ownerForm"
+import { RegResidentForm } from "@/components/register/residentForm"
 
-const login: NextPage = () => {
+const register: NextPage = () => {
   return (
     <>
       <MainLayout className="flex flex-col gap-8">
-        <div className="flex flex-col gap-4">
-          <h1 className="font-subjectivity text-2xl">
-            Welcome to StreamFlow, <br /> Sign In to Continue.
-          </h1>
+        <div className="flex flex-col">
+          <h1 className="font-subjectivity text-2xl">Create Your Account</h1>
           <p className="text-sm">
-            Don't have an account?{" "}
-            <Link href={"/register"} className="underline">
-              Create an account
-            </Link>{" "}
-            <br />
-            It takes less than a minute.
+            Already has an account?{" "}
+            <Link href={"/login"} className="underline">
+              Login
+            </Link>
           </p>
         </div>
 
@@ -35,14 +31,14 @@ const login: NextPage = () => {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="owner">
-            <LoginOwnerForm />
+            <RegOwnerForm />
           </TabsContent>
           <TabsContent value="resident">
-            <LoginResidentForm />
+            <RegResidentForm />
           </TabsContent>
         </Tabs>
       </MainLayout>
     </>
   )
 }
-export default login
+export default register
