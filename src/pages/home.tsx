@@ -8,7 +8,6 @@ import { Separator } from "@/components/ui/separator"
 import Link from "next/link"
 
 import { MdOutlineElectricBolt } from "react-icons/md"
-import { IoIosArrowRoundForward } from "react-icons/io"
 import { FaWater } from "react-icons/fa6"
 import { VscGraphLine } from "react-icons/vsc"
 import { IoIosArrowForward } from "react-icons/io"
