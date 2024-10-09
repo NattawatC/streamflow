@@ -88,7 +88,7 @@ export function LoginResidentForm() {
           )}
         />
         <Button type="submit" className="flex w-full">
-          Submit
+          <Link href={"/home"}>Submit</Link>
         </Button>
       </form>
     </Form>
