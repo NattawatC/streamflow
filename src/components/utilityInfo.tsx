@@ -22,7 +22,7 @@ const UtilityInfo: React.FunctionComponent<InfoProps> = ({
   return (
     <>
       {/* Mobile */}
-      <div className="flex flex-col gap-5 items-center bg-[#F0F1F3] p-4 rounded-lg">
+      <div className="flex flex-col gap-5 items-center bg-custom-gray-background p-4 rounded-lg">
         <div className="flex flex-col bg-white w-full text-base p-3 gap-5 rounded-md">
           <div className="flex flex-row gap-2">
             <p className="whitespace-nowrap">You used</p>
