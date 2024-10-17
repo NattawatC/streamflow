@@ -77,7 +77,7 @@ const home: NextPage = () => {
               </div>
             </div>
 
-            <div className="flex flex-row gap-2 items-center justify-center px-3 py-3 rounded-md bg-[#E0E4EB]">
+            <div className="flex flex-row gap-2 items-center justify-center px-3 py-3 rounded-md bg-custom-gray">
               <p className="text-base font-bold">Payment Status</p>
               {mockData.status ? (
                 <div className="font-bold text-gray-700 rounded-full flex items-center justify-center bg-[#D7FC6E] w-5 h-5"></div>
@@ -115,7 +115,7 @@ const home: NextPage = () => {
           </div>
         </div>
 
-        <div className="fixed bottom-0 left-0 w-full bg-[#F0F1F3] text-black rounded-t-3xl justify-center">
+        <div className="fixed bottom-0 left-0 w-full bg-custom-gray-background text-black rounded-t-3xl justify-center">
           <div className="flex flex-row container mx-auto p-4 justify-between">
             <div className="flex flex-col">
               <p className="text-base font-bold">Payment</p>
