@@ -24,7 +24,7 @@ const mockData = {
   yearOfStudy: 4,
 }
 
-const setting: NextPage = () => {
+const settingT: NextPage = () => {
   return (
     <>
       <MainLayout className="flex flex-col gap-7">
@@ -33,7 +33,7 @@ const setting: NextPage = () => {
         </div>
         <div className="flex flex-col gap-5 items-center bg-custom-gray-background p-4 rounded-lg">
           <div className="flex justify-end w-full">
-            <Link href={"/editProfile"}>
+            <Link href={"/editPT"}>
               <FiEdit size={24} />
             </Link>
           </div>
@@ -154,4 +154,4 @@ const setting: NextPage = () => {
     </>
   )
 }
-export default setting
+export default settingT
