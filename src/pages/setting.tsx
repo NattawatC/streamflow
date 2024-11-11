@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button"
 import HealthDescription from "@/components/cautionCard"
 import { Separator } from "@/components/ui/separator"
 import { MainLayout } from "@/components/layout"
+import { FiEdit } from "react-icons/fi"
 
 const mockData = {
-  name: "Nattawat Chaokraisith",
+  firstname: "Nattawat",
+  lastname: "Chaokraisith",
   age: 20,
   gender: "Male",
   phoneNumber: "000-000-0000",
@@ -22,7 +24,7 @@ const mockData = {
   yearOfStudy: 4,
 }
 
-const electricity: NextPage = () => {
+const setting: NextPage = () => {
   return (
     <>
       <MainLayout className="flex flex-col gap-7">
@@ -30,7 +32,12 @@ const electricity: NextPage = () => {
           <h1 className="font-bold text-2xl">Profile</h1>
         </div>
         <div className="flex flex-col gap-5 items-center bg-custom-gray-background p-4 rounded-lg">
-          <div className="flex flex-col bg-white w-full text-base p-3 gap-5 rounded-md">
+          <div className="flex justify-end w-full">
+            <Link href={"/editProfile"}>
+              <FiEdit size={24} />
+            </Link>
+          </div>
+          <div className="flex flex-col bg-white w-full text-base p-3 gap-3 rounded-md">
             <div className="flex flex-row gap-2">
               <p className="whitespace-nowrap font-bold">Basic Information</p>
               <div className="flex w-full items-center">
@@ -46,7 +53,9 @@ const electricity: NextPage = () => {
                 <p>Phone Number:</p>
               </div>
               <div className="flex flex-col gap-2">
-                <p>{mockData.name}</p>
+                <p>
+                  {mockData.firstname} {mockData.lastname}
+                </p>
                 <p>{mockData.age}</p>
                 <p>{mockData.gender}</p>
                 <p>{mockData.yearOfStudy}</p>
@@ -57,7 +66,7 @@ const electricity: NextPage = () => {
 
           <Separator className="h-[2px] rounded-sm w-full justify-center" />
 
-          <div className="flex flex-col bg-white w-full text-base p-3 gap-5 rounded-md">
+          <div className="flex flex-col bg-white w-full text-base p-3 gap-3 rounded-md">
             <div className="flex flex-row gap-2">
               <p className="whitespace-nowrap font-bold">Address Information</p>
               <div className="flex w-full items-center">
@@ -67,9 +76,7 @@ const electricity: NextPage = () => {
             <div className="flex flex-col gap-2">
               <div className="flex flex-col gap-1">
                 <p className="font-medium">Address:</p>
-                <p>
-                  {mockData.address}
-                </p>
+                <p>{mockData.address}</p>
               </div>
               <div className="flex flex-row gap-4">
                 <div className="flex flex-col font-medium gap-2">
@@ -86,7 +93,7 @@ const electricity: NextPage = () => {
 
           <Separator className="h-[2px] rounded-sm w-full justify-center" />
 
-          <div className="flex flex-col bg-white w-full text-base p-3 gap-5 rounded-md">
+          <div className="flex flex-col bg-white w-full text-base p-3 gap-3 rounded-md">
             <div className="flex flex-row gap-2">
               <p className="whitespace-nowrap font-bold">Room Information</p>
               <div className="flex w-full items-center">
@@ -109,7 +116,7 @@ const electricity: NextPage = () => {
 
           <Separator className="h-[2px] rounded-sm w-full justify-center" />
 
-          <div className="flex flex-col bg-white w-full text-base p-3 gap-5 rounded-md">
+          <div className="flex flex-col bg-white w-full text-base p-3 gap-3 rounded-md">
             <div className="flex flex-row gap-2">
               <p className="whitespace-nowrap font-bold">Payment Information</p>
               <div className="flex w-full items-center">
@@ -129,20 +136,22 @@ const electricity: NextPage = () => {
 
         <HealthDescription yearOfStudy={mockData.yearOfStudy} />
 
-        <Link href={"/edit"}>
-          <Button className="font-bold bg-custom-green text-black w-full text-base gap-2">
-            Edit
-          </Button>
-        </Link>
+        <div className="flex flex-col gap-3">
+          <Link href={"/home"}>
+            <Button className="font-bold bg-custom-green text-black w-full text-base gap-2">
+              Return to Home
+            </Button>
+          </Link>
 
-        <Link
-          href={"/home"}
-          className="flex font-bold justify-center underline"
-        >
-          Return to Home
-        </Link>
+          <Link
+            href={"/login"}
+            className="flex font-bold justify-center underline"
+          >
+            Log Out
+          </Link>
+        </div>
       </MainLayout>
     </>
   )
 }
-export default electricity
+export default setting
