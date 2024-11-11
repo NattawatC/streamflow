@@ -216,9 +216,14 @@ export function RegResidentForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="flex w-full">
-          <Link href={"/home"}>Submit</Link>
-        </Button>
+        <Link href={"/home"}>
+          <Button
+            type="submit"
+            className="flex w-full text-base font-bold mt-8"
+          >
+            Sign Up
+          </Button>
+        </Link>
       </form>
     </Form>
   )
