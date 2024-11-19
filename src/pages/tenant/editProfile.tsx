@@ -23,7 +23,7 @@ const mockData = {
     yearOfStudy: 4,
   }
 
-const editPT: NextPage = () => {
+const editProfile: NextPage = () => {
   return (
     <>
       <MainLayout className="flex flex-col gap-7">
@@ -47,7 +47,7 @@ const editPT: NextPage = () => {
             Save
           </Button>
 
-          <Link href={"/settingT"}>
+          <Link href={"/tenant/setting"}>
             <Button
               variant={"outline"}
               className="font-bold border-black outline-black bg-white text-black w-full text-base gap-2"
@@ -60,4 +60,4 @@ const editPT: NextPage = () => {
     </>
   )
 }
-export default editPT
+export default editProfile

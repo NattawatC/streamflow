@@ -12,7 +12,7 @@ const graph: NextPage = () => {
   return (
     <>
       <MainLayout className="flex flex-col gap-7">
-        <Link href="/home">
+        <Link href="/tenant/home">
           <IoIosArrowBack size={24} className="text-black" />
         </Link>
         <h1 className="flex font-bold text-2xl justify-center">

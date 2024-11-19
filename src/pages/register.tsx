@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { MainLayout } from "@/components/layout"
 import { RegOwnerForm } from "@/components/register/ownerForm"
-import { RegResidentForm } from "@/components/register/residentForm"
+import { RegResidentForm } from "@/components/register/tenantForm"
 
 const register: NextPage = () => {
   return (

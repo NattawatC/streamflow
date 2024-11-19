@@ -216,7 +216,7 @@ export function RegResidentForm() {
             </FormItem>
           )}
         />
-        <Link href={"/home"}>
+        <Link href={"/tenant/home"}>
           <Button
             type="submit"
             className="flex w-full text-base font-bold mt-8"

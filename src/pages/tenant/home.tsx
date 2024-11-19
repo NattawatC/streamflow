@@ -105,7 +105,7 @@ const home: NextPage = () => {
 
           <div className="flex flex-col">
             <Separator className="h-[2px] rounded-sm" />
-            <Link href={"/settingT"}>
+            <Link href={"/tenant/setting"}>
               <Button className="w-full bg-white text-black text-base font-bold justify-between">
                 Account Setting
                 <IoIosArrowForward size={20} />
