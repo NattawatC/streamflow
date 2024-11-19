@@ -20,7 +20,7 @@ const electricity: NextPage = () => {
   return (
     <>
       <MainLayout className="flex flex-col gap-7">
-        <Link href="/home">
+        <Link href="/tenant/home">
           <IoIosArrowBack size={24} className="text-black" />
         </Link>
         <div className="flex flex-row items-center gap-2">
