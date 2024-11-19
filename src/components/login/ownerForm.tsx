@@ -86,7 +86,7 @@ export function LoginOwnerForm() {
           )}
         />
 
-        <Link href={"/home"}>
+        <Link href={"/owner/home"}>
           <Button
             type="submit"
             className="flex w-full text-base font-bold mt-8"
