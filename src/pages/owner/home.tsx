@@ -26,34 +26,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-
-interface Tenant {
-  firstname: string
-  lastname: string
-  room: number
-  pStatus: boolean
-  rStatus: boolean
-}
-
-interface MockData {
-  firstname: string
-  lastname: string
-  gender: string
-  roomNumber: number
-  floorNumber: number
-  BuildingNumber: number
-  status: boolean
-  estate: {
-    name: string
-    address: string
-    totalRoom: number
-    totalBuilding: number
-    totalFloor: number
-    furnitureCost: number
-    roomCharge: number
-  }
-  tenant: Tenant[]
-}
+import { MockData } from "@/interfaces/mockData";
 
 const mockData: MockData = {
   firstname: "Nattawat",
@@ -181,7 +154,7 @@ const home: NextPage = () => {
             </Accordion>
           </div>
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-4">
             <div className="flex flex-row gap-2 items-center">
               <p className="font-bold">List of Tenants</p>
               <Dialog>
