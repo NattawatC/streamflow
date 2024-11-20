@@ -3,7 +3,7 @@
 import { NextPage } from "next"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import HealthDescription from "@/components/cautionCard"
+import CautionCard from "@/components/cautionCard"
 import { Separator } from "@/components/ui/separator"
 import { MainLayout } from "@/components/layout"
 import { FiEdit } from "react-icons/fi"
@@ -134,7 +134,7 @@ const setting: NextPage = () => {
           </div>
         </div>
 
-        <HealthDescription yearOfStudy={mockData.yearOfStudy} />
+        <CautionCard yearOfStudy={mockData.yearOfStudy} />
 
         <div className="flex flex-col gap-3">
           <Link href={"/tenant/home"}>
