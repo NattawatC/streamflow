@@ -10,7 +10,7 @@ export const MainLayout: React.FunctionComponent<ComponentProps<"main">> = ({
     <main
       className={cn(
         className,
-        "min-h-screen mx-auto w-full max-w-md px-4 py-8"
+        "min-h-screen mx-auto w-full max-w-md px-7 py-8"
       )}
       {...props}
     >
