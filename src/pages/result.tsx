@@ -17,7 +17,6 @@ const result: NextPage = () => {
     <>
       <MainLayout className="flex flex-col gap-4">
         <h1 className="font-bold text-2xl">Olá, Newcomer</h1>
-
         <Link href={"/owner/home"}>
           <Button className="bg-custom-green text-black w-full text-base font-bold">
             Return to Home

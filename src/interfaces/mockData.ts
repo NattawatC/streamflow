@@ -1,19 +1,13 @@
 import { Tenant } from "./tenant"
+import { Estate } from "./estate"
 
-export interface Estate {
-  name: string
-  address: string
-  totalRoom: number
-  totalBuilding: number
-  totalFloor: number
-  furnitureCost: number
-  roomCharge: number
-}
 
 export interface MockData {
   firstname: string
   lastname: string
   gender: string
+  age: number
+  phoneNumber: string
   roomNumber: number
   floorNumber: number
   BuildingNumber: number
