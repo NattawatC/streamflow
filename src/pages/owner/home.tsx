@@ -32,18 +32,24 @@ const mockData: MockData = {
   firstname: "Nattawat",
   lastname: "Chaokraisith",
   gender: "Male",
+  age: 56,
+  phoneNumber: "000-000-0000",
   roomNumber: 123,
   floorNumber: 123,
   BuildingNumber: 123,
   status: false,
   estate: {
-    name: "a",
-    address: "691 ถนนฉลองกรุง 1 แยก 6 ลาดกระบัง, Bangkok, Thailand, Bangkok",
+    name: "The Home Ladkrabang",
+    address: "691 ถนนฉลองกรุง 1 แยก 6 ลาดกระบัง",
+    city: "Bangkok",
+    zipCode: "10160",
     totalRoom: 99,
     totalBuilding: 99,
     totalFloor: 99,
     furnitureCost: 9999,
     roomCharge: 9999,
+    electricityCost: 6,
+    waterCost: 17
   },
   tenant: [
     {
