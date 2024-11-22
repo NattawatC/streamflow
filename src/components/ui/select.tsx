@@ -28,7 +28,7 @@ const SelectTrigger = React.forwardRef<
     {...props}
   >
     <div className="flex flex-row justify-between items-center w-full">
-      <div className="flex flex-row gap-3">
+      <div className="flex flex-row gap-3 items-center">
         <span>{icon}</span>
         {children}
       </div>
