@@ -26,7 +26,7 @@ const tenantInfo: NextPage = () => {
     <>
       <MainLayout className="flex flex-col gap-7">
         {/* change path */}
-        <Link href="/tenant/home">
+        <Link href="/owner/home">
           <IoIosArrowBack size={24} className="text-black" />
         </Link>
         <div className="flex flex-row justify-left gap-2">
@@ -107,7 +107,7 @@ const tenantInfo: NextPage = () => {
         
 {/* change path */}
         <div className="flex flex-col gap-3">
-          <Link href={"/tenant/home"}> 
+          <Link href={"/tenant/editTenantInfo"}> 
             <Button className="font-bold bg-custom-green text-black w-full text-base gap-2">
               Edit Room Information
             </Button>
