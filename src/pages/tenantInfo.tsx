@@ -107,7 +107,7 @@ const tenantInfo: NextPage = () => {
         
 {/* change path */}
         <div className="flex flex-col gap-3">
-          <Link href={"/tenant/editTenantInfo"}> 
+          <Link href={"/editTenantInfo"}> 
             <Button className="font-bold bg-custom-green text-black w-full text-base gap-2">
               Edit Room Information
             </Button>
