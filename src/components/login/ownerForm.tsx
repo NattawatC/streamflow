@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
+// needed to use, creaate new component "form" for new page
 const formSchema = z.object({
   username: z.string(),
   password: z.string(),

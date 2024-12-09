@@ -45,8 +45,8 @@ const tenantInfo: NextPage = () => {
                 <p>Name:</p>
                 <p>Age:</p>
                 <p>Gender:</p>
-                <p>Year Of Study:</p>
                 <p>Phone Number:</p>
+                <p>Year Of Study:</p>
               </div>
               <div className="flex flex-col gap-2">
                 <p>
@@ -54,8 +54,8 @@ const tenantInfo: NextPage = () => {
                 </p>
                 <p>{mockData.age}</p>
                 <p>{mockData.gender}</p>
-                <p>{mockData.yearOfStudy}</p>
                 <p>{mockData.phoneNumber}</p>
+                <p>{mockData.yearOfStudy}</p>
               </div>
             </div>
           </div>
@@ -110,7 +110,7 @@ const tenantInfo: NextPage = () => {
           <Link href={"/editTenantInfo"}> 
             <Button className="font-bold bg-custom-green text-black w-full text-base gap-2">
               Edit Room Information
-            </Button>
+            </Button> 
           </Link>
 
         </div>
