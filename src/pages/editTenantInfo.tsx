@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator"
 import { MainLayout } from "@/components/layout"
 import { FiEdit } from "react-icons/fi"
 import { IoIosArrowBack } from "react-icons/io"
+import { EditTenantForm } from "@/components/editTenantForm"
 
 const mockData = {
   firstname: "John",
@@ -14,17 +15,13 @@ const mockData = {
   age: 20,
   gender: "Male",
   phoneNumber: "000-000-0000",
-  building: 99,
-  floor: 99,
-  roomNumber: 1234,
-  status: "Payment Incomplete",
   yearOfStudy: 4,
 }
 
 const editTenantInfo: NextPage = () => {
   return (
     <>
-      <MainLayout className="flex flex-col gap-7">
+      <MainLayout className="flex flex-col gap-5">
         {/* change path */}
         <Link href="owner/home">
           <IoIosArrowBack size={24} className="text-black" />
@@ -60,17 +57,12 @@ const editTenantInfo: NextPage = () => {
             </div>
           </div>       
         </div>
-
-        
-{/* change path */}
-        <div className="flex flex-col gap-3">
-          <Link href={"/editTenantInfo"}> 
-            <Button className="font-bold bg-custom-green text-black w-full text-base gap-2">
-              Save
-            </Button> 
-          </Link>
-
+        <div className=" flex flex-col gap-3">
+          <h1 className="font-bold text-base">Room Information</h1>
+          <EditTenantForm></EditTenantForm>
         </div>
+        
+
       </MainLayout>
     </>
   )
