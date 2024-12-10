@@ -23,7 +23,7 @@ const editTenantInfo: NextPage = () => {
     <>
       <MainLayout className="flex flex-col gap-5">
         {/* change path */}
-        <Link href="owner/home">
+        <Link href="/owner/home">
           <IoIosArrowBack size={24} className="text-black" />
         </Link>
         <div className="flex flex-row justify-left gap-2">
