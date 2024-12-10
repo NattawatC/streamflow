@@ -40,7 +40,7 @@ export function EditTenantForm() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     console.log(values)
-    router.push("/tenantInfo")
+    router.push("owner/home")
   }
 
   return (

@@ -1,5 +1,5 @@
 "use client"
-
+// need to change routing like editTenantInfo.tsx
 import { BiSolidUserRectangle } from "react-icons/bi"
 import { IoIosLock } from "react-icons/io"
 
@@ -7,6 +7,7 @@ import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -18,14 +19,16 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import editTenantInfo from "@/pages/editTenantInfo"
 
 // needed to use, creaate new component "form" for new page
 const formSchema = z.object({
-  username: z.string(),
-  password: z.string(),
+  username: z.string().nonempty("Username is required"),
+  password: z.string().nonempty("Password is required"),
 })
 
 export function LoginOwnerForm() {
+  const router = useRouter()
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -39,6 +42,7 @@ export function LoginOwnerForm() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     console.log(values)
+    router.push("owner/home")
   }
 
   return (
@@ -49,10 +53,11 @@ export function LoginOwnerForm() {
           name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-sm">Username</FormLabel>
+              <FormLabel htmlFor="username" className="text-sm">Username</FormLabel>
               <FormControl>
                 <>
                   <Input
+                    id="username"
                     className="text-sm"
                     placeholder="John"
                     {...field}
@@ -69,9 +74,10 @@ export function LoginOwnerForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-sm">Password</FormLabel>
+              <FormLabel htmlFor="password" className="text-sm">Password</FormLabel>
               <FormControl>
                 <Input
+                  id="password"
                   type="password"
                   className="text-sm"
                   icon={<IoIosLock size={24} />}
@@ -86,15 +92,12 @@ export function LoginOwnerForm() {
             </FormItem>
           )}
         />
-
-        <Link href={"/owner/home"}>
-          <Button
-            type="submit"
-            className="flex w-full text-base font-bold mt-8"
-          >
-            Login
-          </Button>
-        </Link>
+        <Button
+          type="submit"
+          className="flex w-full text-base font-bold mt-8"
+        >
+          Login
+        </Button>
       </form>
     </Form>
   )

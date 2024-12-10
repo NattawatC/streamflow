@@ -38,7 +38,7 @@ const editTenantInfo: NextPage = () => {
               </div>
             </div>
             <div className="flex flex-row gap-4">
-              <div className="flex flex-col font-medium gap-2 text-nowrap">
+              <div className="flex flex-col font-medium gap-2 text-nowrap ">
                 <p>Name:</p>
                 <p>Age:</p>
                 <p>Gender:</p>
