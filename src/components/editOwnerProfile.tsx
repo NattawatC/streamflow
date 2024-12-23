@@ -20,6 +20,13 @@ import { Input } from "@/components/ui/input"
 import { Lasso } from "lucide-react"
 import { getEndPoints } from "recharts/types/cartesian/ReferenceLine"
 import { generateCategoricalChart } from "recharts/types/chart/generateCategoricalChart"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 // needed to use, creaate new component "form" for new page
 const formSchema = z.object({
@@ -28,12 +35,14 @@ const formSchema = z.object({
   age: z.string().nonempty("Age is required"),
   gender: z.string().nonempty("Gender is required"),
   phoneNumber: z.string().nonempty("Phone Number is required"),
-  // estateName: z.string().nonempty("Estate Name is required"),
-  // address: z.string().nonempty("Address is required"),
-  // buildingNumber: z.string().nonempty("Building Number is required"),
-  // floorNumber: z.string().nonempty("Floor Number is required"),
-  // furnitureCost: z.string().nonempty("Furniture Cost is required"),
-  // roomCharge: z.string().nonempty("Room Charge is required"),
+  estateName: z.string().nonempty("Estate Name is required"),
+  address: z.string().nonempty("Address is required"),
+  buildingNumber: z.string().nonempty("Building Number is required"),
+  floorNumber: z.string().nonempty("Floor Number is required"),
+  furnitureCost: z.string().nonempty("Furniture Cost is required"),
+  roomCharge: z.string().nonempty("Room Charge is required"),
+  bank: z.string().nonempty("Bank is required"),
+  accountNumber: z.string().nonempty("Account Number is required"),
 })
 
 export function EditOwnerProfile() {
@@ -47,12 +56,14 @@ export function EditOwnerProfile() {
       age: "",
       gender: "",
       phoneNumber: "",
-      // estateName: "",
-      // address: "",
-      // buildingNumber: "",
-      // floorNumber: "",
-      // furnitureCost: "",
-      // roomCharge: "",
+      estateName: "",
+      address: "",
+      buildingNumber: "",
+      floorNumber: "",
+      furnitureCost: "",
+      roomCharge: "",
+      bank: "",
+      accountNumber: "",
     },
   })
 
@@ -173,7 +184,7 @@ export function EditOwnerProfile() {
               />
           </div>
         </div>
-        {/* <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3">
             <div className="flex flex-row gap-2">
               <p className="whitespace-nowrap font-bold">Estate Information*</p>
               <div className="flex w-full items-center">
@@ -221,8 +232,147 @@ export function EditOwnerProfile() {
                 </FormItem>
               )}
               />
+            <FormField
+              control={form.control}
+              name="buildingNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="buildingNumber" className="text-sm">Number of Building</FormLabel>
+                  <FormControl>
+                    <Input
+                      id="buildingNumber"
+                      type="text"
+                      className="text-sm"
+                      icon={<BiSolidUserRectangle size={24} />}
+                      placeholder="Enter building number"
+                      {...field}
+                      />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+              />
+            <FormField
+              control={form.control}
+              name="floorNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="floorNumber" className="text-sm">Number of Level/Floor</FormLabel>
+                  <FormControl>
+                    <Input
+                      id="floorNumber"
+                      type="text"
+                      className="text-sm"
+                      icon={<BiSolidUserRectangle size={24} />}
+                      placeholder="Enter number of level/floor"
+                      {...field}
+                      />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+              />
+            <FormField
+              control={form.control}
+              name="furnitureCost"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="furnitureCost" className="text-sm">Furniture (Baht)</FormLabel>
+                  <FormControl>
+                    <Input
+                      id="furnitureCost"
+                      type="text"
+                      className="text-sm"
+                      icon={<BiSolidUserRectangle size={24} />}
+                      placeholder="Enter furniture cost"
+                      {...field}
+                      />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+              />
+            <FormField
+              control={form.control}
+              name="roomCharge"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="roomCharge" className="text-sm">Room Charge (Baht)</FormLabel>
+                  <FormControl>
+                    <Input
+                      id="roomCharge"
+                      type="text"
+                      className="text-sm"
+                      icon={<BiSolidUserRectangle size={24} />}
+                      placeholder="Enter room charge cost"
+                      {...field}
+                      />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+              />
           </div> 
-        </div> */}
+        </div>
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-row gap-2">
+            <p className="whitespace-nowrap font-bold">Banking Information</p>
+            <div className="flex w-full items-center">
+              <Separator className="h-[2px] rounded-sm w-full justify-center" />
+            </div>
+          </div>
+          <FormField
+          control={form.control}
+          name="bank"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor="bank" className="text-sm">Select Bank</FormLabel>
+              <FormControl>
+                <Select onValueChange={(value) => field.onChange(value)}>
+                  <SelectTrigger
+                    id="bank"
+                    className="flex w-full"
+                    icon={<BiSolidUserRectangle size={24} />}
+                  >
+                  <SelectValue placeholder="Kasikorn" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Kasikorn Bank">Kasikorn Bank</SelectItem>
+                    <SelectItem value="Siam Commercial Bank">Siam Commercial Bank</SelectItem>
+                    <SelectItem value="Bangkok Bank">Bangkok Bank</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+          />
+          <div className="flex flex-row gap-4">
+            <FormField
+              control={form.control}
+              name="accountNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="accountNumber" className="text-sm">Account Number</FormLabel>
+                  <FormControl>
+                    <Input
+                      id="accountNumber"
+                      type="text"
+                      className="text-sm"
+                      icon={<BiSolidUserRectangle size={24} />}
+                      placeholder="Enter account number"
+                      {...field}
+                      />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+              />
+            <Button type="submit" className="flex w-16 h-fill text-sm font-bold mt-8 bg-custom-pink text-black">
+              Add
+            </Button>
+          </div>
+        </div>
         <Button
           type="submit"
           className="flex w-full text-base font-bold mt-8 bg-custom-green text-black"
