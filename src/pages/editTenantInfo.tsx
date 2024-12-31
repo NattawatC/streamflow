@@ -2,10 +2,8 @@
 
 import { NextPage } from "next"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { MainLayout } from "@/components/layout"
-import { FiEdit } from "react-icons/fi"
 import { IoIosArrowBack } from "react-icons/io"
 import { EditTenantForm } from "@/components/editTenantForm"
 
