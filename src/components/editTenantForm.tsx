@@ -19,9 +19,9 @@ import { Input } from "@/components/ui/input"
 
 // needed to use, creaate new component "form" for new page
 const formSchema = z.object({
-  building: z.string().nonempty("Building is required"),
-  level: z.string().nonempty("Level is required"),
-  roomnumber: z.string().nonempty("Room Number is required"),
+  building: z.string(),
+  level: z.string(),
+  roomnumber: z.string(),
 })
 
 export function EditTenantForm() {
