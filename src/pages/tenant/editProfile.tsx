@@ -16,6 +16,8 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/router"
 import { Button } from "@/components/ui/button"
+import { useToast } from "@/hooks/use-toast"
+
 import {
   Form,
   FormControl,
@@ -41,13 +43,13 @@ const mockData = {
   gender: "Male",
   phoneNumber: "000-000-0000",
   address: "691 ถนนฉลองกรุง 1 แยก 6 ลาดกระบัง",
-  city: "Bangkok",
+  province: "Bangkok",
   zipCode: "10110",
   building: 99,
   floor: 99,
   roomNumber: 1234,
   status: "Payment Incomplete",
-  yearOfStudy: 4,
+  yearOfStudy: "4",
 }
 
 const formSchema = z.object({
@@ -64,27 +66,36 @@ const formSchema = z.object({
 
 export function EditProfileForm() {
   const router = useRouter()
+  const { toast } = useToast()
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstname: "",
-      lastname: "",
+      firstname: mockData.firstname,
+      lastname: mockData.lastname,
       age: mockData.age,
-      gender: "",
-      yearOfStudy: "",
-      phoneNumber: "",
-      address: "",
-      province: "",
-      zipcode: "",
+      gender: mockData.gender,
+      yearOfStudy: mockData.yearOfStudy,
+      phoneNumber: mockData.phoneNumber,
+      address: mockData.address,
+      province: mockData.province,
+      zipcode: mockData.zipCode,
     },
   })
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
+
     console.log(values)
-    router.push("/owner/home")
+
+    toast({
+      title: "Profile Updated Successfully",
+      description: "Your profile has been updated.",
+    })
+
+    setTimeout(() => {
+      router.push("/owner/home")
+    }, 3000) // Navigate after 3 seconds
   }
 
   return (
