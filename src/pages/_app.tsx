@@ -1,6 +1,8 @@
 import "@/styles/globals.css"
 import type { AppProps } from "next/app"
+import { Toaster } from "@/components/ui/toaster"
 import localFont from "next/font/local"
+
 
 const satoshi = localFont({
   src: [
@@ -39,6 +41,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <main className={`${satoshi.variable} font-satoshi ${subjectivity.variable}`}>
         <Component {...pageProps} />
+        <Toaster />
       </main>
     </>
   )
