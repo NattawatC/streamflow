@@ -27,6 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { useState } from "react"
 
 // needed to use, creaate new component "form" for new page
 const formSchema = z.object({
@@ -72,6 +73,26 @@ export function EditOwnerProfile() {
     // Do something with the form values.
     console.log(values)
     router.push("/owner/home")
+  }
+
+  // var bankingInfo: { [key: string]: string } =  {};
+  const [bankingInfo, setBankingInfo] = useState<{ [key: string]: string }>({});
+  let [showInfo, setShowInfo] = useState(false);
+
+  function handleAddBankingInfo(){
+    const selectedBank = form.getValues("bank");
+    const accountNumber = form.getValues("accountNumber");
+    
+    if(selectedBank && accountNumber){
+      bankingInfo[selectedBank] = accountNumber;
+      console.log("Banking Info Updated",bankingInfo);
+      form.setValue("bank","");
+      form.setValue("accountNumber","");
+      setShowInfo(true);
+      console.log("Show Info",showInfo);
+    } else {
+      console.log("Please fill in all the fields");
+    }
   }
 
   return (
@@ -334,7 +355,7 @@ export function EditOwnerProfile() {
                     className="flex w-full"
                     icon={<BiSolidUserRectangle size={24} />}
                   >
-                  <SelectValue placeholder="Kasikorn" />
+                  <SelectValue placeholder="Choose Bank" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Kasikorn Bank">Kasikorn Bank</SelectItem>
@@ -368,10 +389,23 @@ export function EditOwnerProfile() {
                 </FormItem>
               )}
               />
-            <Button type="submit" className="flex w-16 h-fill text-sm font-bold mt-8 bg-custom-pink text-black">
+            <Button type="button" onClick={handleAddBankingInfo} className="flex w-16 h-fill text-sm font-bold mt-8 bg-custom-pink text-black">
               Add
             </Button>
           </div>
+        {showInfo && (
+          <div className = "bg-custom-pink flex flex-col gap-1 rounded-lg p-2">
+            {/* show banking information from dictionary */}
+            {Object.keys(bankingInfo).map((key) => (
+              <>
+              <p key={key} className="text-base font-bold">{key}</p>
+              <p key={key} className="text-sm">Account Number: {bankingInfo[key]}</p>
+              </>
+              
+            ))}
+            
+          </div>
+        )}  
         </div>
         <Button
           type="submit"
