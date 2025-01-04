@@ -383,11 +383,3 @@ export function EditOwnerProfile() {
     </Form>
   )
 }
-
-
-{/* <div className="flex flex-row gap-2">
-  <p className="whitespace-nowrap font-bold">Basic Information</p>
-  <div className="flex w-full items-center">
-    <Separator className="h-[2px] rounded-sm w-full justify-center" />
-  </div>
-</div> */}
