@@ -396,11 +396,15 @@ export function EditOwnerProfile() {
         {showInfo && (
           <div className = "bg-custom-pink flex flex-col gap-1 rounded-lg p-2">
             {/* show banking information from dictionary */}
-            {Object.keys(bankingInfo).map((key) => (
-              <>
-              <p key={key} className="text-base font-bold">{key}</p>
-              <p key={key} className="text-sm">Account Number: {bankingInfo[key]}</p>
-              </>
+            {Object.keys(bankingInfo).map((key, index) => (
+              <div key={index}>
+                <p className="text-base font-bold">{key}</p>
+                <p className="text-sm">Account Number: {bankingInfo[key]}</p>
+              </div>
+              // <>
+              // <p key={key} className="text-base font-bold">{key}</p>
+              // <p key={key} className="text-sm">Account Number: {bankingInfo[key]}</p>
+              // </>
               
             ))}
             
