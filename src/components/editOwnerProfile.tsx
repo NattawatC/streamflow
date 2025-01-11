@@ -77,6 +77,15 @@ export function EditOwnerProfile() {
   const [bankingInfo, setBankingInfo] = useState<{ [key: string]: string[] }>({});
   let [showInfo, setShowInfo] = useState(false);
 
+  const handleDeleteBank = (bank: string) => {
+    setBankingInfo((prev) => {
+      const updatedBankingInfo = { ...prev };
+      delete updatedBankingInfo[bank]; // Remove the bank
+      console.log("Updated Banking Info:", updatedBankingInfo);
+      return updatedBankingInfo;
+    });
+  };
+
   function handleAddBankingInfo(){
 
     const selectedBank = form.getValues("bank");
@@ -400,7 +409,7 @@ export function EditOwnerProfile() {
               Add
             </Button>
           </div>
-        <BankingInfoDisplay show={showInfo} bankingInfo={bankingInfo}/>  
+        <BankingInfoDisplay show={showInfo} bankingInfo={bankingInfo} onDeleteBank={handleDeleteBank}/>  
         </div>
         <Button
           type="submit"
