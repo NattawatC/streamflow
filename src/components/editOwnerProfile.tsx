@@ -76,16 +76,25 @@ export function EditOwnerProfile() {
   }
 
   // var bankingInfo: { [key: string]: string } =  {};
-  const [bankingInfo, setBankingInfo] = useState<{ [key: string]: string }>({});
+  const [bankingInfo, setBankingInfo] = useState<{ [key: string]: string[] }>({});
   let [showInfo, setShowInfo] = useState(false);
 
   function handleAddBankingInfo(){
+
     const selectedBank = form.getValues("bank");
     const accountNumber = form.getValues("accountNumber");
     
     if(selectedBank && accountNumber){
-      bankingInfo[selectedBank] = accountNumber;
-      console.log("Banking Info Updated",bankingInfo);
+      setBankingInfo((prev) => {
+        const updatedBankingInfo = {
+          ...prev,
+          [selectedBank]: prev[selectedBank]
+            ? [...prev[selectedBank], accountNumber] // Append to existing array
+            : [accountNumber], // Initialize new array if none exists
+        };
+        console.log("Banking Info Updated:", updatedBankingInfo);
+        return updatedBankingInfo;
+      });
       form.setValue("bank","");
       form.setValue("accountNumber","");
       setShowInfo(true);
@@ -394,20 +403,21 @@ export function EditOwnerProfile() {
             </Button>
           </div>
         {showInfo && (
-          <div className = "bg-custom-pink flex flex-col gap-1 rounded-lg p-2">
-            {/* show banking information from dictionary */}
-            {Object.keys(bankingInfo).map((key, index) => (
+          <div className = "bg-custom-pink flex flex-col gap-2 rounded-lg p-2">
+            {Object.entries(bankingInfo).map(([key, value], index) => (
               <div key={index}>
                 <p className="text-base font-bold">{key}</p>
-                <p className="text-sm">Account Number: {bankingInfo[key]}</p>
+                {Array.isArray(value) ? (
+                  value.map((item, subIndex) => (
+                    <p key={`${index}-${subIndex}`} className="text-sm">
+                      Account Number: {item}
+                    </p>
+                  ))
+                ) : (
+                  <p className="text-sm">Account Number: {value}</p>
+                )}
               </div>
-              // <>
-              // <p key={key} className="text-base font-bold">{key}</p>
-              // <p key={key} className="text-sm">Account Number: {bankingInfo[key]}</p>
-              // </>
-              
             ))}
-            
           </div>
         )}  
         </div>
