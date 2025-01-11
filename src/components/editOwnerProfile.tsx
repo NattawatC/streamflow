@@ -17,9 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Lasso } from "lucide-react"
-import { getEndPoints } from "recharts/types/cartesian/ReferenceLine"
-import { generateCategoricalChart } from "recharts/types/chart/generateCategoricalChart"
+import BankingInfoDisplay from "./bankingInfoDisplay"
 import {
   Select,
   SelectContent,
@@ -402,24 +400,7 @@ export function EditOwnerProfile() {
               Add
             </Button>
           </div>
-        {showInfo && (
-          <div className = "bg-custom-pink flex flex-col gap-2 rounded-lg p-2">
-            {Object.entries(bankingInfo).map(([key, value], index) => (
-              <div key={index}>
-                <p className="text-base font-bold">{key}</p>
-                {Array.isArray(value) ? (
-                  value.map((item, subIndex) => (
-                    <p key={`${index}-${subIndex}`} className="text-sm">
-                      Account Number: {item}
-                    </p>
-                  ))
-                ) : (
-                  <p className="text-sm">Account Number: {value}</p>
-                )}
-              </div>
-            ))}
-          </div>
-        )}  
+        <BankingInfoDisplay show={showInfo} bankingInfo={bankingInfo}/>  
         </div>
         <Button
           type="submit"
