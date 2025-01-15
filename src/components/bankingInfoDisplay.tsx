@@ -3,14 +3,12 @@ import React from "react";
 import { RxCross2 } from "react-icons/rx";
 
 interface BankingInfoDisplayProps {
-    show: boolean;
     bankingInfo: { [key: string]: string[]};
     onDeleteBank: (bank: string) => void;
 }
 
-
-const BankingInfoDisplay: React.FC<BankingInfoDisplayProps> = ({ show, bankingInfo, onDeleteBank }) => {
-    if (!show) return null;
+const BankingInfoDisplay: React.FC<BankingInfoDisplayProps> = ({ bankingInfo, onDeleteBank }) => {
+    if (Object.keys(bankingInfo).length === 0) return null;
     return (
         <div>
             {Object.entries(bankingInfo).map(([bank, accounts], index) => (

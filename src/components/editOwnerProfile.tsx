@@ -10,7 +10,6 @@ import { Separator } from "@/components/ui/separator"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -75,7 +74,6 @@ export function EditOwnerProfile() {
 
   // var bankingInfo: { [key: string]: string } =  {};
   const [bankingInfo, setBankingInfo] = useState<{ [key: string]: string[] }>({});
-  let [showInfo, setShowInfo] = useState(false);
 
   const handleDeleteBank = (bank: string) => {
     setBankingInfo((prev) => {
@@ -104,8 +102,6 @@ export function EditOwnerProfile() {
       });
       form.setValue("bank","");
       form.setValue("accountNumber","");
-      setShowInfo(true);
-      console.log("Show Info",showInfo);
     } else {
       console.log("Please fill in all the fields");
     }
@@ -409,7 +405,7 @@ export function EditOwnerProfile() {
               Add
             </Button>
           </div>
-        <BankingInfoDisplay show={showInfo} bankingInfo={bankingInfo} onDeleteBank={handleDeleteBank}/>  
+        <BankingInfoDisplay bankingInfo={bankingInfo} onDeleteBank={handleDeleteBank}/>  
         </div>
         <Button
           type="submit"
