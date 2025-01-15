@@ -41,6 +41,7 @@ const formSchema = z.object({
   roomCharge: z.string().nonempty("Room Charge is required"),
   bank: z.string().nonempty("Bank is required"),
   accountNumber: z.string().nonempty("Account Number is required"),
+  accountName: z.string().nonempty("Account Name is required"), 
 })
 
 export function EditOwnerProfile() {
@@ -62,6 +63,7 @@ export function EditOwnerProfile() {
       roomCharge: "",
       bank: "",
       accountNumber: "",
+      accountName: "",
     },
   })
 
@@ -72,40 +74,60 @@ export function EditOwnerProfile() {
     router.push("/owner/home")
   }
 
-  // var bankingInfo: { [key: string]: string } =  {};
-  const [bankingInfo, setBankingInfo] = useState<{ [key: string]: string[] }>({});
+  const [bankingInfo, setBankingInfo] = useState<{ [key: string]: { [accountId: string]: string } }>({});
 
-  const handleDeleteBank = (bank: string) => {
+  function handleDeleteAccount(bank: string, accountId: string) {
     setBankingInfo((prev) => {
-      const updatedBankingInfo = { ...prev };
-      delete updatedBankingInfo[bank]; // Remove the bank
-      console.log("Updated Banking Info:", updatedBankingInfo);
-      return updatedBankingInfo;
+        const updatedAccounts = { ...prev[bank] };
+        delete updatedAccounts[accountId];
+
+        // If the bank has no more accounts, remove the bank entirely
+        if (Object.keys(updatedAccounts).length === 0) {
+            const { [bank]: _, ...remainingBanks } = prev;
+            const updatedBankingInfo = remainingBanks;
+            console.log("Banking Info after deletion:", updatedBankingInfo);  // Print updated dictionary
+            return updatedBankingInfo;
+        }
+
+        const updatedBankingInfo = {
+            ...prev,
+            [bank]: updatedAccounts,
+        };
+        console.log("Banking Info after deletion:", updatedBankingInfo);  // Print updated dictionary
+        return updatedBankingInfo;
     });
-  };
+  }
 
-  function handleAddBankingInfo(){
 
+  function handleAddBankingInfo() {
     const selectedBank = form.getValues("bank");
     const accountNumber = form.getValues("accountNumber");
-    
-    if(selectedBank && accountNumber){
-      setBankingInfo((prev) => {
-        const updatedBankingInfo = {
-          ...prev,
-          [selectedBank]: prev[selectedBank]
-            ? [...prev[selectedBank], accountNumber] // Append to existing array
-            : [accountNumber], // Initialize new array if none exists
-        };
-        console.log("Banking Info Updated:", updatedBankingInfo);
-        return updatedBankingInfo;
-      });
-      form.setValue("bank","");
-      form.setValue("accountNumber","");
+
+    if (selectedBank && accountNumber) {
+        setBankingInfo((prev) => {
+            const uniqueAccountId = `account-${Date.now()}`; // Generate a unique ID for the account
+            const updatedBankingInfo = {
+                ...prev,
+                [selectedBank]: {
+                    ...prev[selectedBank], // Preserve existing accounts for this bank
+                    [uniqueAccountId]: accountNumber, // Add the new account
+                },
+            };
+
+            // Log the updated dictionary
+            console.log("Updated Banking Info:", updatedBankingInfo);
+
+            return updatedBankingInfo; // Return the new state
+        });
+
+        // Reset the form fields
+        form.setValue("bank", "");
+        form.setValue("accountNumber", "");
     } else {
-      console.log("Please fill in all the fields");
+        console.log("Please fill in all the fields");
     }
   }
+
 
   return (
     <Form {...form}>
@@ -405,7 +427,28 @@ export function EditOwnerProfile() {
               Add
             </Button>
           </div>
-        <BankingInfoDisplay bankingInfo={bankingInfo} onDeleteBank={handleDeleteBank}/>  
+          <FormField
+              control={form.control}
+              name="accountName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="accountName" className="text-sm">Account Holder Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      id="accountName"
+                      type="text"
+                      className="text-sm"
+                      icon={<BiSolidUserRectangle size={24} />}
+                      placeholder="Enter account holder name"
+                      {...field}
+                      />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+              />
+
+          <BankingInfoDisplay bankingInfo={bankingInfo} onDeleteAccount={handleDeleteAccount}/>  
         </div>
         <Button
           type="submit"
