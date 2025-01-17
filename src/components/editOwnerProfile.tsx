@@ -73,8 +73,10 @@ export function EditOwnerProfile() {
     console.log(values)
     router.push("/owner/home")
   }
-
-  const [bankingInfo, setBankingInfo] = useState<{ [key: string]: { [accountId: string]: string } }>({});
+  type BankingInfo = {
+    [key: string]: { [accountId: string]: { accountNumber: string; accountHolderName: string } };
+  };
+  const [bankingInfo, setBankingInfo] = useState<BankingInfo>({});
 
   function handleDeleteAccount(bank: string, accountId: string) {
     setBankingInfo((prev) => {
@@ -85,7 +87,7 @@ export function EditOwnerProfile() {
         if (Object.keys(updatedAccounts).length === 0) {
             const { [bank]: _, ...remainingBanks } = prev;
             const updatedBankingInfo = remainingBanks;
-            console.log("Banking Info after deletion:", updatedBankingInfo);  // Print updated dictionary
+            console.log("Banking Info after deletion:", updatedBankingInfo); // Print updated dictionary
             return updatedBankingInfo;
         }
 
@@ -93,24 +95,27 @@ export function EditOwnerProfile() {
             ...prev,
             [bank]: updatedAccounts,
         };
-        console.log("Banking Info after deletion:", updatedBankingInfo);  // Print updated dictionary
+        console.log("Banking Info after deletion:", updatedBankingInfo); // Print updated dictionary
         return updatedBankingInfo;
     });
   }
 
-
   function handleAddBankingInfo() {
     const selectedBank = form.getValues("bank");
     const accountNumber = form.getValues("accountNumber");
+    const accountHolderName = form.getValues("accountName");
 
-    if (selectedBank && accountNumber) {
+    if (selectedBank && accountNumber && accountHolderName) {
         setBankingInfo((prev) => {
             const uniqueAccountId = `account-${Date.now()}`; // Generate a unique ID for the account
             const updatedBankingInfo = {
                 ...prev,
                 [selectedBank]: {
                     ...prev[selectedBank], // Preserve existing accounts for this bank
-                    [uniqueAccountId]: accountNumber, // Add the new account
+                    [uniqueAccountId]: { 
+                        accountNumber, 
+                        accountHolderName, 
+                    }, // Store account details as an object
                 },
             };
 
@@ -123,6 +128,7 @@ export function EditOwnerProfile() {
         // Reset the form fields
         form.setValue("bank", "");
         form.setValue("accountNumber", "");
+        form.setValue("accountName", ""); // Reset the account holder name field
     } else {
         console.log("Please fill in all the fields");
     }
@@ -402,57 +408,57 @@ export function EditOwnerProfile() {
             </FormItem>
           )}
           />
+          <FormField
+            control={form.control}
+            name="accountNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel htmlFor="accountNumber" className="text-sm">Account Number</FormLabel>
+                <FormControl>
+                  <Input
+                    id="accountNumber"
+                    type="text"
+                    className="text-sm"
+                    icon={<BiSolidUserRectangle size={24} />}
+                    placeholder="Enter account number"
+                    {...field}
+                    />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+            />
           <div className="flex flex-row gap-4">
             <FormField
-              control={form.control}
-              name="accountNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel htmlFor="accountNumber" className="text-sm">Account Number</FormLabel>
-                  <FormControl>
-                    <Input
-                      id="accountNumber"
-                      type="text"
-                      className="text-sm"
-                      icon={<BiSolidUserRectangle size={24} />}
-                      placeholder="Enter account number"
-                      {...field}
-                      />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-              />
+                control={form.control}
+                name="accountName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="accountName" className="text-sm">Account Holder Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="accountName"
+                        type="text"
+                        className="text-sm"
+                        icon={<BiSolidUserRectangle size={24} />}
+                        placeholder="Enter account holder name"
+                        {...field}
+                        />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+                />
             <Button type="button" onClick={handleAddBankingInfo} className="flex w-16 h-fill text-sm font-bold mt-8 bg-custom-pink text-black">
               Add
             </Button>
           </div>
-          <FormField
-              control={form.control}
-              name="accountName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel htmlFor="accountName" className="text-sm">Account Holder Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      id="accountName"
-                      type="text"
-                      className="text-sm"
-                      icon={<BiSolidUserRectangle size={24} />}
-                      placeholder="Enter account holder name"
-                      {...field}
-                      />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-              />
 
-          <BankingInfoDisplay bankingInfo={bankingInfo} onDeleteAccount={handleDeleteAccount}/>  
+        <BankingInfoDisplay bankingInfo={bankingInfo} onDeleteAccount={handleDeleteAccount}/>  
         </div>
         <Button
           type="submit"
-          className="flex w-full text-base font-bold mt-8 bg-custom-green text-black"
+          className="flex w-full text-base font-bold bg-custom-green text-black"
           >
           Save
         </Button>
