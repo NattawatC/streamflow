@@ -141,7 +141,7 @@ const home: NextPage = () => {
             {/* Estate Information: Occupied */}
             <Accordion type="single" collapsible>
               <AccordionItem value="item-1">
-                <AccordionTrigger className="font-bold">
+                <AccordionTrigger className="font-bold justify-between">
                   Room Occupancy Overview
                 </AccordionTrigger>
                 <AccordionContent>
