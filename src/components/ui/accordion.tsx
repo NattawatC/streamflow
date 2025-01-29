@@ -3,8 +3,10 @@ import * as AccordionPrimitive from "@radix-ui/react-accordion"
 import { IoIosArrowDown } from "react-icons/io";
 
 import { cn } from "@/lib/utils"
+import { boolean } from "zod";
 
 const Accordion = AccordionPrimitive.Root
+const isNeeded = boolean
 
 const AccordionItem = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Item>,
@@ -26,7 +28,7 @@ const AccordionTrigger = React.forwardRef<
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        "flex flex-1 items-center justify-between px-4 py-2 font-medium transition-all hover:underline [&[data-state=open]>svg]:rotate-180",
+        "flex items-center px-4 py-2 font-medium transition-all hover:underline [&[data-state=open]>svg]:rotate-180",
         className
       )}
       {...props}
