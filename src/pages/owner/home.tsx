@@ -26,7 +26,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { MockData } from "@/interfaces/mockData";
+import { MockData } from "@/interfaces/mockData"
 
 const mockData: MockData = {
   firstname: "Nattawat",
@@ -49,7 +49,7 @@ const mockData: MockData = {
     furnitureCost: 9999,
     roomCharge: 9999,
     electricityCost: 6,
-    waterCost: 17
+    waterCost: 17,
   },
   tenant: [
     {
@@ -141,7 +141,7 @@ const home: NextPage = () => {
             {/* Estate Information: Occupied */}
             <Accordion type="single" collapsible>
               <AccordionItem value="item-1">
-                <AccordionTrigger className="font-bold justify-between">
+                <AccordionTrigger className="flex font-bold w-full justify-between">
                   Room Occupancy Overview
                 </AccordionTrigger>
                 <AccordionContent>
