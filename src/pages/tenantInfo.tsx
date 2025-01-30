@@ -30,7 +30,9 @@ const tenantInfo: NextPage = () => {
           <IoIosArrowBack size={24} className="text-black" />
         </Link>
         <div className="flex flex-row justify-left gap-2">
-          <h1 className="font-bold text-2xl">{mockData.firstname} {mockData.lastname}</h1>
+          <h1 className="font-bold text-2xl">
+            {mockData.firstname} {mockData.lastname}
+          </h1>
         </div>
         <div className="flex flex-col gap-5 items-center bg-custom-gray-background p-4 rounded-lg">
           <div className="flex flex-col bg-white w-full text-base p-3 gap-3 rounded-md">
@@ -62,7 +64,6 @@ const tenantInfo: NextPage = () => {
 
           <Separator className="h-[2px] rounded-sm w-full justify-center" />
 
-
           <div className="flex flex-col bg-white w-full text-base p-3 gap-3 rounded-md">
             <div className="flex flex-row gap-2">
               <p className="whitespace-nowrap font-bold">Room Information</p>
@@ -86,6 +87,7 @@ const tenantInfo: NextPage = () => {
 
           <Separator className="h-[2px] rounded-sm w-full justify-center" />
 
+          {/* Payment Information */}
           <div className="flex flex-col bg-white w-full text-base p-3 gap-3 rounded-md">
             <div className="flex flex-row gap-2">
               <p className="whitespace-nowrap font-bold">Payment Information</p>
@@ -101,18 +103,28 @@ const tenantInfo: NextPage = () => {
                 <p>{mockData.status}</p>
               </div>
             </div>
+            {/* Review Page */}
+            {mockData.status === "Payment Incomplete" ? (
+              <>
+                <Link href="/owner/review">
+                  <div className="flex bg-custom-pink text-black py-1 px-2 rounded-sm justify-center font-medium text-sm">
+                    Review
+                  </div>
+                </Link>
+              </>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
 
-        
-{/* change path */}
+        {/* change path */}
         <div className="flex flex-col gap-3">
-          <Link href={"/editTenantInfo"}> 
+          <Link href={"/editTenantInfo"}>
             <Button className="font-bold bg-custom-green text-black w-full text-base gap-2">
               Edit Room Information
-            </Button> 
+            </Button>
           </Link>
-
         </div>
       </MainLayout>
     </>
