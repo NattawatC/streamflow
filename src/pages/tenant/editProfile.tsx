@@ -94,7 +94,7 @@ export function EditProfileForm() {
     })
 
     setTimeout(() => {
-      router.push("/owner/home")
+      router.push("/tenant/home")
     }, 3000) // Navigate after 3 seconds
   }
 
