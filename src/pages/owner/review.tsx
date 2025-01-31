@@ -9,11 +9,23 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
-
+import { useRouter } from "next/router"
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 const review: NextPage = () => {
   const [selectedValue, setSelectedValue] = useState<string>("")
+  const router = useRouter()
   const handleSubmit = () => {
     console.log("Selected Value:", selectedValue || "No option selected")
+    router.push("/tenantInfo")
   }
   return (
     <>
@@ -69,12 +81,50 @@ const review: NextPage = () => {
             </RadioGroup>
           </div>
         </div>
-        <Button
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button className="font-bold bg-custom-green text-black w-full text-base gap-2">
+              Submit review
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader className="flex flex-col gap-4">
+              <DialogTitle className="flex text-left text-white">
+                Approval
+              </DialogTitle>
+              <DialogDescription>
+                <div className="flex flex-col gap-2">
+                  <p className="text-white text-left">Are you sure?</p>
+                </div>
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="sm:justify-start">
+              <div className="flex flex-row gap-4">
+                <Button
+                  onClick={handleSubmit}
+                  className="w-full bg-custom-pink text-black "
+                >
+                  Confirm
+                </Button>
+                <DialogClose asChild>
+                  <Button
+                    type="button"
+                    className="w-full text-black border "
+                    variant={"outline"}
+                  >
+                    Cancel
+                  </Button>
+                </DialogClose>
+              </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+        {/* <Button
           onClick={handleSubmit}
           className="font-bold bg-custom-green text-black w-full text-base gap-2"
         >
           Submit Review
-        </Button>
+        </Button> */}
       </MainLayout>
     </>
   )
