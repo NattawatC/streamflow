@@ -62,20 +62,20 @@ const review: NextPage = () => {
                       : "text-base"
                   }
                 >
-                  Approved
+                  Approve
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="notApprove" id="notApprove" />
+                <RadioGroupItem value="NotApprove" id="NotApprove" />
                 <Label
-                  htmlFor="notApprove"
+                  htmlFor="NotApprove"
                   className={
-                    selectedValue === "notApprove"
+                    selectedValue === "NotApprove"
                       ? "text-base font-bold"
                       : "text-base"
                   }
                 >
-                  Not Approved
+                  Not Approve
                 </Label>
               </div>
             </RadioGroup>
@@ -94,7 +94,9 @@ const review: NextPage = () => {
               </DialogTitle>
               <DialogDescription>
                 <div className="flex flex-col gap-2">
-                  <p className="text-white text-left">Are you sure?</p>
+                  <p className="text-white text-left">
+                    You have choose {selectedValue}. Are you sure?
+                  </p>
                 </div>
               </DialogDescription>
             </DialogHeader>
@@ -119,12 +121,6 @@ const review: NextPage = () => {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-        {/* <Button
-          onClick={handleSubmit}
-          className="font-bold bg-custom-green text-black w-full text-base gap-2"
-        >
-          Submit Review
-        </Button> */}
       </MainLayout>
     </>
   )
