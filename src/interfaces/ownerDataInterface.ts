@@ -1,8 +1,8 @@
 import { Tenant } from "./tenant"
 import { Estate } from "./estate"
+import { BankInfo } from "./bank"
 
-
-export interface MockData {
+export interface OwnerDataInterface {
   firstname: string
   lastname: string
   gender: string
@@ -14,4 +14,6 @@ export interface MockData {
   status: boolean
   estate: Estate
   tenant: Tenant[]
+  bank: BankInfo[]
 }
+
