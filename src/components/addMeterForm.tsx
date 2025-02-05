@@ -24,7 +24,7 @@ const formSchema = z.object({
   roomnumber: z.string(),
 })
 
-export function EditTenantForm() {
+export function AddMeterForm() {
   const router = useRouter()
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -119,9 +119,9 @@ export function EditTenantForm() {
         />
         <Button
           type="submit"
-          className="flex w-full text-base font-bold bg-custom-green text-black"
+          className="flex w-full text-base font-bold bg-custom-pink text-black"
         >
-          Save
+          Add
         </Button>
       </form>
     </Form>
