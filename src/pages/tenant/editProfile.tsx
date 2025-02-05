@@ -35,29 +35,14 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
-
-const mockData = {
-  firstname: "Nattawat",
-  lastname: "Chaokraisith",
-  age: 20,
-  gender: "Male",
-  phoneNumber: "000-000-0000",
-  address: "691 ถนนฉลองกรุง 1 แยก 6 ลาดกระบัง",
-  province: "Bangkok",
-  zipCode: "10110",
-  building: 99,
-  floor: 99,
-  roomNumber: 1234,
-  status: "Payment Incomplete",
-  yearOfStudy: "4",
-}
+import { tenantData } from "@/interfaces/tenantData"
 
 const formSchema = z.object({
   firstname: z.string(),
   lastname: z.string(),
   age: z.coerce.number(),
   gender: z.string(),
-  yearOfStudy: z.string(),
+  yearOfStudy: z.coerce.number(),
   phoneNumber: z.string(),
   address: z.string(),
   province: z.string(),
@@ -71,15 +56,15 @@ export function EditProfileForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstname: mockData.firstname,
-      lastname: mockData.lastname,
-      age: mockData.age,
-      gender: mockData.gender,
-      yearOfStudy: mockData.yearOfStudy,
-      phoneNumber: mockData.phoneNumber,
-      address: mockData.address,
-      province: mockData.province,
-      zipcode: mockData.zipCode,
+      firstname: tenantData.firstname,
+      lastname: tenantData.lastname,
+      age: tenantData.age,
+      gender: tenantData.gender,
+      yearOfStudy: tenantData.yearOfStudy,
+      phoneNumber: tenantData.phoneNumber,
+      address: tenantData.address,
+      province: tenantData.province,
+      zipcode: tenantData.zipCode,
     },
   })
 
@@ -94,7 +79,7 @@ export function EditProfileForm() {
     })
 
     setTimeout(() => {
-      router.push("/owner/home")
+      router.push("/tenant/home")
     }, 3000) // Navigate after 3 seconds
   }
 
@@ -119,7 +104,7 @@ export function EditProfileForm() {
                     id="building"
                     type="text"
                     className="text-sm"
-                    placeholder={mockData.firstname}
+                    placeholder={tenantData.firstname}
                     {...field}
                     icon={<BiSolidUserRectangle size={24} />}
                   />
@@ -143,7 +128,7 @@ export function EditProfileForm() {
                   type="text"
                   className="text-sm"
                   icon={<BiSolidUserRectangle size={24} />}
-                  placeholder={mockData.lastname}
+                  placeholder={tenantData.lastname}
                   {...field}
                 />
               </FormControl>
@@ -163,7 +148,7 @@ export function EditProfileForm() {
                   type="number"
                   className="text-sm"
                   icon={<TbListNumbers size={24} />}
-                  placeholder={String(mockData.age)}
+                  placeholder={String(tenantData.age)}
                   {...field}
                 />
               </FormControl>
@@ -183,7 +168,7 @@ export function EditProfileForm() {
                     className="flex w-full"
                     icon={<PiGenderNeuterFill size={24} />}
                   >
-                    <SelectValue placeholder={mockData.gender} />
+                    <SelectValue placeholder={tenantData.gender} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="male">Male</SelectItem>
@@ -208,7 +193,7 @@ export function EditProfileForm() {
                     className="flex w-full"
                     icon={<FaGraduationCap size={24} />}
                   >
-                    <SelectValue placeholder={mockData.yearOfStudy} />
+                    <SelectValue placeholder={tenantData.yearOfStudy} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="1">1</SelectItem>
@@ -233,7 +218,7 @@ export function EditProfileForm() {
                 <>
                   <Input
                     className="text-sm"
-                    placeholder={mockData.phoneNumber}
+                    placeholder={tenantData.phoneNumber}
                     {...field}
                     icon={<FaSquarePhone size={24} />}
                   />
@@ -256,7 +241,7 @@ export function EditProfileForm() {
                 <>
                   <Input
                     className="text-sm"
-                    placeholder={mockData.address}
+                    placeholder={tenantData.address}
                     {...field}
                     icon={<FaRegAddressBook size={20} />}
                   />
@@ -279,7 +264,7 @@ export function EditProfileForm() {
                 <>
                   <Input
                     className="text-sm"
-                    placeholder={mockData.zipCode}
+                    placeholder={tenantData.zipCode}
                     {...field}
                     icon={<AiOutlineNumber size={20} />}
                   />

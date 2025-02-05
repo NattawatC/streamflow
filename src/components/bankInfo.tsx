@@ -5,7 +5,7 @@ interface BankProps {
   qrCode?: Blob
   bank: {
     name: string
-    accountNumber: string
+    accountNumber: string | string[]
   }[]
 }
 

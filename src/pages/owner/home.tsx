@@ -26,55 +26,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { MockData } from "@/interfaces/mockData";
-
-const mockData: MockData = {
-  firstname: "Nattawat",
-  lastname: "Chaokraisith",
-  gender: "Male",
-  age: 56,
-  phoneNumber: "000-000-0000",
-  roomNumber: 123,
-  floorNumber: 123,
-  BuildingNumber: 123,
-  status: false,
-  estate: {
-    name: "The Home Ladkrabang",
-    address: "691 ถนนฉลองกรุง 1 แยก 6 ลาดกระบัง",
-    city: "Bangkok",
-    zipCode: "10160",
-    totalRoom: 99,
-    totalBuilding: 99,
-    totalFloor: 99,
-    furnitureCost: 9999,
-    roomCharge: 9999,
-    electricityCost: 6,
-    waterCost: 17
-  },
-  tenant: [
-    {
-      firstname: "John",
-      lastname: "Clark",
-      room: 101,
-      pStatus: false,
-      rStatus: true,
-    },
-    {
-      firstname: "Sarah",
-      lastname: "Shelby",
-      room: 102,
-      pStatus: true,
-      rStatus: false,
-    },
-    {
-      firstname: "Tomb",
-      lastname: "Raider",
-      room: 103,
-      pStatus: true,
-      rStatus: true,
-    },
-  ],
-}
+import { ownerData } from "@/interfaces/ownerData"
 
 const home: NextPage = () => {
   return (
@@ -89,19 +41,19 @@ const home: NextPage = () => {
             </Avatar>
 
             <div className="flex text-xl font-bold justify-center">
-              {mockData.gender == "Male" ? (
+              {ownerData.gender == "Male" ? (
                 <p>
-                  Mr. {mockData.firstname} {mockData.lastname}
+                  Mr. {ownerData.firstname} {ownerData.lastname}
                 </p>
               ) : (
                 <p>
-                  Ms. {mockData.firstname} {mockData.lastname}
+                  Ms. {ownerData.firstname} {ownerData.lastname}
                 </p>
               )}
             </div>
           </div>
 
-          {mockData.estate.name == "" ? (
+          {ownerData.estate.name == "" ? (
             <div className="flex text-base justify-center text-center">
               <p>
                 No information. Please fill your estate & banking in{" "}
@@ -124,7 +76,7 @@ const home: NextPage = () => {
             <Separator className="h-[2px] rounded-sm" />
 
             <Link href={"/owner/setting"}>
-              {mockData.estate.name == "" ? (
+              {ownerData.estate.name == "" ? (
                 <Button className="w-full bg-white text-custom-pink text-base font-bold justify-between">
                   Account Setting*
                   <IoIosArrowForward size={20} />
@@ -141,18 +93,18 @@ const home: NextPage = () => {
             {/* Estate Information: Occupied */}
             <Accordion type="single" collapsible>
               <AccordionItem value="item-1">
-                <AccordionTrigger className="font-bold justify-between">
+                <AccordionTrigger className="flex font-bold w-full justify-between">
                   Room Occupancy Overview
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="flex flex-col gap-2">
                     <div className="flex flex-row justify-between">
                       <p>Room Occupied</p>
-                      <p>10/{mockData.estate.totalRoom}</p>
+                      <p>10/{ownerData.estate.totalRoom}</p>
                     </div>
                     <div className="flex flex-row justify-between">
                       <p>Room Available</p>
-                      <p>89/{mockData.estate.totalRoom}</p>
+                      <p>89/{ownerData.estate.totalRoom}</p>
                     </div>
                   </div>
                 </AccordionContent>
@@ -186,9 +138,9 @@ const home: NextPage = () => {
               </Dialog>
             </div>
 
-            {mockData.tenant.length > 0 ? (
+            {ownerData.tenant.length > 0 ? (
               <div className="flex flex-col gap-4">
-                {mockData.tenant.map((tenant, index) => (
+                {ownerData.tenant.map((tenant, index) => (
                   <TenantCard
                     key={index}
                     room={tenant.room}
