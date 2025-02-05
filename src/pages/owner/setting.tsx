@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { MockData } from "@/interfaces/mockData"
+import { BankInfo } from "@/interfaces/bank"
 
 const mockData: MockData = {
   firstname: "Nattawat",
@@ -69,7 +70,7 @@ const mockData: MockData = {
 const bank = [
   {
     name: "Bank of America",
-    accountNumber: "123456789",
+    accountNumber: ["123456789", "987654321"],
   },
   {
     name: "Chase Bank",
@@ -90,15 +91,20 @@ const bank = [
 ]
 
 const setting: NextPage = () => {
-  const [selectedEstate, setSelectedEstate] = useState({
-    name: "",
-    accountNumber: "",
-  })
+  const [selectedEstate, setSelectedEstate] = useState<BankInfo | null>()
 
   const handleSelect = (value: string) => {
     const bankData = bank.find((item) => item.name === value)
-    setSelectedEstate(bankData || { name: "", accountNumber: "" })
+    if (bankData) {
+      setSelectedEstate({
+        name: bankData.name,
+        accountNumber: Array.isArray(bankData.accountNumber)
+          ? bankData.accountNumber
+          : [bankData.accountNumber],
+      })
+    }
   }
+
   return (
     <>
       <MainLayout className="flex flex-col gap-7">
@@ -227,17 +233,15 @@ const setting: NextPage = () => {
               </Select>
 
               {/* Display selected address */}
-              {selectedEstate.accountNumber && (
-                <>
-                  <div className="flex flex-row gap-2">
-                    <div className="flex flex-col font-medium gap-2">
-                      <p>Account Number:</p>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <p>{selectedEstate.accountNumber}</p>
-                    </div>
-                  </div>
-                </>
+              {selectedEstate && selectedEstate.accountNumber.length > 0 && (
+                <div className="flex flex-col gap-2">
+                  <p className="font-medium">Account Numbers</p>
+                  <ul className="list-disc list-inside">
+                    {selectedEstate.accountNumber.map((acc, index) => (
+                      <li key={index}>{acc}</li>
+                    ))}
+                  </ul>
+                </div>
               )}
             </div>
           </div>
