@@ -19,9 +19,9 @@ import { Input } from "@/components/ui/input"
 
 // needed to use, creaate new component "form" for new page
 const formSchema = z.object({
-  building: z.string(),
-  level: z.string(),
-  roomnumber: z.string(),
+  floor: z.string().nonempty("Floor is required"),
+  room: z.string().nonempty("Room number is required"),
+  meter: z.string().nonempty("Meter number is required"),
 })
 
 export function AddMeterForm() {
@@ -30,9 +30,9 @@ export function AddMeterForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      building: "",
-      level: "",
-      roomnumber: "",
+      floor: "",
+      room: "",
+      meter: "",
     },
   })
 
@@ -40,7 +40,6 @@ export function AddMeterForm() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     console.log(values)
-    router.push("owner/home")
   }
 
   return (
@@ -51,19 +50,19 @@ export function AddMeterForm() {
       >
         <FormField
           control={form.control}
-          name="building"
+          name="floor"
           render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="building" className="text-sm">
-                Building
+              <FormLabel htmlFor="floor" className="text-sm">
+                Floor Number
               </FormLabel>
               <FormControl>
                 <>
                   <Input
-                    id="building"
+                    id="floor"
                     type="text"
                     className="text-sm"
-                    placeholder="19"
+                    placeholder="Enter floor no."
                     {...field}
                     icon={<BiSolidUserRectangle size={24} />}
                   />
@@ -75,19 +74,19 @@ export function AddMeterForm() {
         />
         <FormField
           control={form.control}
-          name="level"
+          name="room"
           render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="level" className="text-sm">
-                Level/Floor
+              <FormLabel htmlFor="room" className="text-sm">
+                Room Number
               </FormLabel>
               <FormControl>
                 <Input
-                  id="level"
+                  id="room"
                   type="text"
                   className="text-sm"
                   icon={<BiSolidUserRectangle size={24} />}
-                  placeholder="4"
+                  placeholder="Enter room no."
                   {...field}
                 />
               </FormControl>
@@ -97,19 +96,19 @@ export function AddMeterForm() {
         />
         <FormField
           control={form.control}
-          name="roomnumber"
+          name="meter"
           render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="roomnumber" className="text-sm">
-                Room Number
+              <FormLabel htmlFor="meter" className="text-sm">
+                Meter Number
               </FormLabel>
               <FormControl>
                 <Input
-                  id="roomnumber"
+                  id="meter"
                   type="text"
                   className="text-sm"
                   icon={<BiSolidUserRectangle size={24} />}
-                  placeholder="1234"
+                  placeholder="Enter meter no."
                   {...field}
                 />
               </FormControl>
