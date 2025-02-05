@@ -41,7 +41,7 @@ const mockData = {
 const bank = [
   {
     name: "Bank of America",
-    accountNumber: "123456789",
+    accountNumber: ["123456789", "987654321"],
   },
   {
     name: "Chase Bank",
