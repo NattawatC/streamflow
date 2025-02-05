@@ -6,15 +6,7 @@ import { Separator } from "@/components/ui/separator"
 import { MainLayout } from "@/components/layout"
 import { IoIosArrowBack } from "react-icons/io"
 import { EditTenantForm } from "@/components/editTenantForm"
-
-const mockData = {
-  firstname: "John",
-  lastname: "Doe",
-  age: 20,
-  gender: "Male",
-  phoneNumber: "000-000-0000",
-  yearOfStudy: 4,
-}
+import { tenantData } from "@/interfaces/tenantData"
 
 const editTenantInfo: NextPage = () => {
   return (
@@ -45,12 +37,12 @@ const editTenantInfo: NextPage = () => {
               </div>
               <div className="flex flex-col gap-2 text-nowrap">
                 <p>
-                  {mockData.firstname} {mockData.lastname}
+                  {tenantData.firstname} {tenantData.lastname}
                 </p>
-                <p>{mockData.age}</p>
-                <p>{mockData.gender}</p>
-                <p>{mockData.phoneNumber}</p>
-                <p>{mockData.yearOfStudy}</p>
+                <p>{tenantData.age}</p>
+                <p>{tenantData.gender}</p>
+                <p>{tenantData.phoneNumber}</p>
+                <p>{tenantData.yearOfStudy}</p>
               </div>
             </div>
           </div>       

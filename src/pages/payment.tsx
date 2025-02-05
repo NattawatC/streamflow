@@ -19,8 +19,9 @@ import {
 } from "@/components/ui/accordion"
 import Receipt from "@/components/receipt"
 import BankInfo from "@/components/bankInfo"
+import { ownerData } from "@/interfaces/ownerData"
 
-const mockData = {
+const data = {
   startDate: "2021/10/01",
   endDate: "2021/10/30",
   TotalCost: 9999,
@@ -37,29 +38,6 @@ const mockData = {
   furniture: 3000,
   roomCharge: 3000,
 }
-
-const bank = [
-  {
-    name: "Bank of America",
-    accountNumber: ["123456789", "987654321"],
-  },
-  {
-    name: "Chase Bank",
-    accountNumber: "987654321",
-  },
-  {
-    name: "Wells Fargo",
-    accountNumber: "456789123",
-  },
-  {
-    name: "Citi Bank",
-    accountNumber: "789123456",
-  },
-  {
-    name: "HSBC",
-    accountNumber: "321987654",
-  },
-]
 
 const payment: NextPage = () => {
   return (
@@ -85,7 +63,7 @@ const payment: NextPage = () => {
                   </div>
 
                   <div className="flex flex-row justify-between items-center font-bold">
-                    <p className="font-bold text-2xl">{mockData.TotalCost}</p>
+                    <p className="font-bold text-2xl">{data.TotalCost}</p>
                   </div>
                 </div>
                 <Accordion
@@ -99,14 +77,14 @@ const payment: NextPage = () => {
                     </AccordionTrigger>
                     <AccordionContent className="gap-4 p-0 pb-4">
                       <Receipt
-                        startDate={mockData.startDate}
-                        endDate={mockData.endDate}
-                        eUsed={mockData.electricity.used}
-                        eCost={mockData.electricity.cost}
-                        wUsed={mockData.water.used}
-                        wCost={mockData.water.cost}
-                        furniture={mockData.furniture}
-                        roomCharge={mockData.roomCharge}
+                        startDate={data.startDate}
+                        endDate={data.endDate}
+                        eUsed={data.electricity.used}
+                        eCost={data.electricity.cost}
+                        wUsed={data.water.used}
+                        wCost={data.water.cost}
+                        furniture={data.furniture}
+                        roomCharge={data.roomCharge}
                       />
                     </AccordionContent>
                   </AccordionItem>
@@ -117,7 +95,7 @@ const payment: NextPage = () => {
         </DialogContent>
       </Dialog>
 
-      <BankInfo bank={bank} />
+      <BankInfo bank={ownerData.bank} />
 
       <div>
         <p>The Receipt</p>

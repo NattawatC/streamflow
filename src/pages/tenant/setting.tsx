@@ -7,22 +7,7 @@ import CautionCard from "@/components/cautionCard"
 import { Separator } from "@/components/ui/separator"
 import { MainLayout } from "@/components/layout"
 import { FiEdit } from "react-icons/fi"
-
-const mockData = {
-  firstname: "Nattawat",
-  lastname: "Chaokraisith",
-  age: 20,
-  gender: "Male",
-  phoneNumber: "000-000-0000",
-  address: "691 ถนนฉลองกรุง 1 แยก 6 ลาดกระบัง",
-  city: "Bangkok",
-  zipCode: 10110,
-  building: 99,
-  floor: 99,
-  roomNumber: 1234,
-  status: "Payment Incomplete",
-  yearOfStudy: 4,
-}
+import { tenantData } from "@/interfaces/tenantData"
 
 const setting: NextPage = () => {
   return (
@@ -54,12 +39,12 @@ const setting: NextPage = () => {
               </div>
               <div className="flex flex-col gap-2">
                 <p>
-                  {mockData.firstname} {mockData.lastname}
+                  {tenantData.firstname} {tenantData.lastname}
                 </p>
-                <p>{mockData.age}</p>
-                <p>{mockData.gender}</p>
-                <p>{mockData.yearOfStudy}</p>
-                <p>{mockData.phoneNumber}</p>
+                <p>{tenantData.age}</p>
+                <p>{tenantData.gender}</p>
+                <p>{tenantData.yearOfStudy}</p>
+                <p>{tenantData.phoneNumber}</p>
               </div>
             </div>
           </div>
@@ -76,7 +61,7 @@ const setting: NextPage = () => {
             <div className="flex flex-col gap-2">
               <div className="flex flex-col gap-1">
                 <p className="font-medium">Address:</p>
-                <p>{mockData.address}</p>
+                <p>{tenantData.address}</p>
               </div>
               <div className="flex flex-row gap-4">
                 <div className="flex flex-col font-medium gap-2">
@@ -84,8 +69,8 @@ const setting: NextPage = () => {
                   <p>Zip Code:</p>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <p>{mockData.city}</p>
-                  <p>{mockData.zipCode}</p>
+                  <p>{tenantData.city}</p>
+                  <p>{tenantData.zipCode}</p>
                 </div>
               </div>
             </div>
@@ -107,9 +92,9 @@ const setting: NextPage = () => {
                 <p>Room Numnber:</p>
               </div>
               <div className="flex flex-col gap-2">
-                <p>{mockData.building}</p>
-                <p>{mockData.floor}</p>
-                <p>{mockData.roomNumber}</p>
+                <p>{tenantData.building}</p>
+                <p>{tenantData.floor}</p>
+                <p>{tenantData.roomNumber}</p>
               </div>
             </div>
           </div>
@@ -128,13 +113,13 @@ const setting: NextPage = () => {
                 <p>Status:</p>
               </div>
               <div className="flex flex-col gap-2">
-                <p>{mockData.status}</p>
+                <p>{tenantData.status}</p>
               </div>
             </div>
           </div>
         </div>
 
-        <CautionCard yearOfStudy={mockData.yearOfStudy} />
+        <CautionCard yearOfStudy={tenantData.yearOfStudy} />
 
         <div className="flex flex-col gap-3">
           <Link href={"/tenant/home"}>

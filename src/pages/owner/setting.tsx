@@ -5,7 +5,6 @@ import { useState } from "react"
 import { NextPage } from "next"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import CautionCard from "@/components/cautionCard"
 import { Separator } from "@/components/ui/separator"
 import { MainLayout } from "@/components/layout"
 import { FiEdit } from "react-icons/fi"
@@ -16,85 +15,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { MockData } from "@/interfaces/mockData"
+import { ownerData } from "@/interfaces/ownerData"
 import { BankInfo } from "@/interfaces/bank"
-
-const mockData: MockData = {
-  firstname: "Nattawat",
-  lastname: "Chaokraisith",
-  gender: "Male",
-  age: 56,
-  phoneNumber: "000-000-0000",
-  roomNumber: 123,
-  floorNumber: 123,
-  BuildingNumber: 123,
-  status: false,
-  estate: {
-    name: "The Home Ladkrabang",
-    address: "691 ถนนฉลองกรุง 1 แยก 6 ลาดกระบัง",
-    city: "Bangkok",
-    zipCode: "10160",
-    totalRoom: 99,
-    totalBuilding: 99,
-    totalFloor: 99,
-    furnitureCost: 9999,
-    roomCharge: 9999,
-    electricityCost: 6,
-    waterCost: 17,
-  },
-  tenant: [
-    {
-      firstname: "John",
-      lastname: "Clark",
-      room: 101,
-      pStatus: false,
-      rStatus: true,
-    },
-    {
-      firstname: "Sarah",
-      lastname: "Shelby",
-      room: 102,
-      pStatus: true,
-      rStatus: false,
-    },
-    {
-      firstname: "Tomb",
-      lastname: "Raider",
-      room: 103,
-      pStatus: true,
-      rStatus: true,
-    },
-  ],
-}
-
-const bank = [
-  {
-    name: "Bank of America",
-    accountNumber: ["123456789", "987654321"],
-  },
-  {
-    name: "Chase Bank",
-    accountNumber: "987654321",
-  },
-  {
-    name: "Wells Fargo",
-    accountNumber: "456789123",
-  },
-  {
-    name: "Citi Bank",
-    accountNumber: "789123456",
-  },
-  {
-    name: "HSBC",
-    accountNumber: "321987654",
-  },
-]
 
 const setting: NextPage = () => {
   const [selectedEstate, setSelectedEstate] = useState<BankInfo | null>()
 
   const handleSelect = (value: string) => {
-    const bankData = bank.find((item) => item.name === value)
+    const bankData = ownerData.bank.find((item) => item.name === value)
     if (bankData) {
       setSelectedEstate({
         name: bankData.name,
@@ -133,11 +61,11 @@ const setting: NextPage = () => {
               </div>
               <div className="flex flex-col gap-2">
                 <p>
-                  {mockData.firstname} {mockData.lastname}
+                  {ownerData.firstname} {ownerData.lastname}
                 </p>
-                <p>{mockData.age}</p>
-                <p>{mockData.gender}</p>
-                <p>{mockData.phoneNumber}</p>
+                <p>{ownerData.age}</p>
+                <p>{ownerData.gender}</p>
+                <p>{ownerData.phoneNumber}</p>
               </div>
             </div>
           </div>
@@ -157,14 +85,14 @@ const setting: NextPage = () => {
                   <p>Name:</p>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <p>{mockData.estate.name}</p>
+                  <p>{ownerData.estate.name}</p>
                 </div>
               </div>
               <div className="flex flex-col gap-1">
                 <p className="font-medium">Address:</p>
                 <p>
-                  {mockData.estate.address}, {mockData.estate.city},{" "}
-                  {mockData.estate.zipCode}
+                  {ownerData.estate.address}, {ownerData.estate.city},{" "}
+                  {ownerData.estate.zipCode}
                 </p>
               </div>
               <div className="flex flex-row gap-2">
@@ -173,8 +101,8 @@ const setting: NextPage = () => {
                   <p>Room Charge (Baht):</p>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <p>{mockData.estate.furnitureCost}</p>
-                  <p>{mockData.estate.roomCharge}</p>
+                  <p>{ownerData.estate.furnitureCost}</p>
+                  <p>{ownerData.estate.roomCharge}</p>
                 </div>
               </div>
             </div>
@@ -197,8 +125,8 @@ const setting: NextPage = () => {
                 <p>Water (Baht):</p>
               </div>
               <div className="flex flex-col gap-2">
-                <p>{mockData.estate.electricityCost}</p>
-                <p>{mockData.estate.waterCost}</p>
+                <p>{ownerData.estate.electricityCost}</p>
+                <p>{ownerData.estate.waterCost}</p>
               </div>
             </div>
           </div>
@@ -224,7 +152,7 @@ const setting: NextPage = () => {
                   <SelectValue placeholder="Select a bank" />
                 </SelectTrigger>
                 <SelectContent>
-                  {bank.map((item) => (
+                  {ownerData.bank.map((item) => (
                     <SelectItem key={item.name} value={item.name}>
                       {item.name}
                     </SelectItem>
@@ -233,13 +161,17 @@ const setting: NextPage = () => {
               </Select>
 
               {/* Display selected address */}
-              {selectedEstate && selectedEstate.accountNumber.length > 0 && (
+              {selectedEstate && selectedEstate.accountNumber && (
                 <div className="flex flex-col gap-2">
                   <p className="font-medium">Account Numbers</p>
                   <ul className="list-disc list-inside">
-                    {selectedEstate.accountNumber.map((acc, index) => (
-                      <li key={index}>{acc}</li>
-                    ))}
+                    {(Array.isArray(selectedEstate.accountNumber)
+                      ? selectedEstate.accountNumber
+                      : [selectedEstate.accountNumber]
+                    ) // Convert string to array
+                      .map((acc, index) => (
+                        <li key={index}>{acc}</li>
+                      ))}
                   </ul>
                 </div>
               )}

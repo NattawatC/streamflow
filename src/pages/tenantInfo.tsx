@@ -7,19 +7,7 @@ import { Separator } from "@/components/ui/separator"
 import { MainLayout } from "@/components/layout"
 import { FiEdit } from "react-icons/fi"
 import { IoIosArrowBack } from "react-icons/io"
-
-const mockData = {
-  firstname: "Nattawat",
-  lastname: "Chaokraisith",
-  age: 20,
-  gender: "Male",
-  phoneNumber: "000-000-0000",
-  building: 99,
-  floor: 99,
-  roomNumber: 1234,
-  status: "Payment Incomplete",
-  yearOfStudy: 4,
-}
+import { tenantData } from "@/interfaces/tenantData"
 
 const tenantInfo: NextPage = () => {
   return (
@@ -30,7 +18,7 @@ const tenantInfo: NextPage = () => {
           <IoIosArrowBack size={24} className="text-black" />
         </Link>
         <div className="flex flex-row justify-left gap-2">
-          <h1 className="font-bold text-2xl">{mockData.firstname} {mockData.lastname}</h1>
+          <h1 className="font-bold text-2xl">{tenantData.firstname} {tenantData.lastname}</h1>
         </div>
         <div className="flex flex-col gap-5 items-center bg-custom-gray-background p-4 rounded-lg">
           <div className="flex flex-col bg-white w-full text-base p-3 gap-3 rounded-md">
@@ -50,12 +38,12 @@ const tenantInfo: NextPage = () => {
               </div>
               <div className="flex flex-col gap-2">
                 <p>
-                  {mockData.firstname} {mockData.lastname}
+                  {tenantData.firstname} {tenantData.lastname}
                 </p>
-                <p>{mockData.age}</p>
-                <p>{mockData.gender}</p>
-                <p>{mockData.phoneNumber}</p>
-                <p>{mockData.yearOfStudy}</p>
+                <p>{tenantData.age}</p>
+                <p>{tenantData.gender}</p>
+                <p>{tenantData.phoneNumber}</p>
+                <p>{tenantData.yearOfStudy}</p>
               </div>
             </div>
           </div>
@@ -77,9 +65,9 @@ const tenantInfo: NextPage = () => {
                 <p>Room Numnber:</p>
               </div>
               <div className="flex flex-col gap-2">
-                <p>{mockData.building}</p>
-                <p>{mockData.floor}</p>
-                <p>{mockData.roomNumber}</p>
+                <p>{tenantData.building}</p>
+                <p>{tenantData.floor}</p>
+                <p>{tenantData.roomNumber}</p>
               </div>
             </div>
           </div>
@@ -98,7 +86,7 @@ const tenantInfo: NextPage = () => {
                 <p>Status:</p>
               </div>
               <div className="flex flex-col gap-2">
-                <p>{mockData.status}</p>
+                <p>{tenantData.status}</p>
               </div>
             </div>
           </div>
