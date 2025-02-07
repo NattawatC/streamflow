@@ -88,6 +88,7 @@ const home: NextPage = () => {
                 </Button>
               )}
             </Link>
+
             <Separator className="h-[2px] rounded-sm" />
 
             {/* Estate Information: Occupied */}
@@ -105,6 +106,34 @@ const home: NextPage = () => {
                     <div className="flex flex-row justify-between">
                       <p>Room Available</p>
                       <p>89/{ownerData.estate.totalRoom}</p>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+
+            {/* Meter Setup */}
+            <Accordion type="single" collapsible>
+              <AccordionItem value="item-1">
+                <AccordionTrigger className="flex font-bold w-full justify-between">
+                  Meter Setup
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="flex flex-col gap-2">
+                    {/* <p className="text-sm">Add Meter</p> */}
+                    <div className="flex flex-row justify-between w-auto gap-5">
+                      <Link
+                        className="flex w-full bg-custom-green text-black text-sm font-bold justify-center items-center rounded-md px-4 py-2"
+                        href="/addMeter"
+                      >
+                        Add Meter
+                      </Link>
+                      <Link
+                        className="flex w-full bg-custom-green text-black text-sm font-bold justify-center items-center rounded-md px-4 py-2"
+                        href="/addMeter"
+                      >
+                        Edit Meter
+                      </Link>
                     </div>
                   </div>
                 </AccordionContent>
