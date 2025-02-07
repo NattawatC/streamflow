@@ -19,7 +19,7 @@ export const tenantData: TenantDataInterface = {
   floor: 99,
   roomNumber: 1234,
   floorNumber: 1234,
-  BuildingNumber: 1234,
+  buildingNumber: 1234,
   status: "Payment Incomplete",
   yearOfStudy: 4,
   electricity: [
