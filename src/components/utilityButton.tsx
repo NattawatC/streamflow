@@ -2,14 +2,14 @@ import React from "react"
 import Link from "next/link"
 import { IoIosArrowRoundForward } from "react-icons/io"
 
-interface CardProps {
+interface UtilityProps {
   title: string
   href: string
   color: string
   Icon: React.ElementType
 }
 
-const Card: React.FunctionComponent<CardProps> = ({
+const Utility: React.FunctionComponent<UtilityProps> = ({
   title,
   color,
   href,
@@ -38,4 +38,4 @@ const Card: React.FunctionComponent<CardProps> = ({
   )
 }
 
-export default Card
+export default Utility
