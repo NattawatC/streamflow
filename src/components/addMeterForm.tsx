@@ -1,9 +1,13 @@
 "use client"
 
 import { BiSolidUserRectangle } from "react-icons/bi"
+import { PiGenderNeuterFill } from "react-icons/pi"
+import { MdOutlineElectricBolt } from "react-icons/md"
+import { FaWater } from "react-icons/fa6"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
 import { useRouter } from "next/router"
 import { Button } from "@/components/ui/button"
 import {
@@ -15,10 +19,18 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 
 // needed to use, creaate new component "form" for new page
 const formSchema = z.object({
+  utility: z.string().nonempty("Utility is required"),
   floor: z.string().nonempty("Floor is required"),
   room: z.string().nonempty("Room number is required"),
   meter: z.string().nonempty("Meter number is required"),
@@ -26,10 +38,12 @@ const formSchema = z.object({
 
 export function AddMeterForm() {
   const router = useRouter()
+  const [selectedUtility, setSelectedUtility] = useState("")
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      utility: "",
       floor: "",
       room: "",
       meter: "",
@@ -48,6 +62,44 @@ export function AddMeterForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-5"
       >
+        <FormField
+          control={form.control}
+          name="utility"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-sm">Select Utility</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={(value) => {
+                    field.onChange(value)
+                    setSelectedUtility(value) // Update state when value changes
+                  }}
+                >
+                  {selectedUtility === "electricity" ? (
+                    <SelectTrigger
+                      className="flex w-full"
+                      icon={<MdOutlineElectricBolt size={24} />}
+                    >
+                      <SelectValue placeholder="Electricity/Water" />
+                    </SelectTrigger>
+                  ) : (
+                    <SelectTrigger
+                      className="flex w-full"
+                      icon={<FaWater size={24} />}
+                    >
+                      <SelectValue placeholder="Electricity/Water" />
+                    </SelectTrigger>
+                  )}
+                  <SelectContent>
+                    <SelectItem value="electricity">Electricity</SelectItem>
+                    <SelectItem value="water">Water</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="floor"
