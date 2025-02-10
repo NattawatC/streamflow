@@ -1,6 +1,8 @@
 import { Tenant } from "./tenant"
 import { Estate } from "./estate"
 import { BankInfo } from "./bank"
+import { ElectricityMeter } from "./electricityMeter"
+import { WaterMeter } from "./waterMeter"
 
 export interface OwnerDataInterface {
   firstname: string

@@ -11,7 +11,7 @@ import { MdOutlineElectricBolt } from "react-icons/md"
 import { FaWater } from "react-icons/fa6"
 import { VscGraphLine } from "react-icons/vsc"
 import { IoIosArrowForward } from "react-icons/io"
-import Card from "@/components/utilityButton"
+import Utility from "@/components/utilityButton"
 
 const mockData = {
   firstname: "Nattawat",
@@ -91,7 +91,7 @@ const home: NextPage = () => {
 
               <div className="grid grid-cols-2 gap-5">
                 {utilities.map((util) => (
-                  <Card
+                  <Utility
                     key={util.title}
                     title={util.title}
                     color={util.color}

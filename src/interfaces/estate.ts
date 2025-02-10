@@ -1,3 +1,6 @@
+import { ElectricityMeter } from "./electricityMeter"
+import { WaterMeter } from "./waterMeter"
+
 export interface Estate {
   name: string
   address: string
@@ -10,4 +13,6 @@ export interface Estate {
   roomCharge: number
   waterCost: number
   electricityCost: number
+  electricityMeter: ElectricityMeter[]
+  waterMeter: WaterMeter[]
 }

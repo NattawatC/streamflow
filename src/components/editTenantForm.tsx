@@ -25,7 +25,7 @@ const formSchema = z.object({
 })
 
 export function EditTenantForm() {
-  const router = useRouter();
+  const router = useRouter()
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -45,13 +45,18 @@ export function EditTenantForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col gap-5"
+      >
         <FormField
           control={form.control}
           name="building"
           render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="building" className="text-sm">Building</FormLabel>
+              <FormLabel htmlFor="building" className="text-sm">
+                Building
+              </FormLabel>
               <FormControl>
                 <>
                   <Input
@@ -73,16 +78,18 @@ export function EditTenantForm() {
           name="level"
           render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="level" className="text-sm">Level/Floor</FormLabel>
+              <FormLabel htmlFor="level" className="text-sm">
+                Level/Floor
+              </FormLabel>
               <FormControl>
                 <Input
-                    id="level"
+                  id="level"
                   type="text"
                   className="text-sm"
                   icon={<BiSolidUserRectangle size={24} />}
                   placeholder="4"
                   {...field}
-                  />
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -93,10 +100,12 @@ export function EditTenantForm() {
           name="roomnumber"
           render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="roomnumber" className="text-sm">Room Number</FormLabel>
+              <FormLabel htmlFor="roomnumber" className="text-sm">
+                Room Number
+              </FormLabel>
               <FormControl>
                 <Input
-                    id="roomnumber"
+                  id="roomnumber"
                   type="text"
                   className="text-sm"
                   icon={<BiSolidUserRectangle size={24} />}
@@ -110,7 +119,7 @@ export function EditTenantForm() {
         />
         <Button
           type="submit"
-          className="flex w-full text-base font-bold mt-8 bg-custom-green text-black"
+          className="flex w-full text-base font-bold bg-custom-green text-black"
         >
           Save
         </Button>

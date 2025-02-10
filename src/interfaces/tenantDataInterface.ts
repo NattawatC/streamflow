@@ -15,7 +15,7 @@ export interface TenantDataInterface {
   floor: number
   roomNumber: number
   floorNumber: number
-  BuildingNumber: number
+  buildingNumber: number
   status: string
   yearOfStudy: number
   electricity: Electricity[]

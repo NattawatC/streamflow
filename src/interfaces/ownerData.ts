@@ -22,6 +22,40 @@ export const ownerData: OwnerDataInterface = {
     roomCharge: 9999,
     electricityCost: 6,
     waterCost: 17,
+    electricityMeter: [
+      {
+        floorNumber: 1,
+        roomNumber: 101,
+        meterNumber: 101,
+      },
+      {
+        floorNumber: 1,
+        roomNumber: 102,
+        meterNumber: 102,
+      },
+      {
+        floorNumber: 2,
+        roomNumber: 202,
+        meterNumber: 202,
+      },
+    ],
+    waterMeter: [
+      {
+        floorNumber: 1,
+        roomNumber: 101,
+        meterNumber: 101,
+      },
+      {
+        floorNumber: 1,
+        roomNumber: 102,
+        meterNumber: 102,
+      },
+      {
+        floorNumber: 2,
+        roomNumber: 202,
+        meterNumber: 202,
+      }
+    ],
   },
   tenant: [
     {
