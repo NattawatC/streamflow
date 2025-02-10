@@ -17,7 +17,7 @@ const listOfMeter: NextPage = () => {
         <div className="flex flex-row justify-left gap-2">
           <h1 className="font-bold text-2xl">List Of Meter</h1>
         </div>
-        <div className="flex flex-row gap-10 bg-custom-gray-background p-3 rounded-2xl justify-start">
+        <div className="flex bg-custom-gray-background p-3 rounded-2xl justify-center">
           <CalendarForm></CalendarForm>
         </div>
       </MainLayout>
