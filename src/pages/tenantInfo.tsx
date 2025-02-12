@@ -5,7 +5,6 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { MainLayout } from "@/components/layout"
-import { FiEdit } from "react-icons/fi"
 import { IoIosArrowBack } from "react-icons/io"
 import { tenantData } from "@/interfaces/tenantData"
 
@@ -92,7 +91,7 @@ const tenantInfo: NextPage = () => {
               </div>
             </div>
             {/* Review Page */}
-            {mockData.status === "Payment Incomplete" ? (
+            {tenantData.status === "Payment Incomplete" ? (
               <>
                 <Link href="/owner/review">
                   <div className="flex bg-custom-pink text-black py-1 px-2 rounded-sm justify-center font-medium text-sm">
