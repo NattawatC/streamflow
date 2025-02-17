@@ -34,6 +34,7 @@ const formSchema = z.object({
   floor: z.string().nonempty("Floor is required"),
   room: z.string().nonempty("Room number is required"),
   meter: z.string().nonempty("Meter number is required"),
+  initialvalue: z.string().nonempty("Initial value is required"),
 })
 
 export function AddMeterForm() {
@@ -47,6 +48,7 @@ export function AddMeterForm() {
       floor: "",
       room: "",
       meter: "",
+      initialvalue: "",
     },
   })
 
@@ -161,6 +163,28 @@ export function AddMeterForm() {
                   className="text-sm"
                   icon={<BiSolidUserRectangle size={24} />}
                   placeholder="Enter meter no."
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="initialvalue"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor="initialvalue" className="text-sm">
+                Initial Value
+              </FormLabel>
+              <FormControl>
+                <Input
+                  id="initialvalue"
+                  type="text"
+                  className="text-sm"
+                  icon={<BiSolidUserRectangle size={24} />}
+                  placeholder="Enter initial value."
                   {...field}
                 />
               </FormControl>
