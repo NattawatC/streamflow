@@ -1,15 +1,21 @@
 import React from "react"
+import { MdOutlineElectricBolt } from "react-icons/md"
+import { FaWater } from "react-icons/fa6"
 
 interface Props {
   roomNumber: number
   electrictyUsage: number
   electricityNo: number
+  waterUsage: number
+  waterNo: number
 }
 
-const ListOfMeterElecCard: React.FunctionComponent<Props> = ({
+const ListOfMeterCard: React.FunctionComponent<Props> = ({
   roomNumber,
   electrictyUsage,
   electricityNo,
+  waterUsage,
+  waterNo,
 }) => {
   return (
     <>
@@ -24,12 +30,25 @@ const ListOfMeterElecCard: React.FunctionComponent<Props> = ({
         {/* second row */}
         <div className="flex flex-col gap-2 justify-evenly">
           <div className="flex flex-row text-base font-bold gap-x-10">
+            <MdOutlineElectricBolt size={20} />
             <p>Electricity Usage</p>
             <p>{electrictyUsage} kWh</p>
           </div>
           <div className="flex flex-row text-sm font-normal gap-x-11">
             <p>Electricity meter no.</p>
-            <p>{electricityNo} m^3</p>
+            <p>{electricityNo}</p>
+          </div>
+        </div>
+        {/* third row */}
+        <div className="flex flex-col gap-2 justify-evenly">
+          <div className="flex flex-row text-base font-bold gap-x-10">
+            <FaWater size={20} />
+            <p>Water Usage</p>
+            <p>{waterUsage} m^3</p>
+          </div>
+          <div className="flex flex-row text-sm font-normal gap-x-11">
+            <p>Water meter no.</p>
+            <p>{waterNo}</p>
           </div>
         </div>
       </div>
@@ -50,4 +69,4 @@ const ListOfMeterElecCard: React.FunctionComponent<Props> = ({
   )
 }
 
-export default ListOfMeterElecCard
+export default ListOfMeterCard

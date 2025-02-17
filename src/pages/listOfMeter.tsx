@@ -8,7 +8,7 @@ import { CalendarForm } from "@/components/calendarForm"
 import { ownerData } from "@/interfaces/ownerData"
 import { Separator } from "@/components/ui/separator"
 import WaterMeterCard from "@/components/waterMeterCard"
-import ListOfMeterCard from "@/components/listOfMeterElecCard"
+import ListOfMeterCard from "@/components/listOfMeterCard"
 import { List } from "lucide-react"
 
 const listOfMeter: NextPage = () => {
@@ -25,7 +25,7 @@ const listOfMeter: NextPage = () => {
         <div className="flex bg-custom-gray-background p-3 rounded-2xl justify-center">
           <CalendarForm></CalendarForm>
         </div>
-        {Object.entries(
+        {/* {Object.entries(
           ownerData.estate.electricityMeter.reduce((acc, meter) => {
             if (!acc[meter.floorNumber]) acc[meter.floorNumber] = []
             acc[meter.floorNumber].push(meter)
@@ -49,6 +49,51 @@ const listOfMeter: NextPage = () => {
                     roomNumber={meter.roomNumber}
                     electrictyUsage={meter.elecUsage}
                     electricityNo={meter.meterNumber}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        ))} */}
+        {Object.entries(
+          ownerData.estate.electricityMeter.reduce((acc, meter) => {
+            if (!acc[meter.floorNumber]) acc[meter.floorNumber] = []
+
+            // Find the corresponding water meter for the same room
+            const waterMeter = ownerData.estate.waterMeter.find(
+              (wMeter) => wMeter.roomNumber === meter.roomNumber
+            )
+
+            acc[meter.floorNumber].push({
+              roomNumber: meter.roomNumber,
+              electricityNo: meter.meterNumber,
+              electrictyUsage: meter.elecUsage || 0, // Ensure a default value
+              waterNo: waterMeter?.meterNumber || 0, // Default if no water meter found
+              waterUsage: waterMeter?.waterUsage || 0, // Default if no water usage data
+            })
+
+            return acc
+          }, {} as Record<number, any[]>)
+        ).map(([floor, meters]) => (
+          <div key={floor} className="mb-4">
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-row gap-2">
+                <p className="whitespace-nowrap text-base font-bold">
+                  Floor {floor}
+                </p>
+                <div className="flex w-full items-center">
+                  <Separator className="h-[2px] rounded-sm w-full justify-center" />
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                {meters.map((meter, index) => (
+                  <ListOfMeterCard
+                    key={index}
+                    roomNumber={meter.roomNumber}
+                    electrictyUsage={meter.electrictyUsage}
+                    electricityNo={meter.electricityNo}
+                    waterUsage={meter.waterUsage}
+                    waterNo={meter.waterNo}
                   />
                 ))}
               </div>
