@@ -38,43 +38,6 @@ import router from "next/router"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 
-async function getEstates() {
-  const { data: dorms, error } = await supabase.from("estates").select("*")
-
-  if (error) {
-    console.error("Error fetching dorms:", error.message)
-  } else {
-    console.log(
-      "Dorms fetched successfully:",
-      dorms.map((dorm) => ({
-        id: dorm.id,
-        name: dorm.name,
-      }))
-    )
-  }
-}
-
-console.log(getEstates())
-
-const estate = [
-  {
-    name: "a",
-    address: "lol",
-  },
-  {
-    name: "b",
-    address: "123 Main St, Springfield",
-  },
-  {
-    name: "c",
-    address: "456 Elm St, Shelbyville",
-  },
-  {
-    name: "d",
-    address: "789 Oak St, Capital City",
-  },
-]
-
 const formSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
