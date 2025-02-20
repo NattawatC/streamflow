@@ -13,7 +13,8 @@ const login: NextPage = () => {
       <MainLayout className="flex flex-col gap-8">
         <div className="flex flex-col gap-4">
           <h1 className="font-subjectivity text-2xl">
-            Welcome to StreamFlow, <br />Log In to Continue.
+            Welcome to StreamFlow, <br />
+            Log In to Continue.
           </h1>
           <p className="text-sm">
             Don't have an account?{" "}

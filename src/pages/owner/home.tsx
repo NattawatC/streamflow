@@ -29,6 +29,7 @@ import {
 import { ownerData } from "@/interfaces/ownerData"
 
 const home: NextPage = () => {
+
   return (
     <>
       <MainLayout>
