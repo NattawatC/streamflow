@@ -1,12 +1,17 @@
 "use client"
 
+// Icon
 import { PiGenderNeuterFill } from "react-icons/pi"
 import { TbListNumbers } from "react-icons/tb"
 import { FaSquarePhone } from "react-icons/fa6"
 import { BiSolidUserRectangle } from "react-icons/bi"
+import { FaGraduationCap } from "react-icons/fa"
 import { RiBuilding2Fill } from "react-icons/ri"
 import { MdBedroomParent } from "react-icons/md"
 import { PiStepsDuotone } from "react-icons/pi"
+
+// Backend
+import supabase from "@/config/supabaseClient"
 
 import { z } from "zod"
 import { useForm } from "react-hook-form"
@@ -31,6 +36,25 @@ import {
 import { Input } from "@/components/ui/input"
 import router from "next/router"
 import Link from "next/link"
+import { useEffect, useState } from "react"
+
+async function getEstates() {
+  const { data: dorms, error } = await supabase.from("estates").select("*")
+
+  if (error) {
+    console.error("Error fetching dorms:", error.message)
+  } else {
+    console.log(
+      "Dorms fetched successfully:",
+      dorms.map((dorm) => ({
+        id: dorm.id,
+        name: dorm.name,
+      }))
+    )
+  }
+}
+
+console.log(getEstates())
 
 const estate = [
   {
@@ -52,18 +76,35 @@ const estate = [
 ]
 
 const formSchema = z.object({
-  firstName: z.string(),
-  lastName: z.string(),
-  age: z.coerce.number(),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  age: z.coerce.number().positive("Age must be positive"),
   gender: z.string(),
-  phoneNumber: z.string(),
-  dorm: z.string(),
-  building: z.coerce.number(),
-  floor: z.coerce.number(),
-  room: z.coerce.number(),
+  yearOfStudy: z.string(),
+  phoneNumber: z.string().regex(/^\d{3}-\d{3}-\d{4}$/, "Invalid phone number"),
+  dorm: z.string().min(1, "Dorm selection is required"),
+    building: z.coerce.number().positive(),
+    floor: z.coerce.number().positive(),
+    room: z.coerce.number().positive(),
 })
 
 export function AddTenantForm() {
+  // Get Estate Selections
+  const [estates, setEstates] = useState<{ id: number; name: string }[]>([])
+  useEffect(() => {
+    async function fetchEstates() {
+      const { data: estates, error } = await supabase
+        .from("estates")
+        .select("id, name")
+      if (error) {
+        console.error("Error fetching estates:", error.message)
+      } else {
+        setEstates(estates)
+      }
+    }
+    fetchEstates()
+  }, [])
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -72,6 +113,7 @@ export function AddTenantForm() {
       lastName: "",
       age: 0,
       gender: "",
+      yearOfStudy: "1",
       phoneNumber: "",
       dorm: "",
       building: 0,
@@ -81,11 +123,37 @@ export function AddTenantForm() {
   })
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    // Find estate_id
+    const estate = estates.find((estate) => estate.name === values.dorm)
+    if (!estate) {
+      console.error("Dorm not found")
+      return
+    }
 
-    router.push("/result")
+    // Create a tenant by the Owner
+    const { data, error } = await supabase
+      .from("tenants")
+      .insert([
+        {
+          first_name: values.firstName,
+          last_name: values.lastName,
+          age: values.age,
+          gender: values.gender,
+          year_of_study: values.yearOfStudy,
+          phone_number: values.phoneNumber,
+          estate_id: estate.id,
+        },
+      ])
+      .select()
+
+    //   Error Checking
+    if (error) {
+      console.error("Error inserting tenant:", error.message)
+    } else {
+      console.log("Tenant inserted successfully:", data)
+      router.push("/result")
+    }
   }
 
   return (
@@ -165,12 +233,39 @@ export function AddTenantForm() {
                     className="flex w-full"
                     icon={<PiGenderNeuterFill size={24} />}
                   >
-                    <SelectValue placeholder="Select Gender" />
+                    <SelectValue placeholder="Select gender" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="male">Male</SelectItem>
                     <SelectItem value="female">Female</SelectItem>
                     <SelectItem value="others">Others</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="yearOfStudy"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-sm">Year Of Study</FormLabel>
+              <FormControl>
+                <Select onValueChange={(value) => field.onChange(value)}>
+                  <SelectTrigger
+                    className="flex w-full"
+                    icon={<FaGraduationCap size={24} />}
+                  >
+                    <SelectValue placeholder="Select year of study" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">1</SelectItem>
+                    <SelectItem value="2">2</SelectItem>
+                    <SelectItem value="3">3</SelectItem>
+                    <SelectItem value="4">4</SelectItem>
+                    <SelectItem value=">4">over 4</SelectItem>
                   </SelectContent>
                 </Select>
               </FormControl>
@@ -211,11 +306,11 @@ export function AddTenantForm() {
                     className="flex w-full"
                     icon={<PiGenderNeuterFill size={24} />}
                   >
-                    <SelectValue placeholder="Select Dorm" />
+                    <SelectValue placeholder="Select your Dormitory" />
                   </SelectTrigger>
                   <SelectContent>
-                    {estate.map(({ name }) => (
-                      <SelectItem key={name} value={name}>
+                    {estates.map(({ id, name }) => (
+                      <SelectItem key={id} value={name}>
                         {name}
                       </SelectItem>
                     ))}
@@ -285,21 +380,21 @@ export function AddTenantForm() {
           )}
         />
 
-          <Button
-            type="submit"
-            className="flex w-full text-base font-bold mt-8 bg-custom-green text-black"
-          >
-            Create Tenant's Account
-          </Button>
+        <Button
+          type="submit"
+          className="flex w-full text-base font-bold mt-8 bg-custom-green text-black"
+        >
+          Create Tenant's Account
+        </Button>
 
-          <Link href={"/owner/home"}>
-            <Button
-              variant={"outline"}
-              className="font-bold border-black outline-black bg-white text-black w-full text-base gap-2 underline mt-3"
-            >
-              Cancle
-            </Button>
-          </Link>
+        <Link href={"/owner/home"}>
+          <Button
+            variant={"outline"}
+            className="font-bold border-black outline-black bg-white text-black w-full text-base gap-2 underline mt-3"
+          >
+            Cancle
+          </Button>
+        </Link>
       </form>
     </Form>
   )
