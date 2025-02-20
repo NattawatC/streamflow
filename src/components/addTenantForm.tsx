@@ -83,9 +83,9 @@ const formSchema = z.object({
   yearOfStudy: z.string(),
   phoneNumber: z.string().regex(/^\d{3}-\d{3}-\d{4}$/, "Invalid phone number"),
   dorm: z.string().min(1, "Dorm selection is required"),
-    building: z.coerce.number().positive(),
-    floor: z.coerce.number().positive(),
-    room: z.coerce.number().positive(),
+  building: z.coerce.number().positive(),
+  floor: z.coerce.number().positive(),
+  room: z.coerce.number().positive(),
 })
 
 export function AddTenantForm() {
@@ -136,13 +136,16 @@ export function AddTenantForm() {
       .from("tenants")
       .insert([
         {
+          estate_id: estate.id,
           first_name: values.firstName,
           last_name: values.lastName,
           age: values.age,
           gender: values.gender,
           year_of_study: values.yearOfStudy,
           phone_number: values.phoneNumber,
-          estate_id: estate.id,
+          building_no: values.building,
+          floor_no: values.floor,
+          room_no: values.room,
         },
       ])
       .select()
