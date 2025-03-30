@@ -175,6 +175,7 @@ const home: NextPage = () => {
                     room={tenant.room}
                     firstname={tenant.firstname}
                     lastname={tenant.lastname}
+                    rentalcost={tenant.rentalcost}
                     pStatus={tenant.pStatus}
                     rStatus={tenant.rStatus}
                   />
