@@ -45,14 +45,12 @@ const editTenantInfo: NextPage = () => {
                 <p>{tenantData.yearOfStudy}</p>
               </div>
             </div>
-          </div>       
+          </div>
         </div>
         <div className=" flex flex-col gap-3">
           <h1 className="font-bold text-base">Room Information</h1>
           <EditTenantForm></EditTenantForm>
         </div>
-        
-
       </MainLayout>
     </>
   )
