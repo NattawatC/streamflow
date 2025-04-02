@@ -1,5 +1,6 @@
 export interface WaterMeter {
-    floorNumber: number
-    roomNumber: number
-    meterNumber: number
+  floorNumber: number
+  roomNumber: number
+  meterNumber: number
+  waterUsage: number
 }
