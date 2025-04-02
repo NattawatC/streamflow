@@ -37,3 +37,15 @@ export const hasErrorInput = [
   // ring color
   "ring-red-200 dark:ring-red-700/30",
 ]
+
+export const getErrorMessage = (
+  error: unknown,
+  defaultMessage: string = "Something went wrong"
+) => {
+  console.error(error);
+  let errorMessage = defaultMessage;
+  if (error instanceof Error && error.message.length < 100) {
+    errorMessage = error.message;
+  }
+  return errorMessage;
+};
