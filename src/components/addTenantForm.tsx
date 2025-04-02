@@ -99,14 +99,12 @@ export function AddTenantForm() {
             <FormItem>
               <FormLabel className="text-sm">First Name</FormLabel>
               <FormControl>
-                <>
-                  <Input
-                    className="text-sm"
-                    placeholder="John"
-                    {...field}
-                    icon={<BiSolidUserRectangle size={24} />}
-                  />
-                </>
+                <Input
+                  className="text-sm"
+                  placeholder="John"
+                  {...field}
+                  icon={<BiSolidUserRectangle size={24} />}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -119,14 +117,12 @@ export function AddTenantForm() {
             <FormItem>
               <FormLabel className="text-sm">Last Name</FormLabel>
               <FormControl>
-                <>
-                  <Input
-                    className="text-sm"
-                    placeholder="Doe"
-                    {...field}
-                    icon={<BiSolidUserRectangle size={24} />}
-                  />
-                </>
+                <Input
+                  className="text-sm"
+                  placeholder="Doe"
+                  {...field}
+                  icon={<BiSolidUserRectangle size={24} />}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -139,15 +135,13 @@ export function AddTenantForm() {
             <FormItem>
               <FormLabel className="text-sm">Age</FormLabel>
               <FormControl>
-                <>
-                  <Input
-                    type="number"
-                    className="text-sm"
-                    placeholder="99"
-                    {...field}
-                    icon={<TbListNumbers size={24} />}
-                  />
-                </>
+                <Input
+                  type="number"
+                  className="text-sm"
+                  placeholder="99"
+                  {...field}
+                  icon={<TbListNumbers size={24} />}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -185,14 +179,12 @@ export function AddTenantForm() {
             <FormItem>
               <FormLabel className="text-sm">Phone Number</FormLabel>
               <FormControl>
-                <>
-                  <Input
-                    className="text-sm"
-                    placeholder="xxx-xxx-xxxx"
-                    {...field}
-                    icon={<FaSquarePhone size={24} />}
-                  />
-                </>
+                <Input
+                  className="text-sm"
+                  placeholder="xxx-xxx-xxxx"
+                  {...field}
+                  icon={<FaSquarePhone size={24} />}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -285,21 +277,21 @@ export function AddTenantForm() {
           )}
         />
 
-          <Button
-            type="submit"
-            className="flex w-full text-base font-bold mt-8 bg-custom-green text-black"
-          >
-            Create Tenant's Account
-          </Button>
+        <Button
+          type="submit"
+          className="flex w-full text-base font-bold mt-8 bg-custom-green text-black"
+        >
+          Create Tenant's Account
+        </Button>
 
-          <Link href={"/owner/home"}>
-            <Button
-              variant={"outline"}
-              className="font-bold border-black outline-black bg-white text-black w-full text-base gap-2 underline mt-3"
-            >
-              Cancle
-            </Button>
-          </Link>
+        <Link href={"/owner/home"}>
+          <Button
+            variant={"outline"}
+            className="font-bold border-black outline-black bg-white text-black w-full text-base gap-2 underline mt-3"
+          >
+            Cancle
+          </Button>
+        </Link>
       </form>
     </Form>
   )
