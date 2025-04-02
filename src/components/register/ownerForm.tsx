@@ -1,4 +1,5 @@
 "use client"
+import { createAccountAction } from "@/actions/users"
 
 import { MdDriveFileRenameOutline } from "react-icons/md"
 import { PiGenderNeuterFill } from "react-icons/pi"
@@ -28,40 +29,58 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
+import { useState, useTransition } from "react"
+import { useRouter } from "next/navigation"
+import { Loader2 } from "lucide-react"
+import { toast } from "sonner"
 
 const formSchema = z.object({
-  firstname: z.string(),
-  lastname: z.string(),
-  age: z.coerce.number(),
-  gender: z.string(),
-  phoneNumber: z.string(),
+  // firstname: z.string(),
+  // lastname: z.string(),
+  // age: z.coerce.number(),
+  // gender: z.string(),
+  // phoneNumber: z.string(),
+  email: z.string().email(),
   password: z.string(),
 })
 
 export function RegOwnerForm() {
+  const router = useRouter()
+  const [isPending, startTransition] = useTransition()
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstname: "",
-      lastname: "",
-      age: 0,
-      gender: "",
-      phoneNumber: "",
+      // firstname: "",
+      // lastname: "",
+      // age: 0,
+      // gender: "",
+      // phoneNumber: "",
       password: "",
+      email: "",
     },
   })
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    console.log(values)
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    startTransition(async () => {
+      const { errorMessage } = await createAccountAction(values)
+
+      if (errorMessage) {
+        toast("Event has been created.")
+
+      } else {
+        router.push("/owner")
+        toast("Event has been created.")
+      }
+    })
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
+        {/* <FormField
           control={form.control}
           name="firstname"
           render={({ field }) => (
@@ -166,6 +185,26 @@ export function RegOwnerForm() {
               <FormMessage />
             </FormItem>
           )}
+        /> */}
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-sm">Email</FormLabel>
+              <FormControl>
+                <Input
+                  type="text"
+                  className="text-sm"
+                  icon={<IoIosLock size={24} />}
+                  disabled={isPending}
+                  placeholder="Enter your email"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
         <FormField
           control={form.control}
@@ -178,6 +217,7 @@ export function RegOwnerForm() {
                   type="password"
                   className="text-sm"
                   icon={<IoIosLock size={24} />}
+                  disabled={isPending}
                   placeholder="********"
                   {...field}
                 />
@@ -186,14 +226,9 @@ export function RegOwnerForm() {
             </FormItem>
           )}
         />
-        <Link href={"/owner/home"}>
-          <Button
-            type="submit"
-            className="flex w-full text-base font-bold mt-8"
-          >
-            Sign Up
-          </Button>
-        </Link>
+        <Button type="submit" className="flex w-full text-base font-bold mt-8" disabled={isPending}>
+          {isPending ? <Loader2 className="animate-spin"/>: "Sign up"}
+        </Button>
       </form>
     </Form>
   )
