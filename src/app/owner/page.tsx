@@ -1,5 +1,3 @@
-"use client"
-
 import { NextPage } from "next"
 import Link from "next/link"
 import TenantCard from "@/components/tenantCard"
@@ -27,8 +25,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { ownerData } from "@/interfaces/ownerData"
+import { getUser } from "@/auth/server"
 
-const home: NextPage = () => {
+const home: NextPage = async () => {
+
+  const user = await getUser();
+
+  console.log(user?.id)
+
   return (
     <>
       <MainLayout>

@@ -11,7 +11,7 @@ const edit: NextPage = () => {
     <>
       <MainLayout className="flex flex-col gap-5">
         {/* change path */}
-        <Link href="/owner/home">
+        <Link href="/owner/setting">
           <IoIosArrowBack size={24} className="text-black" />
         </Link>
         <div className="flex flex-row justify-left gap-2">

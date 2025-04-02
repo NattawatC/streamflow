@@ -1,7 +1,7 @@
 "use client"
 
 import { BiSolidBank } from "react-icons/bi"
-import { useState } from "react"
+import { useState, useTransition } from "react"
 import { NextPage } from "next"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -17,9 +17,15 @@ import {
 } from "@/components/ui/select"
 import { ownerData } from "@/interfaces/ownerData"
 import { BankInfo } from "@/interfaces/bank"
+import { Loader2, LogOut } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
+import { logOutAction } from "@/actions/users"
 
 const setting: NextPage = () => {
   const [selectedEstate, setSelectedEstate] = useState<BankInfo | null>()
+  const router = useRouter()
+  const [isPending, startTransition] = useTransition()
 
   const handleSelect = (value: string) => {
     const bankData = ownerData.bank.find((item) => item.name === value)
@@ -33,6 +39,19 @@ const setting: NextPage = () => {
     }
   }
 
+  const logOut = () => {
+    startTransition(async () => {
+      const { errorMessage } = await logOutAction()
+
+      if (errorMessage) {
+        toast(errorMessage)
+      } else {
+        router.push("/login")
+        toast("Successfully logged out")
+      }
+    })
+  }
+
   return (
     <>
       <MainLayout className="flex flex-col gap-7">
@@ -41,7 +60,7 @@ const setting: NextPage = () => {
         </div>
         <div className="flex flex-col gap-5 items-center bg-custom-gray-background p-4 rounded-lg">
           <div className="flex justify-end w-full">
-            <Link href={"/tenant/editProfile"}>
+            <Link href={"/owner/edit"}>
               <FiEdit size={24} />
             </Link>
           </div>
@@ -180,18 +199,19 @@ const setting: NextPage = () => {
         </div>
 
         <div className="flex flex-col gap-3">
-          <Link href={"/owner/home"}>
+          <Link href={"/owner"}>
             <Button className="font-bold bg-custom-green text-black w-full text-base gap-2">
               Return to Home
             </Button>
           </Link>
 
-          <Link
-            href={"/login"}
-            className="flex font-bold justify-center underline"
+          <Button
+            className="flex font-bold text-base text-black justify-center underline bg-transparent"
+            onClick={logOut}
+            disabled={isPending}
           >
-            Log Out
-          </Link>
+            {isPending ? <Loader2 className="animate-spin" /> : "Log Out"}
+          </Button> 
         </div>
       </MainLayout>
     </>

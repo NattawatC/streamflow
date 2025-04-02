@@ -1,8 +1,7 @@
+import { ReactNode } from "react"
 import "@/styles/globals.css"
-import type { AppProps } from "next/app"
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/sonner"
 import localFont from "next/font/local"
-
 
 const satoshi = localFont({
   src: [
@@ -36,13 +35,20 @@ const subjectivity = localFont({
   variable: "--font-subjectivity",
 })
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function RootLayout({
+  children, // This will be the injected content of each page
+}: {
+  children: ReactNode
+}) {
   return (
-    <>
-      <main className={`${satoshi.variable} font-satoshi ${subjectivity.variable}`}>
-        <Component {...pageProps} />
+    <html lang="en">
+      <head />
+      <body
+        className={`${satoshi.variable} font-satoshi ${subjectivity.variable}`}
+      >
+        <main>{children}</main>
         <Toaster />
-      </main>
-    </>
+      </body>
+    </html>
   )
 }
