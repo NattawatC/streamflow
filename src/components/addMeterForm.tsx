@@ -8,7 +8,7 @@ import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useState } from "react"
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 
-// needed to use, creaate new component "form" for new page
+// needed to use, create new component "form" for new page
 const formSchema = z.object({
   utility: z.string().nonempty("Utility is required"),
   floor: z.string().nonempty("Floor is required"),
@@ -109,7 +109,7 @@ export function AddMeterForm() {
                 Floor Number
               </FormLabel>
               <FormControl>
-                <>
+
                   <Input
                     id="floor"
                     type="text"
@@ -118,7 +118,7 @@ export function AddMeterForm() {
                     {...field}
                     icon={<BiSolidUserRectangle size={24} />}
                   />
-                </>
+
               </FormControl>
               <FormMessage />
             </FormItem>
