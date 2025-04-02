@@ -1,12 +1,17 @@
 "use client"
 
+// Icon
 import { PiGenderNeuterFill } from "react-icons/pi"
 import { TbListNumbers } from "react-icons/tb"
 import { FaSquarePhone } from "react-icons/fa6"
 import { BiSolidUserRectangle } from "react-icons/bi"
+import { FaGraduationCap } from "react-icons/fa"
 import { RiBuilding2Fill } from "react-icons/ri"
 import { MdBedroomParent } from "react-icons/md"
 import { PiStepsDuotone } from "react-icons/pi"
+
+// Backend
+import supabase from "@/config/supabaseClient"
 
 import { z } from "zod"
 import { useForm } from "react-hook-form"
@@ -29,41 +34,42 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
-import router from "next/router"
 import Link from "next/link"
-
-const estate = [
-  {
-    name: "a",
-    address: "lol",
-  },
-  {
-    name: "b",
-    address: "123 Main St, Springfield",
-  },
-  {
-    name: "c",
-    address: "456 Elm St, Shelbyville",
-  },
-  {
-    name: "d",
-    address: "789 Oak St, Capital City",
-  },
-]
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 
 const formSchema = z.object({
-  firstName: z.string(),
-  lastName: z.string(),
-  age: z.coerce.number(),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  age: z.coerce.number().positive("Age must be positive"),
   gender: z.string(),
-  phoneNumber: z.string(),
-  dorm: z.string(),
-  building: z.coerce.number(),
-  floor: z.coerce.number(),
-  room: z.coerce.number(),
+  yearOfStudy: z.string(),
+  phoneNumber: z.string().regex(/^\d{3}-\d{3}-\d{4}$/, "Invalid phone number"),
+  dorm: z.string().min(1, "Dorm selection is required"),
+  building: z.coerce.number().positive(),
+  floor: z.coerce.number().positive(),
+  room: z.string(),
 })
 
 export function AddTenantForm() {
+  const router = useRouter()
+
+  // Get Estate Selections
+  const [estates, setEstates] = useState<{ id: number; name: string }[]>([])
+  useEffect(() => {
+    async function fetchEstates() {
+      const { data: estates, error } = await supabase
+        .from("estates")
+        .select("id, name")
+      if (error) {
+        console.error("Error fetching estates:", error.message)
+      } else {
+        setEstates(estates)
+      }
+    }
+    fetchEstates()
+  }, [])
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -72,20 +78,50 @@ export function AddTenantForm() {
       lastName: "",
       age: 0,
       gender: "",
+      yearOfStudy: "1",
       phoneNumber: "",
       dorm: "",
       building: 0,
       floor: 0,
-      room: 0,
+      room: "",
     },
   })
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    // Find estate_id
+    const estate = estates.find((estate) => estate.name === values.dorm)
+    if (!estate) {
+      console.error("Dorm not found")
+      return
+    }
 
-    router.push("/result")
+    // Create a tenant by the Owner
+    const { data, error } = await supabase
+      .from("tenants")
+      .insert([
+        {
+          estate_id: estate.id,
+          first_name: values.firstName,
+          last_name: values.lastName,
+          age: values.age,
+          gender: values.gender,
+          year_of_study: values.yearOfStudy,
+          phone_number: values.phoneNumber,
+          building_no: values.building,
+          floor_no: values.floor,
+          room_number: values.room,
+        },
+      ])
+      .select()
+
+    //   Error Checking
+    if (error) {
+      console.error("Error inserting tenant:", error.message)
+    } else {
+      console.log("Tenant inserted successfully:", data)
+      router.push("/owner/result")
+    }
   }
 
   return (
@@ -206,7 +242,7 @@ export function AddTenantForm() {
                     <SelectValue placeholder="Select Dorm" />
                   </SelectTrigger>
                   <SelectContent>
-                    {estate.map(({ name }) => (
+                    {estates.map(({ name }) => (
                       <SelectItem key={name} value={name}>
                         {name}
                       </SelectItem>

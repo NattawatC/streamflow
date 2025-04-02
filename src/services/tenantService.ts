@@ -1,15 +1,24 @@
 import supabase from "@/config/supabaseClient"
 
-export const getTenants = async (userId: string | undefined) => {
-  if (!userId) return { tenants: [], error: "User ID is missing" }
+// Function to get estates by user_id
+export const getEstates = async (userId: string | undefined) => {
+  if (!userId) return { estates: [], error: "User ID is missing" }
 
-  const { data: estates, error: estatesError } = await supabase
+  const { data: estates, error } = await supabase
     .from("estates")
     .select("id")
     .eq("user_id", userId)
 
-  if (estatesError) return { tenants: [], error: estatesError.message }
-  if (!estates || estates.length === 0) return { tenants: [], error: "No estates found" }
+  if (error) return { estates: [], error: error.message }
+  if (!estates || estates.length === 0) return { estates: [], error: "No estates found" }
+
+  return { estates, error: null }
+}
+
+// Function to get tenants based on the estates
+export const getTenants = async (userId: string | undefined) => {
+  const { estates, error: estatesError } = await getEstates(userId)
+  if (estatesError) return { tenants: [], error: estatesError }
 
   const estateIds = estates.map((estate) => estate.id)
 
