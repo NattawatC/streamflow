@@ -26,7 +26,6 @@ import {
 } from "@/components/ui/dialog"
 import { ownerData } from "@/interfaces/ownerData"
 import { getUser } from "@/auth/server"
-import supabase from "@/config/supabaseClient"
 import { getTenants } from "@/services/tenantService"
 
 const home: NextPage = async () => {
@@ -35,10 +34,7 @@ const home: NextPage = async () => {
 
   const { tenants, error } = await getTenants(userId)
 
-  console.log(tenants)
-
   return (
-    
     <>
       <MainLayout>
         <div className="flex flex-col gap-8">
@@ -75,7 +71,7 @@ const home: NextPage = async () => {
 
           <div className="flex flex-col">
             <Separator className="h-[2px] rounded-sm" />
-            <Link href={"/addTenant"}>
+            <Link href={"/owner/addTenant"}>
               <Button className="w-full bg-white text-black text-base font-bold justify-between">
                 Add New Tenant
                 <IoIosArrowForward size={20} />
