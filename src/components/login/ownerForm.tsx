@@ -49,11 +49,12 @@ export function LoginOwnerForm() {
       const { errorMessage } = await loginAction(values)
 
       if (errorMessage) {
-        toast("Event has been created.")
-
+        toast(errorMessage)
       } else {
         router.push("/owner")
-        toast("Event has been created.")
+        toast("Successfully Login", {
+          description: "Welcome to StreamFlow!!!",
+        })
       }
     })
   }
@@ -66,18 +67,16 @@ export function LoginOwnerForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-sm">
-                Email
-              </FormLabel>
+              <FormLabel className="text-sm">Email</FormLabel>
               <FormControl>
-                  <Input
-                    id="email"
-                    className="text-sm"
-                    placeholder="John@gmail.com"
-                    disabled={isPending}
-                    {...field}
-                    icon={<BiSolidUserRectangle size={24} />}
-                  />
+                <Input
+                  id="email"
+                  className="text-sm"
+                  placeholder="John@gmail.com"
+                  disabled={isPending}
+                  {...field}
+                  icon={<BiSolidUserRectangle size={24} />}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -102,15 +101,19 @@ export function LoginOwnerForm() {
                   {...field}
                 />
               </FormControl>
-              <FormDescription className="flex text-xs justify-center underline" >
+              <FormDescription className="flex text-xs justify-center underline">
                 <Link href={"/forgetPassword"}>Forget password?</Link>
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" className="flex w-full text-base font-bold mt-8" disabled={isPending}>
-          {isPending ? <Loader2 className="animate-spin"/> : "Login"}
+        <Button
+          type="submit"
+          className="flex w-full text-base font-bold mt-8"
+          disabled={isPending}
+        >
+          {isPending ? <Loader2 className="animate-spin" /> : "Login"}
         </Button>
       </form>
     </Form>
