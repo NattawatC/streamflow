@@ -26,14 +26,19 @@ import {
 } from "@/components/ui/dialog"
 import { ownerData } from "@/interfaces/ownerData"
 import { getUser } from "@/auth/server"
+import supabase from "@/config/supabaseClient"
+import { getTenants } from "@/services/tenantService"
 
 const home: NextPage = async () => {
+  const user = await getUser()
+  const userId = user?.id
 
-  const user = await getUser();
+  const { tenants, error } = await getTenants(userId)
 
-  console.log(user?.id)
+  console.log(tenants)
 
   return (
+    
     <>
       <MainLayout>
         <div className="flex flex-col gap-8">
@@ -171,16 +176,16 @@ const home: NextPage = async () => {
               </Dialog>
             </div>
 
-            {ownerData.tenant.length > 0 ? (
+            {tenants.length > 0 ? (
               <div className="flex flex-col gap-4">
-                {ownerData.tenant.map((tenant, index) => (
+                {tenants.map((tenant, index) => (
                   <TenantCard
                     key={index}
-                    room={tenant.room}
-                    firstname={tenant.firstname}
-                    lastname={tenant.lastname}
-                    pStatus={tenant.pStatus}
-                    rStatus={tenant.rStatus}
+                    room={tenant.room_number}
+                    firstname={tenant.first_name}
+                    lastname={tenant.last_name}
+                    pStatus={tenant.payment_status}
+                    rStatus={tenant.room_status}
                   />
                 ))}
               </div>
