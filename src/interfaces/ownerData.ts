@@ -27,16 +27,19 @@ export const ownerData: OwnerDataInterface = {
         floorNumber: 1,
         roomNumber: 101,
         meterNumber: 101,
+        elecUsage: 99,
       },
       {
         floorNumber: 1,
         roomNumber: 102,
         meterNumber: 102,
+        elecUsage: 99,
       },
       {
         floorNumber: 2,
         roomNumber: 202,
         meterNumber: 202,
+        elecUsage: 99,
       },
     ],
     waterMeter: [
@@ -44,17 +47,20 @@ export const ownerData: OwnerDataInterface = {
         floorNumber: 1,
         roomNumber: 101,
         meterNumber: 101,
+        waterUsage: 88,
       },
       {
         floorNumber: 1,
         roomNumber: 102,
         meterNumber: 102,
+        waterUsage: 88,
       },
       {
         floorNumber: 2,
         roomNumber: 202,
         meterNumber: 202,
-      }
+        waterUsage: 88,
+      },
     ],
   },
   tenant: [
