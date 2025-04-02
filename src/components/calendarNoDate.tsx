@@ -28,7 +28,11 @@ const FormSchema = z.object({
   }),
 })
 
-export function MonthYearPicker() {
+interface MonthYearPickerProps {
+  onDateSelect: (month: number, year: number) => void
+}
+
+export function MonthYearPicker({ onDateSelect }: MonthYearPickerProps) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   })
@@ -39,15 +43,14 @@ export function MonthYearPicker() {
   function handleSelect(month: number, year: number) {
     const newDate = setYear(setMonth(new Date(), month), year) // Month is 0-based
     form.setValue("dob", newDate)
-    console.log(format(newDate, "yyyy-MM")) // Logs "2025-02" for database query
-    form.handleSubmit(onSubmit)() // Auto-submit
+    onDateSelect(month, year)
   }
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    const monthNumber = format(data.dob, "MM") // Get month as "02"
-    const yearNumber = format(data.dob, "yyyy") // Get year as "2025"
-    console.log("Selected:", `${yearNumber}-${monthNumber}`) // Logs "2025-02"
-  }
+  // function onSubmit(data: z.infer<typeof FormSchema>) {
+  //   const monthNumber = format(data.dob, "MM") // Get month as "02"
+  //   const yearNumber = format(data.dob, "yyyy") // Get year as "2025"
+  //   console.log("Selected:", `${yearNumber}-${monthNumber}`) // Logs "2025-02"
+  // }
 
   return (
     <Form {...form}>

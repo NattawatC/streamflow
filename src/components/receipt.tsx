@@ -20,8 +20,8 @@ const Receipt: React.FunctionComponent<ReceiptProps> = ({
   eCost,
   wUsed,
   wCost,
-furniture,
-roomCharge
+  furniture,
+  roomCharge,
 }) => {
   return (
     <>
@@ -69,7 +69,7 @@ roomCharge
             </div>
             <div className="flex flex-row justify-between items-center font-medium">
               <li>{wCost}</li>
-              <p>Cost (Baht per m³)</p>
+              <p>Cost (Baht)</p>
             </div>
           </div>
 
