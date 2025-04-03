@@ -1,12 +1,10 @@
 "use client"
 import { BiSolidBank } from "react-icons/bi"
+import { FiEdit } from "react-icons/fi"
 
-import { NextPage } from "next"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { MainLayout } from "@/components/layout"
-import { FiEdit } from "react-icons/fi"
 import {
   Select,
   SelectContent,
@@ -14,20 +12,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-// import { ownerData } from "@/interfaces/ownerData"
+import { toast } from "sonner"
+import { Loader2 } from "lucide-react"
+
 import { BankInfo } from "@/interfaces/bank"
 import { useRouter } from "next/navigation"
-import { toast } from "sonner"
 import { logOutAction } from "@/actions/users"
 import {
   getUserBanks,
   getUserEstate,
   getUserProfile,
 } from "@/services/ownerService"
-import { createSupabaseClient } from "@/auth/client"
-import { startTransition, useEffect, useState, useTransition } from "react"
-import { User } from "@supabase/supabase-js"
-import { Loader2 } from "lucide-react"
+import { useEffect, useState, useTransition } from "react"
 
 interface Props {
   userId: string | undefined
@@ -68,18 +64,19 @@ export function ProfileOwnerCard({ userId }: Props) {
   useEffect(() => {
     const fetchUserEstate = async () => {
       try {
-        const userEstate = await getUserEstate(userId);
+        const userEstate = await getUserEstate(userId)
         // Use the first estate if available
-        const estateRecord = userEstate?.estates?.length > 0 ? userEstate.estates[0] : null;
-        setEstate(estateRecord); // Update estate with the first record if available
+        const estateRecord =
+          userEstate?.estates?.length > 0 ? userEstate.estates[0] : null
+        setEstate(estateRecord) // Update estate with the first record if available
       } catch (err) {
-        setError("Failed to fetch estate data");
-        console.error(err);
+        setError("Failed to fetch estate data")
+        console.error(err)
       }
-    };
-  
-    fetchUserEstate();
-  }, [userId]);
+    }
+
+    fetchUserEstate()
+  }, [userId])
 
   //   Fetch User's Bank informaiton
   useEffect(() => {
@@ -176,8 +173,7 @@ export function ProfileOwnerCard({ userId }: Props) {
             <div className="flex flex-col gap-1">
               <p className="font-medium">Address:</p>
               <p>
-                {estate?.address}, {estate?.city},{" "}
-                {estate?.postal_code}
+                {estate?.address}, {estate?.city}, {estate?.postal_code}
               </p>
             </div>
             <div className="flex flex-row gap-2">
