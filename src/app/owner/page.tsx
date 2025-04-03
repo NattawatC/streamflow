@@ -24,15 +24,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { ownerData } from "@/interfaces/ownerData"
+// import { ownerData } from "@/interfaces/ownerData"
 import { getUser } from "@/auth/server"
-import { getTenants } from "@/services/tenantService"
+import { getEstate, getTenants } from "@/services/tenantService"
+import { getUserProfile } from "@/services/ownerService"
 
 const home: NextPage = async () => {
   const user = await getUser()
   const userId = user?.id
 
-  const { tenants, error } = await getTenants(userId)
+  const profile = await getUserProfile(userId)
+  const estate = await getEstate(userId)
+  const tenants = (await getTenants(userId)) || []
+
+  const estateRecord = estate.estates.length > 0 ? estate.estates[0] : null
 
   return (
     <>
@@ -45,20 +50,27 @@ const home: NextPage = async () => {
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
 
-            <div className="flex text-xl font-bold justify-center">
-              {ownerData.gender == "Male" ? (
-                <p>
-                  Mr. {ownerData.firstname} {ownerData.lastname}
-                </p>
-              ) : (
-                <p>
-                  Ms. {ownerData.firstname} {ownerData.lastname}
-                </p>
-              )}
-            </div>
+            {profile ? (
+              <div className="flex text-xl font-bold justify-center">
+                {profile.gender === "Male" ? (
+                  <p>
+                    Mr. {profile.first_name} {profile.last_name}
+                  </p>
+                ) : (
+                  <p>
+                    Ms. {profile.first_name} {profile.last_name}
+                  </p>
+                )}
+              </div>
+            ) : (
+              <></>
+              // <div className="flex text-base justify-center text-center">
+              //   <p>Need to setup your profile in Account Setting tab</p>
+              // </div>
+            )}
           </div>
 
-          {ownerData.estate.name == "" ? (
+          {estate.estates.length === 0 || !estate.estates[0]?.name ? (
             <div className="flex text-base justify-center text-center">
               <p>
                 No information. Please fill your estate & banking in{" "}
@@ -80,8 +92,8 @@ const home: NextPage = async () => {
 
             <Separator className="h-[2px] rounded-sm" />
 
-            <Link href={"/owner/setting"}>
-              {ownerData.estate.name == "" ? (
+            <Link href={`/owner/setting`}>
+              {estate.estates.length === 0 || !estate.estates[0]?.name ? (
                 <Button className="w-full bg-white text-custom-pink text-base font-bold justify-between">
                   Account Setting*
                   <IoIosArrowForward size={20} />
@@ -106,11 +118,11 @@ const home: NextPage = async () => {
                   <div className="flex flex-col gap-2">
                     <div className="flex flex-row justify-between">
                       <p>Room Occupied</p>
-                      <p>10/{ownerData.estate.totalRoom}</p>
+                      <p>10/{estateRecord?.total_room}</p>
                     </div>
                     <div className="flex flex-row justify-between">
                       <p>Room Available</p>
-                      <p>89/{ownerData.estate.totalRoom}</p>
+                      <p>89/{estateRecord?.total_room}</p>
                     </div>
                   </div>
                 </AccordionContent>
@@ -172,9 +184,9 @@ const home: NextPage = async () => {
               </Dialog>
             </div>
 
-            {tenants.length > 0 ? (
+            {tenants?.tenants?.length > 0 ? (
               <div className="flex flex-col gap-4">
-                {tenants.map((tenant, index) => (
+                {tenants.tenants.map((tenant, index) => (
                   <TenantCard
                     key={index}
                     room={tenant.room_number}
