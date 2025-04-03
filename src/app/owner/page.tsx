@@ -188,6 +188,7 @@ const home: NextPage = async () => {
               <div className="flex flex-col gap-4">
                 {tenants.tenants.map((tenant, index) => (
                   <TenantCard
+                    id = {tenant.id}
                     key={index}
                     room={tenant.room_number}
                     firstname={tenant.first_name}
