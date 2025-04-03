@@ -20,7 +20,7 @@ import { Badge } from "@/components/ui/badge"
 import { IoIosArrowRoundForward } from "react-icons/io"
 import { Tenant } from "@/interfaces/tenant"
 import supabase from "@/config/supabaseClient"
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 
 const TenantCard: React.FunctionComponent<Tenant> = ({
   id,
@@ -38,7 +38,7 @@ const TenantCard: React.FunctionComponent<Tenant> = ({
       console.error("Error deleting tenant:", error.message)
     } else {
       console.log("Tenant deleted successfully")
-      router.reload()
+    //   router.reload()
     }
   }
   return (
