@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react"
 import { Separator } from "./ui/separator"
 import { HiMiniTrash } from "react-icons/hi2"
@@ -17,14 +19,28 @@ import { PiWarningCircleFill } from "react-icons/pi"
 import { Badge } from "@/components/ui/badge"
 import { IoIosArrowRoundForward } from "react-icons/io"
 import { Tenant } from "@/interfaces/tenant"
+import supabase from "@/config/supabaseClient"
+import { useRouter } from "next/router"
 
 const TenantCard: React.FunctionComponent<Tenant> = ({
+  id,
   room,
   firstname,
   lastname,
   pStatus,
   rStatus,
 }) => {
+    const router = useRouter()
+  const deleteTenant = async (id: number) => {
+    const { error } = await supabase.from("tenants").delete().eq("id", id)
+
+    if (error) {
+      console.error("Error deleting tenant:", error.message)
+    } else {
+      console.log("Tenant deleted successfully")
+      router.reload()
+    }
+  }
   return (
     <>
       <div className="flex flex-col gap-5 items-center bg-custom-gray-background p-4 rounded-lg">
@@ -48,23 +64,28 @@ const TenantCard: React.FunctionComponent<Tenant> = ({
                       Delete the Tenant's Account
                     </DialogTitle>
                     <DialogDescription>
-                      <div className="flex flex-col gap-2">
-                        <p className="text-white text-left">
-                          Are you sure you want to permanently remove this
-                          tenant from the property?
-                        </p>
-                        <div className="flex flex-row gap-2 text-custom-pink items-center">
-                          <PiWarningCircleFill size={24} />
-                          <p className="text-custom-pink">
-                            Please note that this action is irreversible.
-                          </p>
-                        </div>
-                      </div>
+                      <>
+                        {/* <div className="flex flex-col gap-2">
+                          <span>
+                            Are you sure you want to permanently remove this
+                            tenant from the property?
+                          </span>
+                          <div className="flex flex-row gap-2 text-custom-pink items-center">
+                            <span className="text-custom-pink">
+                              Please note that this action is irreversible.
+                            </span>
+                            <PiWarningCircleFill size={24} />
+                          </div>
+                        </div> */}
+                      </>
                     </DialogDescription>
                   </DialogHeader>
                   <DialogFooter className="sm:justify-start">
                     <div className="flex flex-row gap-4">
-                      <Button className="w-full bg-custom-pink text-black ">
+                      <Button
+                        className="w-full bg-custom-pink text-black"
+                        onClick={() => deleteTenant(id)}
+                      >
                         Delete
                       </Button>
                       <DialogClose asChild>
@@ -116,9 +137,12 @@ const TenantCard: React.FunctionComponent<Tenant> = ({
             <Separator className="h-[2px] rounded-sm w-full justify-center" />
           </div>
 
-          <Link href={"/tenantInfo"} className="flex flex-row gap-2 items-center justify-center rounded-full py-1 px-0 w-full border border-custom-purple text-custom-purple">
-              View Details 
-              <IoIosArrowRoundForward size={20} />
+          <Link
+            href={"/tenantInfo"}
+            className="flex flex-row gap-2 items-center justify-center rounded-full py-1 px-0 w-full border border-custom-purple text-custom-purple"
+          >
+            View Details
+            <IoIosArrowRoundForward size={20} />
           </Link>
         </div>
       </div>
