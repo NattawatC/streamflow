@@ -52,7 +52,7 @@ const home: NextPage = async () => {
 
             {profile ? (
               <div className="flex text-xl font-bold justify-center">
-                {profile.gender === "Male" ? (
+                {profile.gender === "male" ? (
                   <p>
                     Mr. {profile.first_name} {profile.last_name}
                   </p>
