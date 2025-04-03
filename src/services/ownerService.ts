@@ -38,3 +38,16 @@ export const getUserBanks = async (userId: string | undefined) => {
     return bank.length > 0 ? bank : null
   }
   
+  export const getUserEstate = async (userId: string | undefined) => {
+    if (!userId) return { estates: [], error: "User ID is missing" }
+  
+    const { data: estates, error } = await supabase
+      .from("estates")
+      .select("*")
+      .eq("user_id", userId)
+  
+    if (error) return { estates: [], error: error.message }
+    if (!estates || estates.length === 0) return { estates: [], error: "No estates found" }
+  
+    return { estates, error: null }
+  }
