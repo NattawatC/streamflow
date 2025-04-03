@@ -320,7 +320,7 @@ export function AddTenantForm() {
           Create Tenant's Account
         </Button>
 
-        <Link href={"/owner/home"}>
+        <Link href={"/owner"}>
           <Button
             variant={"outline"}
             className="font-bold border-black outline-black bg-white text-black w-full text-base gap-2 underline mt-3"
