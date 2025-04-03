@@ -24,7 +24,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { BankInfo } from "@/interfaces/bank"
+import { getUserBanks, getUserEstate, getUserProfile } from "@/services/ownerService"
 
 // needed to use, creaate new component "form" for new page
 const formSchema = z.object({
@@ -50,11 +52,66 @@ interface Props {
 
 export function EditOwnerProfile({ userId }: Props) {
   const router = useRouter()
+  const [bank, setBank] = useState<any>(null)
+  const [profile, setProfile] = useState<any>(null)
+  const [estate, setEstate] = useState<any>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  const [selectedBank, setSelectedBank] = useState<BankInfo | null>()
+
+  // Fetch User's Profile information
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const userProfile = await getUserProfile(userId)
+        setProfile(userProfile)
+      } catch (err) {
+        setError("Failed to fetch bank data")
+        console.error(err)
+      }
+    }
+
+    fetchUserProfile()
+  }, [userId])
+
+  //   Fetch User's Estate information
+  useEffect(() => {
+    const fetchUserEstate = async () => {
+      try {
+        const userEstate = await getUserEstate(userId)
+        // Use the first estate if available
+        const estateRecord =
+          userEstate?.estates?.length > 0 ? userEstate.estates[0] : null
+        setEstate(estateRecord) // Update estate with the first record if available
+      } catch (err) {
+        setError("Failed to fetch estate data")
+        console.error(err)
+      }
+    }
+
+    fetchUserEstate()
+  }, [userId])
+
+  //   Fetch User's Bank informaiton
+  useEffect(() => {
+    const fetchBankData = async () => {
+      try {
+        const bankData = await getUserBanks(userId)
+        setBank(bankData)
+      } catch (err) {
+        setError("Failed to fetch bank data")
+        console.error(err)
+      }
+    }
+
+    fetchBankData()
+  }, [userId])
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: "",
+      firstName: profile?.first_name,
       lastName: "",
       age: "",
       gender: "",
@@ -162,7 +219,7 @@ export function EditOwnerProfile({ userId }: Props) {
                       id="firstName"
                       type="text"
                       className="text-sm"
-                      placeholder="John"
+                      placeholder={profile?.first_name}
                       {...field}
                       icon={<BiSolidUserRectangle size={24} />}
                     />
@@ -479,7 +536,7 @@ export function EditOwnerProfile({ userId }: Props) {
                       type="text"
                       className="text-sm"
                       icon={<BiSolidUserRectangle size={24} />}
-                      placeholder="Enter account holder name"
+                      placeholder="Enter account's name"
                       {...field}
                     />
                   </FormControl>
