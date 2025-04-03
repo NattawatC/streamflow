@@ -44,7 +44,11 @@ const formSchema = z.object({
   accountName: z.string().nonempty("Account Name is required"),
 })
 
-export function EditOwnerProfile() {
+interface Props {
+  userId: string | undefined
+}
+
+export function EditOwnerProfile({ userId }: Props) {
   const router = useRouter()
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
