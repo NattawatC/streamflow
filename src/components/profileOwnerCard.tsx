@@ -47,7 +47,7 @@ export function ProfileOwnerCard({ userId }: Props) {
   const [estate, setEstate] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
 
-  const [selectedEstate, setSelectedEstate] = useState<BankInfo | null>()
+  const [selectedBank, setSelectedBank] = useState<BankInfo | null>()
 
   // Fetch User's Profile information
   useEffect(() => {
@@ -96,14 +96,12 @@ export function ProfileOwnerCard({ userId }: Props) {
     fetchBankData()
   }, [userId])
 
-  console.log(estate)
-
   const handleSelect = (value: string) => {
     // Find the bank data by matching the name
     const bankData = bank.find((item: Bank) => item.name === value)
 
     if (bankData) {
-      setSelectedEstate({
+      setSelectedBank({
         name: bankData.name,
         accountNumber: Array.isArray(bankData.acct_no)
           ? bankData.acct_no
@@ -246,13 +244,13 @@ export function ProfileOwnerCard({ userId }: Props) {
             </Select>
 
             {/* Display selected address */}
-            {selectedEstate && selectedEstate.accountNumber && (
+            {selectedBank && selectedBank.accountNumber && (
               <div className="flex flex-col gap-2">
                 <p className="font-medium">Account Numbers</p>
                 <ul className="list-disc list-inside">
-                  {(Array.isArray(selectedEstate.accountNumber)
-                    ? selectedEstate.accountNumber
-                    : [selectedEstate.accountNumber]
+                  {(Array.isArray(selectedBank.accountNumber)
+                    ? selectedBank.accountNumber
+                    : [selectedBank.accountNumber]
                   ) // Convert string to array
                     .map((acc, index) => (
                       <li key={index}>{acc}</li>
