@@ -19,7 +19,7 @@ export const WaterMetercard: React.FunctionComponent<waterMeterProps> = ({
   const handleDelete = async () => {
     console.log(`Attempting to delete meter with ID: ${id}`)
 
-    const { error } = await supabase.from("electricity").delete().eq("id", id)
+    const { error } = await supabase.from("water").delete().eq("id", id)
 
     if (error) {
       console.error("Error deleting meter:", error)
