@@ -1,25 +1,11 @@
 import { NextPage } from "next"
 import { Separator } from "@/components/ui/separator"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { MainLayout } from "@/components/layout"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { AddMeterForm } from "@/components/addMeterPage/addMeterForm"
-// import { ownerData } from "@/interfaces/ownerData"
-import ElectricityMeterCard from "@/components/electricityMeterCard"
-import WaterMeterCard from "@/components/waterMeterCard"
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
 import { getUser } from "@/auth/server"
 import { Electricity } from "@/components/addMeterPage/electricity"
-import {
-  getAllElectricityMeterById,
-  getUserEstateId,
-} from "@/services/ownerService"
 import { Water } from "@/components/addMeterPage/water"
 import { ElecAccordion } from "@/components/addMeterPage/elecAccordion"
 import { WaterAccordion } from "@/components/addMeterPage/waterAccordion"
