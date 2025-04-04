@@ -46,8 +46,8 @@ const formSchema = z.object({
   yearOfStudy: z.string(),
   phoneNumber: z.string().regex(/^\d{3}-\d{3}-\d{4}$/, "Invalid phone number"),
   dorm: z.string().min(1, "Dorm selection is required"),
-  building: z.coerce.number().positive(),
-  floor: z.coerce.number().positive(),
+  building: z.string(),
+  floor: z.string(),
   room: z.string(),
 })
 
@@ -70,7 +70,6 @@ export function AddTenantForm() {
     fetchEstates()
   }, [])
 
-  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -81,13 +80,12 @@ export function AddTenantForm() {
       yearOfStudy: "1",
       phoneNumber: "",
       dorm: "",
-      building: 0,
-      floor: 0,
+      building: "",
+      floor: "",
       room: "",
     },
   })
 
-  // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     // Find estate_id
     const estate = estates.find((estate) => estate.name === values.dorm)
@@ -96,7 +94,6 @@ export function AddTenantForm() {
       return
     }
 
-    // Create a tenant by the Owner
     const { data, error } = await supabase
       .from("tenants")
       .insert([
@@ -110,7 +107,8 @@ export function AddTenantForm() {
           phone_number: values.phoneNumber,
           building_no: values.building,
           floor_no: values.floor,
-          room_number: values.room,
+          room_no: values.room,
+          room_status: true,
         },
       ])
       .select()
