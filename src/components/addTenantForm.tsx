@@ -117,8 +117,9 @@ export function AddTenantForm() {
     if (error) {
       console.error("Error inserting tenant:", error.message)
     } else {
-      console.log("Tenant inserted successfully:", data)
-      router.push("/owner/result")
+        const insertedTenant = data?.[0]
+        console.log("Tenant inserted successfully:", insertedTenant)
+        router.push(`/owner/result?id=${insertedTenant.id}`)
     }
   }
 
