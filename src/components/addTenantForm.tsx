@@ -261,7 +261,7 @@ export function AddTenantForm() {
               <FormLabel className="text-sm">Building</FormLabel>
               <FormControl>
                 <Input
-                  type="number"
+                  type="text"
                   className="text-sm"
                   icon={<RiBuilding2Fill size={24} />}
                   placeholder="1, 2, 3, ..."
@@ -280,7 +280,7 @@ export function AddTenantForm() {
               <FormLabel className="text-sm">Floor</FormLabel>
               <FormControl>
                 <Input
-                  type="number"
+                  type="text"
                   className="text-sm"
                   icon={<PiStepsDuotone size={24} />}
                   placeholder="1, 2, 3, ..."
@@ -299,7 +299,7 @@ export function AddTenantForm() {
               <FormLabel className="text-sm">Room</FormLabel>
               <FormControl>
                 <Input
-                  type="number"
+                  type="text"
                   className="text-sm"
                   icon={<MdBedroomParent size={24} />}
                   placeholder="1, 2, 3, ..."
