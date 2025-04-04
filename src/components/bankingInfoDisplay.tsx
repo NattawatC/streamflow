@@ -29,7 +29,7 @@ const BankingInfoDisplay: React.FC<BankingInfoDisplayProps> = ({
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-bold">{bank}</h3>
                   <button
-                    onClick={() => onDeleteAccount(bank, accountId)}
+                    onClick={() => onDeleteAccount(bank, accountNumber)}
                     className="flex justify-end"
                   >
                     <RxCross2 size={20} />

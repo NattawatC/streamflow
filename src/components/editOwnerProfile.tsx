@@ -4,7 +4,7 @@ import { BiSolidUserRectangle } from "react-icons/bi"
 import { set, z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useRouter } from "next/navigation"
+import { useRouter, useServerInsertedHTML } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import {
@@ -31,24 +31,24 @@ import {
   getUserEstate,
   getUserProfile,
 } from "@/services/ownerService"
+import supabase from "@/config/supabaseClient"
 
-// needed to use, creaate new component "form" for new page
 const formSchema = z.object({
-  firstName: z.string().nonempty("First Name is required"),
-  lastName: z.string().nonempty("Last Name is required"),
-  age: z.string().nonempty("Age is required"),
-  gender: z.string().nonempty("Gender is required"),
-  phoneNumber: z.string().nonempty("Phone Number is required"),
-  estateName: z.string().nonempty("Estate Name is required"),
-  address: z.string().nonempty("Address is required"),
-  totalBuilding: z.string().nonempty("Total Building is required"),
-  totalFloor: z.string().nonempty("Total Floor is required"),
-  totalRoom: z.string().nonempty("Total Room is required"),
-  furnitureCost: z.string().nonempty("Furniture Cost is required"),
-  roomCharge: z.string().nonempty("Room Charge is required"),
-  bank: z.string().nonempty("Bank is required"),
-  accountNumber: z.string().nonempty("Account Number is required"),
-  accountName: z.string().nonempty("Account Name is required"),
+  firstName: z.string(),
+  lastName: z.string(),
+  age: z.string(),
+  gender: z.string(),
+  phoneNumber: z.string(),
+  estateName: z.string(),
+  address: z.string(),
+  totalBuilding: z.string(),
+  totalFloor: z.string(),
+  totalRoom: z.coerce.number(),
+  furnitureCost: z.coerce.number(),
+  roomCharge: z.coerce.number(),
+  bank: z.string(),
+  accountNumber: z.string(),
+  accountName: z.string(),
 })
 
 interface Props {
@@ -63,6 +63,16 @@ interface BankInfoFromAPI {
   user_id: string
 }
 
+const bankOptions = [
+  "Bangkok Bank (BBL)",
+  "Kasikorn Bank (KBank)",
+  "Siam Commercial Bank (SCB)",
+  "Krungthai Bank (KTB)",
+  "Bank of Ayudhya (Krungsri)",
+  "TMBThanachart Bank (TTB)",
+  "CIMB Thai Bank",
+]
+
 export function EditOwnerProfile({ userId }: Props) {
   const router = useRouter()
   const [bank, setBank] = useState<BankInfoFromAPI[]>([])
@@ -70,7 +80,16 @@ export function EditOwnerProfile({ userId }: Props) {
   const [estate, setEstate] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
 
-  const [selectedBank, setSelectedBank] = useState<BankInfo | null>()
+  const [bankingInfo, setBankingInfo] = useState<{
+    [bank: string]: {
+      [accountId: string]: { accountNumber: string; accountHolderName: string }
+    }
+  }>({})
+  const [latestBankingInfo, setLatestBankingInfo] = useState<
+    typeof bankingInfo
+  >({})
+
+  // const [selectedBank, setSelectedBank] = useState<BankInfo | null>()
 
   // Fetch User's Profile information
   useEffect(() => {
@@ -92,10 +111,9 @@ export function EditOwnerProfile({ userId }: Props) {
     const fetchUserEstate = async () => {
       try {
         const userEstate = await getUserEstate(userId)
-        // Use the first estate if available
         const estateRecord =
           userEstate?.estates?.length > 0 ? userEstate.estates[0] : null
-        setEstate(estateRecord) // Update estate with the first record if available
+        setEstate(estateRecord)
       } catch (err) {
         setError("Failed to fetch estate data")
         console.error(err)
@@ -125,23 +143,24 @@ export function EditOwnerProfile({ userId }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: profile?.first_name,
-      lastName: profile?.last_name,
-      age: profile?.age,
-      gender: profile?.gender,
-      phoneNumber: profile?.phone_no,
-      estateName: estate?.name,
-      address: estate?.address,
-      totalBuilding: estate?.total_building,
-      totalFloor: estate?.total_floor,
-      totalRoom: estate?.total_room,
-      furnitureCost: estate?.furniture_cost,
-      roomCharge: estate?.room_charge,
+      firstName: "",
+      lastName: "",
+      age: "",
+      gender: "",
+      phoneNumber: "",
+      estateName: "",
+      address: "",
+      totalBuilding: "",
+      totalFloor: "",
+      totalRoom: 0,
+      furnitureCost: 0,
+      roomCharge: 0,
       bank: "",
       accountNumber: "",
       accountName: "",
     },
   })
+
   useEffect(() => {
     if (bank && bank.length > 0) {
       const initialBankingInfo: BankingInfo = {}
@@ -157,47 +176,16 @@ export function EditOwnerProfile({ userId }: Props) {
 
       setBankingInfo(initialBankingInfo)
 
-      // Set form values with the first bank
       form.setValue("bank", bank[0].name)
       form.setValue("accountNumber", bank[0].acct_no)
       form.setValue("accountName", bank[0].holder_name)
     }
   }, [bank, form])
-  // 1. Define your form.
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    console.log(values)
-    router.push("/owner/home")
-  }
   type BankingInfo = {
     [key: string]: {
       [accountId: string]: { accountNumber: string; accountHolderName: string }
     }
-  }
-  const [bankingInfo, setBankingInfo] = useState<BankingInfo>({})
-
-  function handleDeleteAccount(bank: string, accountId: string) {
-    setBankingInfo((prev) => {
-      const updatedAccounts = { ...prev[bank] }
-      delete updatedAccounts[accountId]
-
-      // If the bank has no more accounts, remove the bank entirely
-      if (Object.keys(updatedAccounts).length === 0) {
-        const { [bank]: _, ...remainingBanks } = prev
-        const updatedBankingInfo = remainingBanks
-        console.log("Banking Info after deletion:", updatedBankingInfo) // Print updated dictionary
-        return updatedBankingInfo
-      }
-
-      const updatedBankingInfo = {
-        ...prev,
-        [bank]: updatedAccounts,
-      }
-      console.log("Banking Info after deletion:", updatedBankingInfo) // Print updated dictionary
-      return updatedBankingInfo
-    })
   }
 
   function handleAddBankingInfo() {
@@ -207,31 +195,186 @@ export function EditOwnerProfile({ userId }: Props) {
 
     if (selectedBank && accountNumber && accountHolderName) {
       setBankingInfo((prev) => {
-        const uniqueAccountId = `account-${Date.now()}` // Generate a unique ID for the account
-        const updatedBankingInfo = {
+        const updated = {
           ...prev,
           [selectedBank]: {
-            ...prev[selectedBank], // Preserve existing accounts for this bank
-            [uniqueAccountId]: {
+            ...prev[selectedBank],
+            [accountNumber]: {
+              // Use accountNumber as the key
               accountNumber,
               accountHolderName,
-            }, // Store account details as an object
+            },
           },
         }
-
-        // Log the updated dictionary
-        console.log("Updated Banking Info:", updatedBankingInfo)
-
-        return updatedBankingInfo // Return the new state
+        console.log("Updated Banking Info:", updated)
+        setLatestBankingInfo(updated) // Store the latest info
+        return updated
       })
 
-      // Reset the form fields
+      // Reset form values
       form.setValue("bank", "")
       form.setValue("accountNumber", "")
-      form.setValue("accountName", "") // Reset the account holder name field
+      form.setValue("accountName", "")
     } else {
       console.log("Please fill in all the fields")
     }
+  }
+
+  async function handleDeleteAccount(bank: string, accountNumber: string) {
+    console.log(
+      `Attempting to delete account with number: ${accountNumber} from ${bank}`
+    )
+
+    // First, delete the account from Supabase
+    const { data, error } = await supabase
+      .from("bank_info")
+      .delete()
+      .eq("acct_no", accountNumber) // Ensure the column name matches
+      .eq("name", bank) // Ensure the bank name is correct in your data
+
+    // Check if there's an error in the deletion
+    if (error) {
+      console.error("Error deleting from Supabase:", error)
+      return // Exit if there's an error in the deletion
+    }
+
+    // If data is returned, confirm deletion
+    if (data) {
+      console.log("Successfully deleted account data from Supabase:", data)
+    }
+
+    // Now update the local state to reflect the deletion
+    setBankingInfo((prev) => {
+      const updatedAccounts = { ...prev[bank] }
+      delete updatedAccounts[accountNumber] // Delete by accountNumber
+
+      if (Object.keys(updatedAccounts).length === 0) {
+        const { [bank]: _, ...remainingBanks } = prev
+        console.log("Banking Info after deletion:", remainingBanks)
+        setLatestBankingInfo(remainingBanks) // Store the latest info
+        return remainingBanks
+      }
+
+      const updated = {
+        ...prev,
+        [bank]: updatedAccounts,
+      }
+      console.log("Banking Info after deletion:", updated)
+      setLatestBankingInfo(updated) // Store the latest info
+      return updated
+    })
+  }
+
+  // Reset form when data loads
+  useEffect(() => {
+    if (profile && estate && bank) {
+      form.reset({
+        firstName: profile.first_name || "",
+        lastName: profile.last_name || "",
+        age: profile.age || "",
+        gender: profile.gender || "",
+        phoneNumber: profile.phone_no || "",
+        estateName: estate.name || "",
+        address: estate.address || "",
+        totalBuilding: estate.total_building || "",
+        totalFloor: estate.total_floor || "",
+        totalRoom: estate.total_room || "",
+        furnitureCost: estate.furniture_cost || "",
+        roomCharge: estate.room_charge || "",
+        bank: bank[0]?.name || "",
+        accountNumber: bank[0]?.acct_no || "",
+        accountName: bank[0]?.holder_name || "",
+      })
+    }
+  }, [profile, estate, bank, form])
+
+  if (!profile || !estate || !bank) {
+    return <div>Loading...</div>
+  }
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    // 1. Update profile table
+    const { data: profileData, error: profileError } = await supabase
+      .from("profile")
+      .update({
+        first_name: values.firstName,
+        last_name: values.lastName,
+        gender: values.gender,
+        phone_no: values.phoneNumber,
+        age: values.age,
+      })
+      .eq("user_id", userId)
+      .select()
+
+    if (profileError) throw profileError
+
+    // 2. Update estates table
+    const { data: estateData, error: estateError } = await supabase
+      .from("estates")
+      .update({
+        name: values.estateName,
+        total_room: values.totalRoom,
+        total_floor: values.totalFloor,
+        total_building: values.totalBuilding,
+        room_charge: values.roomCharge,
+        furniture_cost: values.furnitureCost,
+      })
+      .eq("user_id", userId)
+      .select()
+
+    if (estateError) throw estateError
+
+    // 3. (Update or insert) banking info
+    for (const bankName in latestBankingInfo) {
+      const accounts = latestBankingInfo[bankName]
+
+      for (const account of Object.values(accounts)) {
+        const { accountNumber, accountHolderName } = account
+
+        // Check if account exists
+        const { data: existingAccount, error: fetchError } = await supabase
+          .from("bank_info")
+          .select("*")
+          .eq("acct_no", accountNumber)
+          .eq("user_id", userId)
+          .maybeSingle()
+
+        if (fetchError) {
+          console.error("Error checking account:", fetchError)
+          continue
+        }
+
+        if (existingAccount) {
+          // Update existing account
+          const { error: updateError } = await supabase
+            .from("bank_info")
+            .update({
+              name: bankName,
+              holder_name: accountHolderName,
+            })
+            .eq("id", existingAccount.id)
+
+          if (updateError) {
+            console.error("Error updating account:", updateError)
+          }
+        } else {
+          // Insert new account
+          const { error: insertError } = await supabase
+            .from("bank_info")
+            .insert({
+              name: bankName,
+              acct_no: accountNumber,
+              holder_name: accountHolderName,
+              user_id: userId,
+            })
+
+          if (insertError) {
+            console.error("Error inserting account:", insertError)
+          }
+        }
+      }
+    }
+    router.push("/owner/setting")
   }
 
   return (
@@ -541,16 +684,14 @@ export function EditOwnerProfile({ userId }: Props) {
                       className="flex w-full"
                       icon={<BiSolidUserRectangle size={24} />}
                     >
-                      <SelectValue placeholder="Kasikorn Bank" />
+                      <SelectValue placeholder="Kasikorn Bank (KBank)" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Kasikorn Bank">
-                        Kasikorn Bank
-                      </SelectItem>
-                      <SelectItem value="Siam Commercial Bank">
-                        Siam Commercial Bank
-                      </SelectItem>
-                      <SelectItem value="Bangkok Bank">Bangkok Bank</SelectItem>
+                      {bankOptions.map((bank) => (
+                        <SelectItem key={bank} value={bank}>
+                          {bank}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </FormControl>
