@@ -190,7 +190,7 @@ const home: NextPage = async () => {
                   <TenantCard
                     id = {tenant.id}
                     key={index}
-                    room={tenant.room_number}
+                    room={tenant.room_no}
                     firstname={tenant.first_name}
                     lastname={tenant.last_name}
                     pStatus={tenant.payment_status}
