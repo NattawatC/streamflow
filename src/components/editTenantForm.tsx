@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import supabase from "@/config/supabaseClient"
+import { toast } from "sonner"
 
 interface EditTenantFormProps {
   id: string | null
@@ -62,14 +63,15 @@ export function EditTenantForm({
         floor_no: values.floor,
         room_no: values.room,
       })
-      .eq("id", id) // Use the tenant's ID to identify which tenant to update
+      .eq("id", id)
       .select()
 
     if (error) {
+      toast(error.message)
       console.error("Error updating tenant:", error.message)
     } else {
+      toast("Tenant updated successfully")
       console.log("Tenant updated successfully:", data)
-      // Redirect after successful update
       router.push(`/owner/tenant-info?id=${id}`)
     }
   }
