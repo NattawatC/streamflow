@@ -91,8 +91,6 @@ export function EditOwnerProfile({ userId }: Props) {
     typeof bankingInfo
   >({})
 
-  // const [selectedBank, setSelectedBank] = useState<BankInfo | null>()
-
   // Fetch User's Profile information
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -233,29 +231,26 @@ export function EditOwnerProfile({ userId }: Props) {
     const { data, error } = await supabase
       .from("bank_info")
       .delete()
-      .eq("acct_no", accountNumber) // Ensure the column name matches
-      .eq("name", bank) // Ensure the bank name is correct in your data
+      .eq("acct_no", accountNumber)
+      .eq("name", bank)
 
-    // Check if there's an error in the deletion
     if (error) {
       console.error("Error deleting from Supabase:", error)
-      return // Exit if there's an error in the deletion
+      return
     }
 
-    // If data is returned, confirm deletion
     if (data) {
       console.log("Successfully deleted account data from Supabase:", data)
     }
 
-    // Now update the local state to reflect the deletion
     setBankingInfo((prev) => {
       const updatedAccounts = { ...prev[bank] }
-      delete updatedAccounts[accountNumber] // Delete by accountNumber
+      delete updatedAccounts[accountNumber]
 
       if (Object.keys(updatedAccounts).length === 0) {
         const { [bank]: _, ...remainingBanks } = prev
         console.log("Banking Info after deletion:", remainingBanks)
-        setLatestBankingInfo(remainingBanks) // Store the latest info
+        setLatestBankingInfo(remainingBanks)
         return remainingBanks
       }
 
@@ -264,7 +259,7 @@ export function EditOwnerProfile({ userId }: Props) {
         [bank]: updatedAccounts,
       }
       console.log("Banking Info after deletion:", updated)
-      setLatestBankingInfo(updated) // Store the latest info
+      setLatestBankingInfo(updated)
       return updated
     })
   }
@@ -299,7 +294,7 @@ export function EditOwnerProfile({ userId }: Props) {
   }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // 1. Update profile table
+    //  Update profile table
     const { data: profileData, error: profileError } = await supabase
       .from("profile")
       .update({
@@ -314,7 +309,7 @@ export function EditOwnerProfile({ userId }: Props) {
 
     if (profileError) throw profileError
 
-    // 2. Update estates table
+    // Update estates table
     const { data: estateData, error: estateError } = await supabase
       .from("estates")
       .update({
@@ -332,7 +327,7 @@ export function EditOwnerProfile({ userId }: Props) {
 
     if (estateError) throw estateError
 
-    // 3. (Update or insert) banking info
+    // (Update or insert) banking info
     for (const bankName in latestBankingInfo) {
       const accounts = latestBankingInfo[bankName]
 
