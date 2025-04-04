@@ -664,6 +664,60 @@ export function EditOwnerProfile({ userId }: Props) {
         </div>
         <div className="flex flex-col gap-3">
           <div className="flex flex-row gap-2">
+            <p className="whitespace-nowrap font-bold">Utility Information</p>
+            <div className="flex w-full items-center">
+              <Separator className="h-[2px] rounded-sm w-full justify-center" />
+            </div>
+          </div>
+          <div className="flex flex-col gap-5">
+            <FormField
+              control={form.control}
+              name="elecCost"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="elecCost" className="text-sm">
+                    Electricity cost (per unit)
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      id="elecCost"
+                      type="text"
+                      className="text-sm"
+                      icon={<BiSolidUserRectangle size={24} />}
+                      placeholder="Enter cost per unit"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="waterCost"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="waterCost" className="text-sm">
+                    Water cost (per unit)
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      id="waterCost"
+                      type="text"
+                      className="text-sm"
+                      icon={<BiSolidUserRectangle size={24} />}
+                      placeholder="Enter cost per unit"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-row gap-2">
             <p className="whitespace-nowrap font-bold">Banking Information</p>
             <div className="flex w-full items-center">
               <Separator className="h-[2px] rounded-sm w-full justify-center" />
