@@ -39,7 +39,7 @@ export function ElecAccordion({ userId }: Props) {
   useEffect(() => {
     const fetchUserEstate = async () => {
       try {
-        const { estateId, error } = await getUserEstateId(userId) // Extract estateId
+        const { estateId, error } = await getUserEstateId(userId)
 
         if (error) {
           setError("Failed to fetch estate data")
@@ -47,7 +47,7 @@ export function ElecAccordion({ userId }: Props) {
           return
         }
 
-        setEstateId(estateId) // Store only estateId (number)
+        setEstateId(estateId)
       } catch (err) {
         setError("Failed to fetch estate data")
         console.error(err)
