@@ -138,7 +138,7 @@ const TenantCard: React.FunctionComponent<Tenant> = ({
           </div>
 
           <Link
-            href={"/tenantInfo"}
+            href={`/owner/tenant-info?id=${id}`}
             className="flex flex-row gap-2 items-center justify-center rounded-full py-1 px-0 w-full border border-custom-purple text-custom-purple"
           >
             View Details
