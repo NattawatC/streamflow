@@ -2,9 +2,9 @@ import React from "react"
 import { HiMiniXMark } from "react-icons/hi2"
 
 interface elecMeterProps {
-  floorNumber: number
+  floorNumber: string
   roomNumber: number
-  meterNumber: number
+  meterNumber: string
 }
 
 const ElectricityMetercard: React.FunctionComponent<elecMeterProps> = ({

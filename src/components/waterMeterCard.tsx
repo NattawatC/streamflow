@@ -2,9 +2,9 @@ import React from "react"
 import { HiMiniXMark } from "react-icons/hi2"
 
 interface waterMeterProps {
-  floorNumber: number
+  floorNumber: string
   roomNumber: number
-  meterNumber: number
+  meterNumber: string
 }
 
 const WaterMetercard: React.FunctionComponent<waterMeterProps> = ({
