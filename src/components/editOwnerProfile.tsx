@@ -1,7 +1,7 @@
 "use client"
 
 import { BiSolidUserRectangle } from "react-icons/bi"
-import { z } from "zod"
+import { set, z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
@@ -26,7 +26,11 @@ import {
 } from "@/components/ui/select"
 import { useEffect, useState } from "react"
 import { BankInfo } from "@/interfaces/bank"
-import { getUserBanks, getUserEstate, getUserProfile } from "@/services/ownerService"
+import {
+  getUserBanks,
+  getUserEstate,
+  getUserProfile,
+} from "@/services/ownerService"
 
 // needed to use, creaate new component "form" for new page
 const formSchema = z.object({
@@ -37,8 +41,9 @@ const formSchema = z.object({
   phoneNumber: z.string().nonempty("Phone Number is required"),
   estateName: z.string().nonempty("Estate Name is required"),
   address: z.string().nonempty("Address is required"),
-  buildingNumber: z.string().nonempty("Building Number is required"),
-  floorNumber: z.string().nonempty("Floor Number is required"),
+  totalBuilding: z.string().nonempty("Total Building is required"),
+  totalFloor: z.string().nonempty("Total Floor is required"),
+  totalRoom: z.string().nonempty("Total Room is required"),
   furnitureCost: z.string().nonempty("Furniture Cost is required"),
   roomCharge: z.string().nonempty("Room Charge is required"),
   bank: z.string().nonempty("Bank is required"),
@@ -50,9 +55,17 @@ interface Props {
   userId: string | undefined
 }
 
+interface BankInfoFromAPI {
+  id: number
+  name: string
+  acct_no: string
+  holder_name: string
+  user_id: string
+}
+
 export function EditOwnerProfile({ userId }: Props) {
   const router = useRouter()
-  const [bank, setBank] = useState<any>(null)
+  const [bank, setBank] = useState<BankInfoFromAPI[]>([])
   const [profile, setProfile] = useState<any>(null)
   const [estate, setEstate] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
@@ -97,36 +110,60 @@ export function EditOwnerProfile({ userId }: Props) {
     const fetchBankData = async () => {
       try {
         const bankData = await getUserBanks(userId)
-        setBank(bankData)
+        console.log("fetched bank data:", bankData)
+        setBank(bankData || [])
       } catch (err) {
         setError("Failed to fetch bank data")
         console.error(err)
+        setBank([])
       }
     }
 
     fetchBankData()
   }, [userId])
 
-  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       firstName: profile?.first_name,
-      lastName: "",
-      age: "",
-      gender: "",
-      phoneNumber: "",
-      estateName: "",
-      address: "",
-      buildingNumber: "",
-      floorNumber: "",
-      furnitureCost: "",
-      roomCharge: "",
+      lastName: profile?.last_name,
+      age: profile?.age,
+      gender: profile?.gender,
+      phoneNumber: profile?.phone_no,
+      estateName: estate?.name,
+      address: estate?.address,
+      totalBuilding: estate?.total_building,
+      totalFloor: estate?.total_floor,
+      totalRoom: estate?.total_room,
+      furnitureCost: estate?.furniture_cost,
+      roomCharge: estate?.room_charge,
       bank: "",
       accountNumber: "",
       accountName: "",
     },
   })
+  useEffect(() => {
+    if (bank && bank.length > 0) {
+      const initialBankingInfo: BankingInfo = {}
+
+      bank.forEach((bankItem) => {
+        initialBankingInfo[bankItem.name] = {
+          [`bank-${bankItem.id}`]: {
+            accountNumber: bankItem.acct_no,
+            accountHolderName: bankItem.holder_name,
+          },
+        }
+      })
+
+      setBankingInfo(initialBankingInfo)
+
+      // Set form values with the first bank
+      form.setValue("bank", bank[0].name)
+      form.setValue("accountNumber", bank[0].acct_no)
+      form.setValue("accountName", bank[0].holder_name)
+    }
+  }, [bank, form])
+  // 1. Define your form.
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -242,7 +279,7 @@ export function EditOwnerProfile({ userId }: Props) {
                       type="text"
                       className="text-sm"
                       icon={<BiSolidUserRectangle size={24} />}
-                      placeholder="Doe"
+                      placeholder={profile?.last_name}
                       {...field}
                     />
                   </FormControl>
@@ -264,7 +301,7 @@ export function EditOwnerProfile({ userId }: Props) {
                       type="text"
                       className="text-sm"
                       icon={<BiSolidUserRectangle size={24} />}
-                      placeholder="50"
+                      placeholder={profile?.age}
                       {...field}
                     />
                   </FormControl>
@@ -286,7 +323,7 @@ export function EditOwnerProfile({ userId }: Props) {
                       type="text"
                       className="text-sm"
                       icon={<BiSolidUserRectangle size={24} />}
-                      placeholder="Enter your gender"
+                      placeholder={profile?.gender}
                       {...field}
                     />
                   </FormControl>
@@ -308,7 +345,7 @@ export function EditOwnerProfile({ userId }: Props) {
                       type="text"
                       className="text-sm"
                       icon={<BiSolidUserRectangle size={24} />}
-                      placeholder="000-000-0000"
+                      placeholder={profile?.phone_no}
                       {...field}
                     />
                   </FormControl>
@@ -340,7 +377,7 @@ export function EditOwnerProfile({ userId }: Props) {
                       type="text"
                       className="text-sm"
                       icon={<BiSolidUserRectangle size={24} />}
-                      placeholder="Enter place name"
+                      placeholder={estate?.name}
                       {...field}
                     />
                   </FormControl>
@@ -362,7 +399,7 @@ export function EditOwnerProfile({ userId }: Props) {
                       type="text"
                       className="text-sm"
                       icon={<BiSolidUserRectangle size={24} />}
-                      placeholder="Enter address"
+                      placeholder={estate?.address}
                       {...field}
                     />
                   </FormControl>
@@ -372,19 +409,19 @@ export function EditOwnerProfile({ userId }: Props) {
             />
             <FormField
               control={form.control}
-              name="buildingNumber"
+              name="totalBuilding"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="buildingNumber" className="text-sm">
+                  <FormLabel htmlFor="totalBuilding" className="text-sm">
                     Number of Building
                   </FormLabel>
                   <FormControl>
                     <Input
-                      id="buildingNumber"
+                      id="totalBuilding"
                       type="text"
                       className="text-sm"
                       icon={<BiSolidUserRectangle size={24} />}
-                      placeholder="Enter building number"
+                      placeholder={estate?.total_building}
                       {...field}
                     />
                   </FormControl>
@@ -394,19 +431,41 @@ export function EditOwnerProfile({ userId }: Props) {
             />
             <FormField
               control={form.control}
-              name="floorNumber"
+              name="totalFloor"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="floorNumber" className="text-sm">
+                  <FormLabel htmlFor="totalFloor" className="text-sm">
                     Number of Level/Floor
                   </FormLabel>
                   <FormControl>
                     <Input
-                      id="floorNumber"
+                      id="totalFloor"
                       type="text"
                       className="text-sm"
                       icon={<BiSolidUserRectangle size={24} />}
-                      placeholder="Enter number of level/floor"
+                      placeholder={estate?.total_floor}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="totalRoom"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="totalRoom" className="text-sm">
+                    Number of Room
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      id="totalRoom"
+                      type="text"
+                      className="text-sm"
+                      icon={<BiSolidUserRectangle size={24} />}
+                      placeholder={estate?.total_room}
                       {...field}
                     />
                   </FormControl>
@@ -428,7 +487,7 @@ export function EditOwnerProfile({ userId }: Props) {
                       type="text"
                       className="text-sm"
                       icon={<BiSolidUserRectangle size={24} />}
-                      placeholder="Enter furniture cost"
+                      placeholder={estate?.furniture_cost}
                       {...field}
                     />
                   </FormControl>
@@ -450,7 +509,7 @@ export function EditOwnerProfile({ userId }: Props) {
                       type="text"
                       className="text-sm"
                       icon={<BiSolidUserRectangle size={24} />}
-                      placeholder="Enter room charge cost"
+                      placeholder={estate?.room_charge}
                       {...field}
                     />
                   </FormControl>
@@ -482,7 +541,7 @@ export function EditOwnerProfile({ userId }: Props) {
                       className="flex w-full"
                       icon={<BiSolidUserRectangle size={24} />}
                     >
-                      <SelectValue placeholder="Choose Bank" />
+                      <SelectValue placeholder="Kasikorn Bank" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="Kasikorn Bank">
@@ -513,7 +572,7 @@ export function EditOwnerProfile({ userId }: Props) {
                     type="text"
                     className="text-sm"
                     icon={<BiSolidUserRectangle size={24} />}
-                    placeholder="Enter account number"
+                    placeholder=""
                     {...field}
                   />
                 </FormControl>
@@ -536,7 +595,7 @@ export function EditOwnerProfile({ userId }: Props) {
                       type="text"
                       className="text-sm"
                       icon={<BiSolidUserRectangle size={24} />}
-                      placeholder="Enter account's name"
+                      placeholder=""
                       {...field}
                     />
                   </FormControl>
