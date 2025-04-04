@@ -12,7 +12,7 @@ interface Tenant {
   id: number
   first_name: string
   last_name: string
-  age: number
+  age: string
   gender: string
   year_of_study: number
   phone_number: string
