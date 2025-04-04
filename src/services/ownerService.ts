@@ -29,12 +29,10 @@ export const getUserBanks = async (userId: string | undefined) => {
       .eq("user_id", userId)
   
     if (error) {
-      // Handle any error that occurred while fetching the bank data
       console.error("Error fetching bank information:", error)
-      return null // Return null if there's an error
+      return null
     }
-  
-    // Return bank data if found, otherwise return null
+
     return bank.length > 0 ? bank : null
   }
   
@@ -50,4 +48,44 @@ export const getUserBanks = async (userId: string | undefined) => {
     if (!estates || estates.length === 0) return { estates: [], error: "No estates found" }
   
     return { estates, error: null }
+  }
+  export const getUserEstateId = async (userId: string | undefined) => {
+    if (!userId) return { estateId: null, error: "User ID is missing" }
+  
+    const { data: estates, error } = await supabase
+      .from("estates")
+      .select("id")
+      .eq("user_id", userId)
+      .single()
+  
+    if (error) return { estateId: null, error: error.message }
+    if (!estates) return { estateId: null, error: "No estate found" }
+  
+    return { estateId: estates.id, error: null }
+  }
+
+  export const getAllElectricityMeterById = async (estateId: number | undefined) => {
+    if (!estateId) return { electricity: [], error: "Estate ID is missing" }
+  
+    const { data: electricity, error } = await supabase
+      .from("electricity")
+      .select("*")
+      .eq("estate_id", estateId)
+  
+    if (error) return { electricity: [], error: error.message }
+  
+    return { electricity, error: null }
+  }
+
+  export const getAllWaterMeterById = async (estateId: number | undefined) => {
+    if (!estateId) return { water: [], error: "Estate ID is missing" }
+  
+    const { data: water, error } = await supabase
+      .from("water")
+      .select("*")
+      .eq("estate_id", estateId)
+  
+    if (error) return { water: [], error: error.message }
+  
+    return { water, error: null }
   }

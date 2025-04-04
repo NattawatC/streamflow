@@ -7,7 +7,7 @@ import { FaWater } from "react-icons/fa6"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
@@ -27,33 +27,81 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
+import { getUserEstateId } from "@/services/ownerService"
+import supabase from "@/config/supabaseClient"
 
-// needed to use, create new component "form" for new page
 const formSchema = z.object({
   utility: z.string().nonempty("Utility is required"),
   floor: z.string().nonempty("Floor is required"),
-  room: z.string().nonempty("Room number is required"),
+  room: z.coerce.number(),
   meter: z.string().nonempty("Meter number is required"),
+  initialValue: z.string().nonempty("Initial value is required"),
 })
 
-export function AddMeterForm() {
+interface Props {
+  userId: string | undefined
+}
+
+export function AddMeterForm({ userId }: Props) {
   const router = useRouter()
+  const [estateId, setEstateId] = useState<number | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const [selectedUtility, setSelectedUtility] = useState("")
-  // 1. Define your form.
+
+  useEffect(() => {
+    const fetchUserEstate = async () => {
+      try {
+        const { estateId, error } = await getUserEstateId(userId)
+
+        if (error) {
+          setError("Failed to fetch estate data")
+          console.error(error)
+          return
+        }
+
+        setEstateId(estateId)
+      } catch (err) {
+        setError("Failed to fetch estate data")
+        console.error(err)
+      }
+    }
+
+    fetchUserEstate()
+  }, [userId])
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       utility: "",
       floor: "",
-      room: "",
+      room: 0,
       meter: "",
+      initialValue: "",
     },
   })
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const tableName = values.utility === "electricity" ? "electricity" : "water"
+
+    const { data, error } = await supabase
+      .from(tableName)
+      .insert([
+        {
+          estate_id: estateId,
+          room_no: values.room,
+          floor_no: values.floor,
+          meter_no: values.meter,
+          initial_value: values.initialValue,
+        },
+      ])
+      .select()
+
+    if (error) {
+      console.error(`Error inserting into ${tableName}:`, error.message)
+    } else {
+      console.log(`${tableName} meter inserted successfully:`, data)
+      router.refresh()
+    }
   }
 
   return (
@@ -109,16 +157,14 @@ export function AddMeterForm() {
                 Floor Number
               </FormLabel>
               <FormControl>
-
-                  <Input
-                    id="floor"
-                    type="text"
-                    className="text-sm"
-                    placeholder="Enter floor no."
-                    {...field}
-                    icon={<BiSolidUserRectangle size={24} />}
-                  />
-
+                <Input
+                  id="floor"
+                  type="text"
+                  className="text-sm"
+                  placeholder="Enter floor no."
+                  {...field}
+                  icon={<BiSolidUserRectangle size={24} />}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -129,13 +175,11 @@ export function AddMeterForm() {
           name="room"
           render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="room" className="text-sm">
-                Room Number
-              </FormLabel>
+              <FormLabel className="text-sm">Room Number</FormLabel>
               <FormControl>
                 <Input
                   id="room"
-                  type="text"
+                  type="number"
                   className="text-sm"
                   icon={<BiSolidUserRectangle size={24} />}
                   placeholder="Enter room no."
@@ -161,6 +205,28 @@ export function AddMeterForm() {
                   className="text-sm"
                   icon={<BiSolidUserRectangle size={24} />}
                   placeholder="Enter meter no."
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="initialValue"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor="initialvalue" className="text-sm">
+                Initial Value
+              </FormLabel>
+              <FormControl>
+                <Input
+                  id="initialvalue"
+                  type="text"
+                  className="text-sm"
+                  icon={<BiSolidUserRectangle size={24} />}
+                  placeholder="Enter initial value."
                   {...field}
                 />
               </FormControl>
