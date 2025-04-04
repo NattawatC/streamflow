@@ -33,7 +33,7 @@ import supabase from "@/config/supabaseClient"
 const formSchema = z.object({
   utility: z.string().nonempty("Utility is required"),
   floor: z.string().nonempty("Floor is required"),
-  room: z.coerce.number(),
+  room: z.string().nonempty("Floor is required"),
   meter: z.string().nonempty("Meter number is required"),
   initialValue: z.string().nonempty("Initial value is required"),
 })
@@ -74,7 +74,7 @@ export function AddMeterForm({ userId }: Props) {
     defaultValues: {
       utility: "",
       floor: "",
-      room: 0,
+      room: "",
       meter: "",
       initialValue: "",
     },
@@ -179,7 +179,7 @@ export function AddMeterForm({ userId }: Props) {
               <FormControl>
                 <Input
                   id="room"
-                  type="number"
+                  type="text"
                   className="text-sm"
                   icon={<BiSolidUserRectangle size={24} />}
                   placeholder="Enter room no."
