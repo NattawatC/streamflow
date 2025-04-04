@@ -171,13 +171,13 @@ const home: NextPage = async () => {
                       Tenant Information
                     </DialogTitle>
                     <DialogDescription className="text-white">
-                      <p>
+                      <span>
                         Clicking on the{" "}
                         <span className="text-custom-pink">
                           "View Details"{" "}
                         </span>
                         button to see the additional information
-                      </p>
+                      </span>
                     </DialogDescription>
                   </DialogHeader>
                 </DialogContent>
