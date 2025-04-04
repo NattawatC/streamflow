@@ -41,7 +41,7 @@ import { useRouter } from "next/navigation"
 const formSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
-  age: z.coerce.number().positive("Age must be positive"),
+  age: z.string(),
   gender: z.string(),
   yearOfStudy: z.string(),
   phoneNumber: z.string().regex(/^\d{3}-\d{3}-\d{4}$/, "Invalid phone number"),
@@ -75,7 +75,7 @@ export function AddTenantForm() {
     defaultValues: {
       firstName: "",
       lastName: "",
-      age: 0,
+      age: "",
       gender: "",
       yearOfStudy: "1",
       phoneNumber: "",
@@ -117,9 +117,9 @@ export function AddTenantForm() {
     if (error) {
       console.error("Error inserting tenant:", error.message)
     } else {
-        const insertedTenant = data?.[0]
-        console.log("Tenant inserted successfully:", insertedTenant)
-        router.push(`/owner/result?id=${insertedTenant.id}`)
+      const insertedTenant = data?.[0]
+      console.log("Tenant inserted successfully:", insertedTenant)
+      router.push(`/owner/result?id=${insertedTenant.id}`)
     }
   }
 
@@ -171,7 +171,7 @@ export function AddTenantForm() {
               <FormLabel className="text-sm">Age</FormLabel>
               <FormControl>
                 <Input
-                  type="number"
+                  type="text"
                   className="text-sm"
                   placeholder="99"
                   {...field}
