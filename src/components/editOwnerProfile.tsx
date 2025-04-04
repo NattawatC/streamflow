@@ -49,6 +49,8 @@ const formSchema = z.object({
   bank: z.string(),
   accountNumber: z.string(),
   accountName: z.string(),
+  waterCost: z.coerce.number(),
+  elecCost: z.coerce.number(),
 })
 
 interface Props {
@@ -158,6 +160,8 @@ export function EditOwnerProfile({ userId }: Props) {
       bank: "",
       accountNumber: "",
       accountName: "",
+      waterCost: 0,
+      elecCost: 0,
     },
   })
 
@@ -284,6 +288,8 @@ export function EditOwnerProfile({ userId }: Props) {
         bank: bank[0]?.name || "",
         accountNumber: bank[0]?.acct_no || "",
         accountName: bank[0]?.holder_name || "",
+        waterCost: estate.water_cost || 0,
+        elecCost: estate.elec_cost || 0,
       })
     }
   }, [profile, estate, bank, form])
@@ -318,6 +324,8 @@ export function EditOwnerProfile({ userId }: Props) {
         total_building: values.totalBuilding,
         room_charge: values.roomCharge,
         furniture_cost: values.furnitureCost,
+        water_cost: values.waterCost,
+        elec_cost: values.elecCost,
       })
       .eq("user_id", userId)
       .select()
