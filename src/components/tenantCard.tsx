@@ -30,7 +30,7 @@ const TenantCard: React.FunctionComponent<Tenant> = ({
   pStatus,
   rStatus,
 }) => {
-    const router = useRouter()
+  const router = useRouter()
   const deleteTenant = async (id: number) => {
     const { error } = await supabase.from("tenants").delete().eq("id", id)
 
@@ -38,7 +38,7 @@ const TenantCard: React.FunctionComponent<Tenant> = ({
       console.error("Error deleting tenant:", error.message)
     } else {
       console.log("Tenant deleted successfully")
-    //   router.reload()
+      router.refresh()
     }
   }
   return (
@@ -65,18 +65,18 @@ const TenantCard: React.FunctionComponent<Tenant> = ({
                     </DialogTitle>
                     <DialogDescription>
                       <>
-                        {/* <div className="flex flex-col gap-2">
-                          <span>
+                        <span className="flex flex-col gap-2">
+                          <span className="text-white">
                             Are you sure you want to permanently remove this
                             tenant from the property?
                           </span>
-                          <div className="flex flex-row gap-2 text-custom-pink items-center">
+                          <span className="flex flex-row gap-2 text-custom-pink items-center">
+                            <PiWarningCircleFill size={24} />
                             <span className="text-custom-pink">
                               Please note that this action is irreversible.
                             </span>
-                            <PiWarningCircleFill size={24} />
-                          </div>
-                        </div> */}
+                          </span>
+                        </span>
                       </>
                     </DialogDescription>
                   </DialogHeader>
