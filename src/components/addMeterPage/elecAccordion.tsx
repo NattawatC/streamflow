@@ -13,7 +13,7 @@ import {
   getAllElectricityMeterById,
 } from "@/services/ownerService"
 import { Separator } from "../ui/separator"
-import ElectricityMeterCard from "../electricityMeterCard"
+import { ElectricityMeterCard } from "./electricityMeterCard"
 
 interface Props {
   userId: string | undefined
@@ -82,7 +82,9 @@ export function ElecAccordion({ userId }: Props) {
     fetchElectricityData()
   }, [estateId])
 
-  console.log(meterNum)
+  const handleDeleteMeter = (id: number) => {
+    setMeterNum((prevMeters) => prevMeters.filter((meter) => meter.id !== id))
+  }
 
   return (
     <>
@@ -115,9 +117,10 @@ export function ElecAccordion({ userId }: Props) {
                       {meters.map((meter, index) => (
                         <ElectricityMeterCard
                           key={index}
-                          floorNumber={meter.floor_no}
+                          id={meter.id}
                           roomNumber={meter.room_no}
                           meterNumber={meter.meter_no}
+                          onDelete={handleDeleteMeter}
                         />
                       ))}
                     </div>

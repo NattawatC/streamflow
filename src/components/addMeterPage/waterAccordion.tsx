@@ -14,8 +14,7 @@ import {
   getAllWaterMeterById,
 } from "@/services/ownerService"
 import { Separator } from "../ui/separator"
-import ElectricityMeterCard from "../electricityMeterCard"
-import WaterMeterCard from "../waterMeterCard"
+import WaterMeterCard from "./waterMeterCard"
 
 interface Props {
   userId: string | undefined
@@ -82,6 +81,10 @@ export function WaterAccordion({ userId }: Props) {
     fetchWaterData()
   }, [estateId])
 
+  const handleDeleteMeter = (id: number) => {
+    setMeterNum((prevMeters) => prevMeters.filter((meter) => meter.id !== id))
+  }
+
   return (
     <>
       <Accordion type="single" collapsible>
@@ -113,9 +116,10 @@ export function WaterAccordion({ userId }: Props) {
                       {meters.map((meter, index) => (
                         <WaterMeterCard
                           key={index}
-                          floorNumber={meter.floor_no}
+                          id={meter.id}
                           roomNumber={meter.room_no}
                           meterNumber={meter.meter_no}
+                          onDelete={handleDeleteMeter}
                         />
                       ))}
                     </div>
