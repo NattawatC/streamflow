@@ -4,7 +4,7 @@ import { BiSolidUserRectangle } from "react-icons/bi"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -16,31 +16,62 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import supabase from "@/config/supabaseClient"
+
+interface EditTenantFormProps {
+  id: string | null
+  building_no: string
+  floor_no: string
+  room_no: string
+}
 
 // needed to use, creaate new component "form" for new page
 const formSchema = z.object({
   building: z.string(),
-  level: z.string(),
-  roomnumber: z.string(),
+  floor: z.string(),
+  room: z.string(),
 })
 
-export function EditTenantForm() {
+export function EditTenantForm({
+  id,
+  building_no,
+  floor_no,
+  room_no,
+}: EditTenantFormProps) {
   const router = useRouter()
-  // 1. Define your form.
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      building: "",
-      level: "",
-      roomnumber: "",
+      building: building_no,
+      floor: floor_no,
+      room: room_no,
     },
   })
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    console.log(values)
-    router.push("owner/home")
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!id) {
+      console.error("No tenant ID provided!")
+      return
+    }
+
+    const { data, error } = await supabase
+      .from("tenants")
+      .update({
+        building_no: values.building,
+        floor_no: values.floor,
+        room_no: values.room,
+      })
+      .eq("id", id) // Use the tenant's ID to identify which tenant to update
+      .select()
+
+    if (error) {
+      console.error("Error updating tenant:", error.message)
+    } else {
+      console.log("Tenant updated successfully:", data)
+      // Redirect after successful update
+      router.push(`/owner/tenant-info?id=${id}`)
+    }
   }
 
   return (
@@ -58,16 +89,14 @@ export function EditTenantForm() {
                 Building
               </FormLabel>
               <FormControl>
-                <>
-                  <Input
-                    id="building"
-                    type="text"
-                    className="text-sm"
-                    placeholder="19"
-                    {...field}
-                    icon={<BiSolidUserRectangle size={24} />}
-                  />
-                </>
+                <Input
+                  id="building"
+                  type="text"
+                  className="text-sm"
+                  placeholder={building_no}
+                  {...field}
+                  icon={<BiSolidUserRectangle size={24} />}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -75,7 +104,7 @@ export function EditTenantForm() {
         />
         <FormField
           control={form.control}
-          name="level"
+          name="floor"
           render={({ field }) => (
             <FormItem>
               <FormLabel htmlFor="level" className="text-sm">
@@ -87,7 +116,7 @@ export function EditTenantForm() {
                   type="text"
                   className="text-sm"
                   icon={<BiSolidUserRectangle size={24} />}
-                  placeholder="4"
+                  placeholder={floor_no}
                   {...field}
                 />
               </FormControl>
@@ -97,7 +126,7 @@ export function EditTenantForm() {
         />
         <FormField
           control={form.control}
-          name="roomnumber"
+          name="room"
           render={({ field }) => (
             <FormItem>
               <FormLabel htmlFor="roomnumber" className="text-sm">
@@ -109,7 +138,7 @@ export function EditTenantForm() {
                   type="text"
                   className="text-sm"
                   icon={<BiSolidUserRectangle size={24} />}
-                  placeholder="1234"
+                  placeholder={room_no}
                   {...field}
                 />
               </FormControl>
