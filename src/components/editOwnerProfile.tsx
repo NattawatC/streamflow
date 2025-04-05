@@ -87,9 +87,16 @@ export function EditOwnerProfile({ userId }: Props) {
   const [profile, setProfile] = useState<any>(null)
   const [estate, setEstate] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
-  const [imageUrls, setImageUrls] = useState<string[]>([])
+  const [imageUrls, setImageUrls] = useState<string[]>(
+    profile?.qrcode_url ? [profile.qrcode_url] : []
+  )
   const imageInputRef = useRef<HTMLInputElement>(null)
   const [isPending, startTransition] = useTransition()
+  type BankingInfo = {
+    [key: string]: {
+      [accountId: string]: { accountNumber: string; accountHolderName: string }
+    }
+  }
 
   const [bankingInfo, setBankingInfo] = useState<{
     [bank: string]: {
@@ -187,7 +194,7 @@ export function EditOwnerProfile({ userId }: Props) {
 
       bank.forEach((bankItem) => {
         initialBankingInfo[bankItem.name] = {
-          [`bank-${bankItem.id}`]: {
+          [bankItem.acct_no]: {
             accountNumber: bankItem.acct_no,
             accountHolderName: bankItem.holder_name,
           },
@@ -196,17 +203,13 @@ export function EditOwnerProfile({ userId }: Props) {
 
       setBankingInfo(initialBankingInfo)
 
-      form.setValue("bank", bank[0].name)
-      form.setValue("accountNumber", bank[0].acct_no)
-      form.setValue("accountName", bank[0].holder_name)
+      if (bank.length > 0) {
+        form.setValue("bank", bank[0].name)
+        form.setValue("accountNumber", bank[0].acct_no)
+        form.setValue("accountName", bank[0].holder_name)
+      }
     }
   }, [bank, form])
-
-  type BankingInfo = {
-    [key: string]: {
-      [accountId: string]: { accountNumber: string; accountHolderName: string }
-    }
-  }
 
   async function handleAddBankingInfo() {
     const selectedBank = form.getValues("bank")
@@ -261,49 +264,55 @@ export function EditOwnerProfile({ userId }: Props) {
     }
   }
 
-  async function handleDeleteAccount(bank: string, accountNumber: string) {
-    console.log(
-      `Attempting to delete account with number: ${accountNumber} from ${bank}`
-    )
+  async function handleDeleteAccount(bankName: string, accountNumber: string) {
+    try {
+      const bankItem = bank.find(
+        (item) => item.name === bankName && item.acct_no === accountNumber
+      )
 
-    // First, delete the account from Supabase
-    const { data, error } = await supabase
-      .from("bank_info")
-      .delete()
-      .eq("acct_no", accountNumber)
-      .eq("name", bank)
-
-    if (error) {
-      console.error("Error deleting from Supabase:", error)
-      return
-    }
-
-    if (data) {
-      console.log("Successfully deleted account data from Supabase:", data)
-    }
-
-    setBankingInfo((prev) => {
-      const updatedAccounts = { ...prev[bank] }
-      delete updatedAccounts[accountNumber]
-
-      if (Object.keys(updatedAccounts).length === 0) {
-        const { [bank]: _, ...remainingBanks } = prev
-        console.log("Banking Info after deletion:", remainingBanks)
-        setLatestBankingInfo(remainingBanks)
-        return remainingBanks
+      if (!bankItem) {
+        console.error("Bank item not found")
+        return
       }
 
-      const updated = {
-        ...prev,
-        [bank]: updatedAccounts,
-      }
-      console.log("Banking Info after deletion:", updated)
-      setLatestBankingInfo(updated)
-      return updated
-    })
+      const { error } = await supabase
+        .from("bank_info")
+        .delete()
+        .eq("acct_no", accountNumber)
+        .eq("name", bankName)
+
+      if (error) throw error
+
+      setBankingInfo((prev) => {
+        const updatedAccounts = { ...prev[bankName] }
+
+        const accountKey = Object.keys(updatedAccounts).find(
+          (key) => updatedAccounts[key].accountNumber === accountNumber
+        )
+
+        if (accountKey) {
+          delete updatedAccounts[accountKey]
+        }
+
+        if (Object.keys(updatedAccounts).length === 0) {
+          const { [bankName]: _, ...remainingBanks } = prev
+          return remainingBanks
+        }
+
+        return {
+          ...prev,
+          [bankName]: updatedAccounts,
+        }
+      })
+
+      setBank((prev) => prev.filter((item) => item.acct_no !== accountNumber))
+
+      console.log("Successfully deleted bank account")
+    } catch (error) {
+      console.error("Error deleting bank account:", error)
+    }
   }
 
-  // Reset form when data loads
   useEffect(() => {
     if (profile && estate && bank) {
       form.reset({
@@ -324,7 +333,14 @@ export function EditOwnerProfile({ userId }: Props) {
         accountName: bank[0]?.holder_name || "",
         waterCost: estate.water_cost || 0,
         elecCost: estate.elec_cost || 0,
+        qrCodeImage: profile.qrcode_url
+          ? new File([], "existing-qr-code")
+          : undefined,
       })
+      // Initialize imageUrls with existing QR code
+      if (profile.qrcode_url) {
+        setImageUrls([profile.qrcode_url])
+      }
     }
   }, [profile, estate, bank, form])
 
@@ -343,14 +359,11 @@ export function EditOwnerProfile({ userId }: Props) {
         .from("profile")
         .update({ qrcode_url: null })
         .eq("user_id", userId)
-        .single()
 
       if (updateError) throw updateError
 
       setProfile((prev: any) => ({ ...prev, qrcode_url: null }))
       setImageUrls([])
-
-      console.log("QR code deleted successfully.")
     } catch (error) {
       console.error("Error deleting QR code:", error)
     }
@@ -358,12 +371,10 @@ export function EditOwnerProfile({ userId }: Props) {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     startTransition(async () => {
-      console.log("start uploading...")
+      let imageUrl = profile?.qrcode_url || ""
 
-      let imageUrl = ""
-      if (imageUrls.length > 0) {
+      if (imageUrls.length > 0 && imageUrls[0] !== profile?.qrcode_url) {
         const imageFile = await convertBlobUrlToFile(imageUrls[0])
-
         const result = await uploadImage({
           file: imageFile,
           bucket: "qrcode",
@@ -413,56 +424,6 @@ export function EditOwnerProfile({ userId }: Props) {
 
       if (estateError) throw estateError
 
-      // // (Update or insert) banking info
-      // for (const bankName in latestBankingInfo) {
-      //   const accounts = latestBankingInfo[bankName]
-
-      //   for (const account of Object.values(accounts)) {
-      //     const { accountNumber, accountHolderName } = account
-
-      //     // Check if account exists
-      //     const { data: existingAccount, error: fetchError } = await supabase
-      //       .from("bank_info")
-      //       .select("*")
-      //       .eq("acct_no", accountNumber)
-      //       .eq("esate", userId)
-      //       .maybeSingle()
-
-      //     if (fetchError) {
-      //       console.error("Error checking account:", fetchError)
-      //       continue
-      //     }
-
-      //     if (existingAccount) {
-      //       // Update existing account
-      //       const { error: updateError } = await supabase
-      //         .from("bank_info")
-      //         .update({
-      //           name: bankName,
-      //           holder_name: accountHolderName,
-      //         })
-      //         .eq("id", existingAccount.id)
-
-      //       if (updateError) {
-      //         console.error("Error updating account:", updateError)
-      //       }
-      //     } else {
-      //       // Insert new account
-      //       const { error: insertError } = await supabase
-      //         .from("bank_info")
-      //         .insert({
-      //           name: bankName,
-      //           acct_no: accountNumber,
-      //           holder_name: accountHolderName,
-      //           user_id: userId,
-      //         })
-
-      //       if (insertError) {
-      //         console.error("Error inserting account:", insertError)
-      //       }
-      //     }
-      //   }
-      // }
     })
     router.push("/owner/setting")
   }
@@ -818,11 +779,11 @@ export function EditOwnerProfile({ userId }: Props) {
           </div>
 
           {/* Conditionally render based on whether profile already has a qrcode_url */}
-          {profile?.qrcode_url ? (
+          {profile?.qrcode_url || imageUrls.length > 0 ? (
             <div className="flex flex-col gap-2 items-center ">
               <Image
-                src={profile.qrcode_url}
-                alt="Uploaded QR code"
+                src={imageUrls[0] || profile.qrcode_url}
+                alt="QR code"
                 width={300}
                 height={300}
                 className="rounded-lg shadow"
@@ -832,7 +793,7 @@ export function EditOwnerProfile({ userId }: Props) {
                 variant="destructive"
                 className="w-fit"
                 onClick={handleDeleteImage}
-                // disabled={isPending}
+                disabled={isPending}
               >
                 Delete QR Code
               </Button>
@@ -865,7 +826,6 @@ export function EditOwnerProfile({ userId }: Props) {
                 )}
               />
 
-              {/* Preview newly selected image (before upload) */}
               <div className="flex gap-4 mt-2">
                 {imageUrls.map((url, index) => (
                   <Image
