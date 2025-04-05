@@ -34,6 +34,7 @@ interface Bank {
   acct_no: string
   id: number
   name: string
+  holder_name: string
 }
 
 export function ProfileOwnerCard({ userId }: Props) {
@@ -103,6 +104,9 @@ export function ProfileOwnerCard({ userId }: Props) {
         accountNumber: Array.isArray(bankData.acct_no)
           ? bankData.acct_no
           : [bankData.acct_no],
+        holder_name: Array.isArray(bankData.holder_name)
+          ? bankData.holder_name
+          : [bankData.holder_name],
       })
     }
   }
@@ -242,15 +246,23 @@ export function ProfileOwnerCard({ userId }: Props) {
             {/* Display Bank address */}
             {selectedBank && selectedBank.accountNumber && (
               <div className="flex flex-col gap-2">
-                <p className="font-medium">Account Numbers</p>
+                <p className="font-medium">Account Name</p>
+                <p className="list-disc list-inside">
+                  {(Array.isArray(selectedBank.holder_name)
+                    ? selectedBank.holder_name
+                    : [selectedBank.holder_name]
+                  ).map((acc, index) => (
+                    <li key={index}>{acc}</li>
+                  ))}
+                </p>
+                <p className="font-medium">Account Number</p>
                 <ul className="list-disc list-inside">
                   {(Array.isArray(selectedBank.accountNumber)
                     ? selectedBank.accountNumber
                     : [selectedBank.accountNumber]
-                  ) // Convert string to array
-                    .map((acc, index) => (
-                      <li key={index}>{acc}</li>
-                    ))}
+                  ).map((acc, index) => (
+                    <li key={index}>{acc}</li>
+                  ))}
                 </ul>
               </div>
             )}
