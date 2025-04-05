@@ -24,6 +24,7 @@ import {
   getUserProfile,
 } from "@/services/ownerService"
 import { useEffect, useState, useTransition } from "react"
+import Image from "next/image"
 
 interface Props {
   userId: string | undefined
@@ -65,10 +66,9 @@ export function ProfileOwnerCard({ userId }: Props) {
     const fetchUserEstate = async () => {
       try {
         const userEstate = await getUserEstate(userId)
-        // Use the first estate if available
         const estateRecord =
           userEstate?.estates?.length > 0 ? userEstate.estates[0] : null
-        setEstate(estateRecord) // Update estate with the first record if available
+        setEstate(estateRecord)
       } catch (err) {
         setError("Failed to fetch estate data")
         console.error(err)
@@ -239,7 +239,7 @@ export function ProfileOwnerCard({ userId }: Props) {
               </SelectContent>
             </Select>
 
-            {/* Display selected address */}
+            {/* Display Bank address */}
             {selectedBank && selectedBank.accountNumber && (
               <div className="flex flex-col gap-2">
                 <p className="font-medium">Account Numbers</p>
@@ -253,6 +253,32 @@ export function ProfileOwnerCard({ userId }: Props) {
                     ))}
                 </ul>
               </div>
+            )}
+          </div>
+        </div>
+
+        <Separator className="h-[2px] rounded-sm w-full justify-center" />
+
+        <div className="flex flex-col bg-white w-full text-base p-3 gap-3 rounded-md">
+          <div className="flex flex-row gap-2">
+            <p className="whitespace-nowrap font-bold">PromtPay</p>
+            <div className="flex w-full items-center">
+              <Separator className="h-[2px] rounded-sm w-full justify-center" />
+            </div>
+          </div>
+          <div className="flex flex-row gap-2">
+            {profile?.qrcode_url ? (
+              <Image
+                src={profile.qrcode_url}
+                width={300}
+                height={300}
+                alt="qrcode"
+                priority
+              />
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                No QR code uploaded
+              </p>
             )}
           </div>
         </div>
