@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { useEffect, useState } from "react"
+import { ChangeEvent, useEffect, useRef, useState, useTransition } from "react"
 import { BankInfo } from "@/interfaces/bank"
 import {
   getUserBanks,
@@ -32,6 +32,11 @@ import {
   getUserProfile,
 } from "@/services/ownerService"
 import supabase from "@/config/supabaseClient"
+import Image from "next/image"
+import { convertBlobUrlToFile } from "@/lib/utils"
+import { uploadImage } from "@/auth/storage/client"
+import { Loader2 } from "lucide-react"
+import { url } from "inspector"
 
 const formSchema = z.object({
   firstName: z.string(),
@@ -51,6 +56,7 @@ const formSchema = z.object({
   accountName: z.string(),
   waterCost: z.coerce.number(),
   elecCost: z.coerce.number(),
+  qrCodeImage: z.instanceof(File).optional(),
 })
 
 interface Props {
@@ -81,6 +87,9 @@ export function EditOwnerProfile({ userId }: Props) {
   const [profile, setProfile] = useState<any>(null)
   const [estate, setEstate] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
+  const [imageUrls, setImageUrls] = useState<string[]>([])
+  const imageInputRef = useRef<HTMLInputElement>(null)
+  const [isPending, startTransition] = useTransition()
 
   const [bankingInfo, setBankingInfo] = useState<{
     [bank: string]: {
@@ -90,6 +99,15 @@ export function EditOwnerProfile({ userId }: Props) {
   const [latestBankingInfo, setLatestBankingInfo] = useState<
     typeof bankingInfo
   >({})
+
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const filesArray = Array.from(e.target.files)
+      const newImageUrls = filesArray.map((file) => URL.createObjectURL(file))
+
+      setImageUrls([...imageUrls, ...newImageUrls])
+    }
+  }
 
   // Fetch User's Profile information
   useEffect(() => {
@@ -294,89 +312,113 @@ export function EditOwnerProfile({ userId }: Props) {
   }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    //  Update profile table
-    const { data: profileData, error: profileError } = await supabase
-      .from("profile")
-      .update({
-        first_name: values.firstName,
-        last_name: values.lastName,
-        gender: values.gender,
-        phone_no: values.phoneNumber,
-        age: values.age,
-      })
-      .eq("user_id", userId)
-      .select()
+    startTransition(async () => {
+      console.log("start uploading...")
 
-    if (profileError) throw profileError
+      let imageUrl = ""
+      if (imageUrls.length > 0) {
+        const imageFile = await convertBlobUrlToFile(imageUrls[0])
 
-    // Update estates table
-    const { data: estateData, error: estateError } = await supabase
-      .from("estates")
-      .update({
-        name: values.estateName,
-        total_room: values.totalRoom,
-        total_floor: values.totalFloor,
-        total_building: values.totalBuilding,
-        room_charge: values.roomCharge,
-        furniture_cost: values.furnitureCost,
-        water_cost: values.waterCost,
-        elec_cost: values.elecCost,
-      })
-      .eq("user_id", userId)
-      .select()
+        const result = await uploadImage({
+          file: imageFile,
+          bucket: "qrcode",
+        })
 
-    if (estateError) throw estateError
-
-    // (Update or insert) banking info
-    for (const bankName in latestBankingInfo) {
-      const accounts = latestBankingInfo[bankName]
-
-      for (const account of Object.values(accounts)) {
-        const { accountNumber, accountHolderName } = account
-
-        // Check if account exists
-        const { data: existingAccount, error: fetchError } = await supabase
-          .from("bank_info")
-          .select("*")
-          .eq("acct_no", accountNumber)
-          .eq("user_id", userId)
-          .maybeSingle()
-
-        if (fetchError) {
-          console.error("Error checking account:", fetchError)
-          continue
+        if (result.error) {
+          console.error(result.error)
+          return
         }
 
-        if (existingAccount) {
-          // Update existing account
-          const { error: updateError } = await supabase
-            .from("bank_info")
-            .update({
-              name: bankName,
-              holder_name: accountHolderName,
-            })
-            .eq("id", existingAccount.id)
+        imageUrl = result.imageUrl
+      }
 
-          if (updateError) {
-            console.error("Error updating account:", updateError)
+      setImageUrls([])
+
+      // Update profile table
+      const { data: profileData, error: profileError } = await supabase
+        .from("profile")
+        .update({
+          first_name: values.firstName,
+          last_name: values.lastName,
+          gender: values.gender,
+          phone_no: values.phoneNumber,
+          age: values.age,
+          qrcode_url: imageUrl, // Single URL string now
+        })
+        .eq("user_id", userId)
+        .select()
+
+      if (profileError) throw profileError
+
+      // Update estates table
+      const { data: estateData, error: estateError } = await supabase
+        .from("estates")
+        .update({
+          name: values.estateName,
+          total_room: values.totalRoom,
+          total_floor: values.totalFloor,
+          total_building: values.totalBuilding,
+          room_charge: values.roomCharge,
+          furniture_cost: values.furnitureCost,
+          water_cost: values.waterCost,
+          elec_cost: values.elecCost,
+        })
+        .eq("user_id", userId)
+        .select()
+
+      if (estateError) throw estateError
+
+      // (Update or insert) banking info
+      for (const bankName in latestBankingInfo) {
+        const accounts = latestBankingInfo[bankName]
+
+        for (const account of Object.values(accounts)) {
+          const { accountNumber, accountHolderName } = account
+
+          // Check if account exists
+          const { data: existingAccount, error: fetchError } = await supabase
+            .from("bank_info")
+            .select("*")
+            .eq("acct_no", accountNumber)
+            .eq("user_id", userId)
+            .maybeSingle()
+
+          if (fetchError) {
+            console.error("Error checking account:", fetchError)
+            continue
           }
-        } else {
-          // Insert new account
-          const { error: insertError } = await supabase
-            .from("bank_info")
-            .insert({
-              name: bankName,
-              acct_no: accountNumber,
-              holder_name: accountHolderName,
-              user_id: userId,
-            })
 
-          if (insertError) {
-            console.error("Error inserting account:", insertError)
+          if (existingAccount) {
+            // Update existing account
+            const { error: updateError } = await supabase
+              .from("bank_info")
+              .update({
+                name: bankName,
+                holder_name: accountHolderName,
+              })
+              .eq("id", existingAccount.id)
+
+            if (updateError) {
+              console.error("Error updating account:", updateError)
+            }
+          } else {
+            // Insert new account
+            const { error: insertError } = await supabase
+              .from("bank_info")
+              .insert({
+                name: bankName,
+                acct_no: accountNumber,
+                holder_name: accountHolderName,
+                user_id: userId,
+              })
+
+            if (insertError) {
+              console.error("Error inserting account:", insertError)
+            }
           }
         }
       }
-    }
+    })
     router.push("/owner/setting")
   }
 
@@ -719,6 +761,54 @@ export function EditOwnerProfile({ userId }: Props) {
             />
           </div>
         </div>
+
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-row gap-2">
+            <p className="whitespace-nowrap font-bold">
+              Upload Qrcode/PromptPay
+            </p>
+            <div className="flex w-full items-center">
+              <Separator className="h-[2px] rounded-sm w-full justify-center" />
+            </div>
+          </div>
+          <FormField
+            control={form.control}
+            name="qrCodeImage" // Use the correct field name
+            render={({ field: { value, onChange, ...field } }) => (
+              <FormItem>
+                <FormLabel htmlFor="qrCodeImage" className="text-sm">
+                  QR Code/PromptPay Image
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    id="qrCodeImage"
+                    type="file"
+                    accept="image/*"
+                    hidden={true}
+                    icon={<BiSolidUserRectangle size={24} />}
+                    onChange={handleImageChange}
+                    className="text-sm"
+                    disabled={isPending}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="flex gap-4">
+            {imageUrls.map((url, index) => (
+              <Image
+                key={url}
+                src={url}
+                width={300}
+                height={300}
+                alt={`img-${index}`}
+              />
+            ))}
+          </div>
+        </div>
+
         <div className="flex flex-col gap-3">
           <div className="flex flex-row gap-2">
             <p className="whitespace-nowrap font-bold">Banking Information</p>
@@ -819,7 +909,7 @@ export function EditOwnerProfile({ userId }: Props) {
           type="submit"
           className="flex w-full text-base font-bold bg-custom-green text-black"
         >
-          Save
+          {isPending ? <Loader2 className="animate-spin" /> : "Save"}
         </Button>
       </form>
     </Form>
