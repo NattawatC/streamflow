@@ -34,7 +34,7 @@ import {
 import supabase from "@/config/supabaseClient"
 import Image from "next/image"
 import { convertBlobUrlToFile } from "@/lib/utils"
-import { uploadImage } from "@/auth/storage/client"
+import { deleteImage, uploadImage } from "@/auth/storage/client"
 import { Loader2 } from "lucide-react"
 import { url } from "inspector"
 
@@ -208,30 +208,51 @@ export function EditOwnerProfile({ userId }: Props) {
     }
   }
 
-  function handleAddBankingInfo() {
+  async function handleAddBankingInfo() {
     const selectedBank = form.getValues("bank")
     const accountNumber = form.getValues("accountNumber")
     const accountHolderName = form.getValues("accountName")
 
     if (selectedBank && accountNumber && accountHolderName) {
       setBankingInfo((prev) => {
-        const updated = {
+        const updatedAccounts = {
           ...prev,
           [selectedBank]: {
             ...prev[selectedBank],
             [accountNumber]: {
-              // Use accountNumber as the key
               accountNumber,
               accountHolderName,
             },
           },
         }
-        console.log("Updated Banking Info:", updated)
-        setLatestBankingInfo(updated) // Store the latest info
-        return updated
+
+        console.log("Updated Banking Info:", updatedAccounts)
+        setLatestBankingInfo(updatedAccounts)
+
+        return updatedAccounts
       })
 
-      // Reset form values
+      const { data, error } = await supabase
+        .from("bank_info")
+        .insert([
+          {
+            acct_no: accountNumber,
+            name: selectedBank,
+            holder_name: accountHolderName,
+            estate_id: estate.id,
+          },
+        ])
+        .select()
+
+      if (error) {
+        console.error("Error adding banking info to Supabase:", error)
+        return
+      }
+
+      if (data) {
+        console.log("Successfully added banking info to Supabase:", data)
+      }
+
       form.setValue("bank", "")
       form.setValue("accountNumber", "")
       form.setValue("accountName", "")
@@ -311,6 +332,30 @@ export function EditOwnerProfile({ userId }: Props) {
     return <div>Loading...</div>
   }
 
+  const handleDeleteImage = async () => {
+    if (!profile?.qrcode_url) return
+
+    try {
+      const { error: deleteError } = await deleteImage(profile.qrcode_url)
+      if (deleteError) throw deleteError
+
+      const { error: updateError } = await supabase
+        .from("profile")
+        .update({ qrcode_url: null })
+        .eq("user_id", userId)
+        .single()
+
+      if (updateError) throw updateError
+
+      setProfile((prev: any) => ({ ...prev, qrcode_url: null }))
+      setImageUrls([])
+
+      console.log("QR code deleted successfully.")
+    } catch (error) {
+      console.error("Error deleting QR code:", error)
+    }
+  }
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     startTransition(async () => {
       console.log("start uploading...")
@@ -343,7 +388,7 @@ export function EditOwnerProfile({ userId }: Props) {
           gender: values.gender,
           phone_no: values.phoneNumber,
           age: values.age,
-          qrcode_url: imageUrl, // Single URL string now
+          qrcode_url: imageUrl,
         })
         .eq("user_id", userId)
         .select()
@@ -368,56 +413,56 @@ export function EditOwnerProfile({ userId }: Props) {
 
       if (estateError) throw estateError
 
-      // (Update or insert) banking info
-      for (const bankName in latestBankingInfo) {
-        const accounts = latestBankingInfo[bankName]
+      // // (Update or insert) banking info
+      // for (const bankName in latestBankingInfo) {
+      //   const accounts = latestBankingInfo[bankName]
 
-        for (const account of Object.values(accounts)) {
-          const { accountNumber, accountHolderName } = account
+      //   for (const account of Object.values(accounts)) {
+      //     const { accountNumber, accountHolderName } = account
 
-          // Check if account exists
-          const { data: existingAccount, error: fetchError } = await supabase
-            .from("bank_info")
-            .select("*")
-            .eq("acct_no", accountNumber)
-            .eq("user_id", userId)
-            .maybeSingle()
+      //     // Check if account exists
+      //     const { data: existingAccount, error: fetchError } = await supabase
+      //       .from("bank_info")
+      //       .select("*")
+      //       .eq("acct_no", accountNumber)
+      //       .eq("esate", userId)
+      //       .maybeSingle()
 
-          if (fetchError) {
-            console.error("Error checking account:", fetchError)
-            continue
-          }
+      //     if (fetchError) {
+      //       console.error("Error checking account:", fetchError)
+      //       continue
+      //     }
 
-          if (existingAccount) {
-            // Update existing account
-            const { error: updateError } = await supabase
-              .from("bank_info")
-              .update({
-                name: bankName,
-                holder_name: accountHolderName,
-              })
-              .eq("id", existingAccount.id)
+      //     if (existingAccount) {
+      //       // Update existing account
+      //       const { error: updateError } = await supabase
+      //         .from("bank_info")
+      //         .update({
+      //           name: bankName,
+      //           holder_name: accountHolderName,
+      //         })
+      //         .eq("id", existingAccount.id)
 
-            if (updateError) {
-              console.error("Error updating account:", updateError)
-            }
-          } else {
-            // Insert new account
-            const { error: insertError } = await supabase
-              .from("bank_info")
-              .insert({
-                name: bankName,
-                acct_no: accountNumber,
-                holder_name: accountHolderName,
-                user_id: userId,
-              })
+      //       if (updateError) {
+      //         console.error("Error updating account:", updateError)
+      //       }
+      //     } else {
+      //       // Insert new account
+      //       const { error: insertError } = await supabase
+      //         .from("bank_info")
+      //         .insert({
+      //           name: bankName,
+      //           acct_no: accountNumber,
+      //           holder_name: accountHolderName,
+      //           user_id: userId,
+      //         })
 
-            if (insertError) {
-              console.error("Error inserting account:", insertError)
-            }
-          }
-        }
-      }
+      //       if (insertError) {
+      //         console.error("Error inserting account:", insertError)
+      //       }
+      //     }
+      //   }
+      // }
     })
     router.push("/owner/setting")
   }
@@ -771,42 +816,69 @@ export function EditOwnerProfile({ userId }: Props) {
               <Separator className="h-[2px] rounded-sm w-full justify-center" />
             </div>
           </div>
-          <FormField
-            control={form.control}
-            name="qrCodeImage" // Use the correct field name
-            render={({ field: { value, onChange, ...field } }) => (
-              <FormItem>
-                <FormLabel htmlFor="qrCodeImage" className="text-sm">
-                  QR Code/PromptPay Image
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    id="qrCodeImage"
-                    type="file"
-                    accept="image/*"
-                    hidden={true}
-                    icon={<BiSolidUserRectangle size={24} />}
-                    onChange={handleImageChange}
-                    className="text-sm"
-                    disabled={isPending}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
 
-          <div className="flex gap-4">
-            {imageUrls.map((url, index) => (
+          {/* Conditionally render based on whether profile already has a qrcode_url */}
+          {profile?.qrcode_url ? (
+            <div className="flex flex-col gap-2 items-center ">
               <Image
-                key={url}
-                src={url}
+                src={profile.qrcode_url}
+                alt="Uploaded QR code"
                 width={300}
                 height={300}
-                alt={`img-${index}`}
+                className="rounded-lg shadow"
               />
-            ))}
-          </div>
+              <Button
+                type="button"
+                variant="destructive"
+                className="w-fit"
+                onClick={handleDeleteImage}
+                // disabled={isPending}
+              >
+                Delete QR Code
+              </Button>
+            </div>
+          ) : (
+            <>
+              <p className="text-sm text-muted-foreground">
+                No QR code uploaded. Please upload a QR code using the form
+                below.
+              </p>
+              <FormField
+                control={form.control}
+                name="qrCodeImage"
+                render={({ field: { value, onChange, ...field } }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        id="qrCodeImage"
+                        type="file"
+                        accept="image/*"
+                        hidden={true}
+                        icon={<BiSolidUserRectangle size={24} />}
+                        onChange={handleImageChange}
+                        className="text-sm"
+                        disabled={isPending}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Preview newly selected image (before upload) */}
+              <div className="flex gap-4 mt-2">
+                {imageUrls.map((url, index) => (
+                  <Image
+                    key={url}
+                    src={url}
+                    width={300}
+                    height={300}
+                    alt={`img-${index}`}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
 
         <div className="flex flex-col gap-3">
