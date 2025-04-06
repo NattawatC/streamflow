@@ -15,7 +15,6 @@ interface Props {
 
 interface ElectricityMeter {
   id: number
-  estate_id: number
   floor_no: string
   room_no: number
   meter_no: string
@@ -26,7 +25,6 @@ interface ElectricityMeter {
 
 interface WaterMeter {
   id: number
-  estate_id: number
   floor_no: string
   room_no: number
   meter_no: string
