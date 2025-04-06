@@ -1,7 +1,7 @@
 "use client"
 
 import { BiSolidUserRectangle } from "react-icons/bi"
-import { set, z } from "zod"
+import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter, useServerInsertedHTML } from "next/navigation"
@@ -25,7 +25,6 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { ChangeEvent, useEffect, useRef, useState, useTransition } from "react"
-import { BankInfo } from "@/interfaces/bank"
 import {
   getUserBanks,
   getUserEstate,
@@ -36,7 +35,6 @@ import Image from "next/image"
 import { convertBlobUrlToFile } from "@/lib/utils"
 import { deleteImage, uploadImage } from "@/auth/storage/client"
 import { Loader2 } from "lucide-react"
-import { url } from "inspector"
 
 const formSchema = z.object({
   firstName: z.string(),

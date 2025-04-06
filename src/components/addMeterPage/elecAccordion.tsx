@@ -33,7 +33,6 @@ interface ElectricityMeter {
 export function ElecAccordion({ userId }: Props) {
   const [estateId, setEstateId] = useState<number | null>(null)
   const [meterNum, setMeterNum] = useState<ElectricityMeter[]>([])
-
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
