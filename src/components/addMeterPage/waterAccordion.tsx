@@ -10,7 +10,6 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { useState, useEffect } from "react"
 import {
   getUserEstateId,
-  getAllElectricityMeterById,
   getAllWaterMeterById,
 } from "@/services/ownerService"
 import { Separator } from "../ui/separator"
