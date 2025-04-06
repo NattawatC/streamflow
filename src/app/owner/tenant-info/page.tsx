@@ -140,7 +140,7 @@ const tenantInfo: NextPage = () => {
         <div className="flex flex-col gap-3">
         <Link href={`/owner/edit-tenant?id=${id}`}>
             <Button className="font-bold bg-custom-green text-black w-full text-base gap-2">
-              Edit Room Information
+              Edit Tenant Information
             </Button>
           </Link>
         </div>
