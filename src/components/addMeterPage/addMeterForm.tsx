@@ -80,7 +80,7 @@ export function AddMeterForm({ userId }: Props) {
     },
   })
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {  
     const tableName = values.utility === "electricity" ? "electricity" : "water"
 
     const { data, error } = await supabase
@@ -100,7 +100,8 @@ export function AddMeterForm({ userId }: Props) {
       console.error(`Error inserting into ${tableName}:`, error.message)
     } else {
       console.log(`${tableName} meter inserted successfully:`, data)
-      router.refresh()
+      // router.refresh()
+      window.location.reload() 
     }
   }
 
