@@ -141,13 +141,13 @@ const home: NextPage = async () => {
                     <div className="flex flex-col justify-between w-auto gap-2">
                       <Link
                         className="flex w-full bg-custom-green text-black text-sm font-bold justify-center items-center rounded-md px-4 py-2"
-                        href="/owner/addMeter"
+                        href="/owner/add-meter"
                       >
                         Add/Delete Meter
                       </Link>
                       <Link
                         className="flex w-full bg-custom-purple text-black text-sm font-bold justify-center items-center rounded-md px-4 py-2"
-                        href="/owner/addMeter"
+                        href="/owner/list-of-meter"
                       >
                         View/Edit Meter
                       </Link>
