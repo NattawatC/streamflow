@@ -59,6 +59,7 @@ const formSchema = z.object({
   building: z.string(),
   floor: z.string(),
   room: z.string(),
+  password: z.string().nonempty("Password is required"),
 })
 
 export function AddTenantForm() {
@@ -93,6 +94,7 @@ export function AddTenantForm() {
       building: "",
       floor: "",
       room: "",
+      password: "",
     },
   })
 
@@ -119,6 +121,7 @@ export function AddTenantForm() {
           floor_no: values.floor,
           room_no: values.room,
           room_status: true,
+          password: values.password,
         },
       ])
       .select()
@@ -350,13 +353,26 @@ export function AddTenantForm() {
           )}
         />
 
-        {/* <Button
-          type="submit"
-          className="flex w-full text-base font-bold mt-8 bg-custom-green text-black"
-        >
-          Create Tenant's Account
-        </Button> */}
-
+        <p className="font-medium text-lg">Set the Password</p>
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-sm">Password</FormLabel>
+              <FormControl>
+                <Input
+                  type="password"
+                  className="text-sm"
+                  icon={<MdBedroomParent size={24} />}
+                  placeholder="********"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <Dialog>
           <DialogTrigger asChild>
             <Button
