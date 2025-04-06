@@ -5,9 +5,6 @@ import { IoIosArrowBack } from "react-icons/io"
 // import { CalendarForm } from "@/components/calendarForm"
 import { getUser } from "@/auth/server"
 import { RetrieveMeters } from "@/components/listOfMeterPage/retrieveMeters"
-import { Toggle } from "@/components/ui/toggle"
-import { Switch } from "@/components/ui/switch"
-import { z } from "zod"
 import { EstateStatus } from "@/components/listOfMeterPage/estateStatus"
 
 const listOfMeter: NextPage = async () => {
