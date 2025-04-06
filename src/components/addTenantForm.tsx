@@ -225,6 +225,34 @@ export function AddTenantForm() {
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="gender"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-sm">Year of Study</FormLabel>
+              <FormControl>
+                <Select onValueChange={(value) => field.onChange(value)}>
+                  <SelectTrigger
+                    className="flex w-full"
+                    icon={<PiGenderNeuterFill size={24} />}
+                  >
+                    <SelectValue placeholder="Select year of study" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">1</SelectItem>
+                    <SelectItem value="2">2</SelectItem>
+                    <SelectItem value="3">3</SelectItem>
+                    <SelectItem value="4">4</SelectItem>
+                    <SelectItem value=">4">Over 4</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
         <p className="font-medium text-lg">Room Information</p>
         <FormField
           control={form.control}
