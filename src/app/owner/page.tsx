@@ -138,18 +138,18 @@ const home: NextPage = async () => {
                 <AccordionContent>
                   <div className="flex flex-col gap-2">
                     {/* <p className="text-sm">Add Meter</p> */}
-                    <div className="flex flex-row justify-between w-auto gap-5">
+                    <div className="flex flex-col justify-between w-auto gap-2">
                       <Link
                         className="flex w-full bg-custom-green text-black text-sm font-bold justify-center items-center rounded-md px-4 py-2"
                         href="/owner/addMeter"
                       >
-                        Add Meter
+                        Add/Delete Meter
                       </Link>
                       <Link
-                        className="flex w-full bg-custom-green text-black text-sm font-bold justify-center items-center rounded-md px-4 py-2"
+                        className="flex w-full bg-custom-purple text-black text-sm font-bold justify-center items-center rounded-md px-4 py-2"
                         href="/owner/addMeter"
                       >
-                        Edit Meter
+                        View/Edit Meter
                       </Link>
                     </div>
                   </div>
@@ -193,6 +193,7 @@ const home: NextPage = async () => {
                     room={tenant.room_no}
                     firstname={tenant.first_name}
                     lastname={tenant.last_name}
+                    // rentalCost={tenant.rentalCost}
                     pStatus={tenant.payment_status}
                     rStatus={tenant.room_status}
                   />
