@@ -83,7 +83,14 @@ export function Water({ userId }: Props) {
           </span>
         </div>
       ) : (
-        <p className="text-black text-base">No water meters added.</p>
+        <div className="flex bg-custom-green w-auto flex-col p-4 text-center rounded-md">
+          <div className="flex flex-col gap-2">
+            <p className="text-black font-bold text-base">
+              Water <br /> Added
+            </p>
+          </div>
+          <p className="text-black text-2xl font-bold">0</p>
+        </div>
       )}
     </>
   )
