@@ -1,7 +1,7 @@
 "use client"
 
 // Icon
-import { PiGenderNeuterFill } from "react-icons/pi"
+import { PiGenderNeuterFill, PiWarningCircleFill } from "react-icons/pi"
 import { TbListNumbers } from "react-icons/tb"
 import { FaSquarePhone } from "react-icons/fa6"
 import { BiSolidUserRectangle } from "react-icons/bi"
@@ -33,6 +33,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
 import { useEffect, useState } from "react"
@@ -227,7 +237,7 @@ export function AddTenantForm() {
         />
         <FormField
           control={form.control}
-          name="gender"
+          name="yearOfStudy"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-sm">Year of Study</FormLabel>
@@ -252,7 +262,7 @@ export function AddTenantForm() {
             </FormItem>
           )}
         />
-        
+
         <p className="font-medium text-lg">Room Information</p>
         <FormField
           control={form.control}
@@ -340,12 +350,66 @@ export function AddTenantForm() {
           )}
         />
 
-        <Button
+        {/* <Button
           type="submit"
           className="flex w-full text-base font-bold mt-8 bg-custom-green text-black"
         >
           Create Tenant's Account
-        </Button>
+        </Button> */}
+
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              type="button"
+              className="flex w-full text-base font-bold mt-8 bg-custom-green text-black"
+            >
+              Create Tenant's Account
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader className="flex flex-col gap-4">
+              <DialogTitle className="flex text-left text-white">
+                Create Tenant's Account
+              </DialogTitle>
+              <DialogDescription>
+                <>
+                  <span className="flex flex-col gap-2">
+                    <span className="text-white">
+                      Have you completed the verification of the tenant's
+                      information?
+                    </span>
+                    <span className="flex flex-row gap-2 text-custom-pink items-center">
+                      <PiWarningCircleFill size={24} />
+                      <span className="text-custom-pink">
+                        Please note that this action is irreversible.
+                      </span>
+                    </span>
+                  </span>
+                </>
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="sm:justify-start">
+              <div className="flex flex-row gap-4">
+                <Button
+                  type="submit"
+                  onClick={form.handleSubmit(onSubmit)}
+                  className="w-full bg-custom-pink text-black"
+                >
+                  Yes, I'm sure
+                </Button>
+                <DialogClose asChild>
+                  <Button
+                    type="button"
+                    className="w-full text-black border "
+                    variant={"outline"}
+                  >
+                    Wait a minute...
+                  </Button>
+                </DialogClose>
+              </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         <Link href={"/owner"}>
           <Button
