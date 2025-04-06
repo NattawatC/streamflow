@@ -2,28 +2,29 @@ import { NextPage } from "next"
 import Link from "next/link"
 import { MainLayout } from "@/components/layout"
 import { IoIosArrowBack } from "react-icons/io"
-import { CalendarForm } from "@/components/calendarForm"
+// import { CalendarForm } from "@/components/calendarForm"
 import { getUser } from "@/auth/server"
 import { RetrieveMeters } from "@/components/listOfMeterPage/retrieveMeters"
-
+import { Toggle } from "@/components/ui/toggle"
+import { Switch } from "@/components/ui/switch"
+import { z } from "zod"
+import { EstateStatus } from "@/components/listOfMeterPage/estateStatus"
 
 const listOfMeter: NextPage = async () => {
   const user = await getUser()
   const userId = user?.id
-  
+
   return (
     <>
       <MainLayout className="flex flex-col gap-7">
-        {/* change path */}
         <Link href="/owner">
           <IoIosArrowBack size={24} className="text-black" />
         </Link>
-        <div className="flex flex-row justify-left gap-2">
+        <div className="flex flex-row justify-between w-full">
           <h1 className="font-bold text-2xl">List of Meter</h1>
+          <EstateStatus userId={userId} />
         </div>
-        <div className="flex bg-custom-gray-background p-3 rounded-2xl justify-center">
-          {/* <CalendarForm></CalendarForm> */}
-        </div>
+
         <RetrieveMeters userId={userId} />
       </MainLayout>
     </>
