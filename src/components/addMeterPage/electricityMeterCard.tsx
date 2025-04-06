@@ -28,6 +28,7 @@ export const ElectricityMeterCard: React.FunctionComponent<ElecMeterProps> = ({
 
     console.log(`Successfully deleted meter with ID: ${id}`)
     onDelete(id)
+    window.location.reload()
   }
 
   return (

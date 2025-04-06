@@ -28,6 +28,7 @@ export const WaterMetercard: React.FunctionComponent<waterMeterProps> = ({
 
     console.log(`Successfully deleted meter with ID: ${id}`)
     onDelete(id)
+    window.location.reload()
   }
   return (
     <>
