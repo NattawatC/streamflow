@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/accordion"
 import Receipt from "@/components/receipt"
 import BankInfo from "@/components/bankInfo"
-import { ownerData } from "@/api/interfaces/ownerData"
+// import { ownerData } from "@/api/interfaces/ownerData"
 
 const data = {
   startDate: "2021/10/01",
@@ -95,7 +95,7 @@ const payment: NextPage = () => {
         </DialogContent>
       </Dialog>
 
-      <BankInfo bank={ownerData.bank} />
+      {/* <BankInfo bank={ownerData.bank} /> */}
 
       <div>
         <p>The Receipt</p>
