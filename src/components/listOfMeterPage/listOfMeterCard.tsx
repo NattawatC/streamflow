@@ -13,7 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { EditMeterDialog } from "@/components/listOfMeterPage/editMeterForm"
+import EditMeterForm from "./editMeterForm"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Image from "next/image"
@@ -59,7 +59,7 @@ const ListOfMeterCard: React.FunctionComponent<Props> = ({
   })
 
   return (
-    <div className="flex flex-col w-full rounded-lg outline-black outline p-3 gap-5 relative">
+    <div className="flex flex-col w-full rounded-lg border border-black p-3 gap-5 relative">
       {/* first row */}
       <button
         className="absolute top-2 right-2"
@@ -107,7 +107,7 @@ const ListOfMeterCard: React.FunctionComponent<Props> = ({
       {/* 2 buttons */}
       {showOptions && (
         <div className="flex flex-row justify-center gap-3">
-          {/* <EditMeterDialog
+          <EditMeterForm
             roomNumber={roomNumber}
             electricityNo={electricityNo}
             electrictyUsage={electricityUsage}
@@ -117,11 +117,11 @@ const ListOfMeterCard: React.FunctionComponent<Props> = ({
             <Button className="flex text-base w-full font-medium bg-custom-green text-black">
               Edit
             </Button>
-          </EditMeterDialog> */}
+          </EditMeterForm>
 
           <Dialog>
             <DialogTrigger asChild>
-              <Button className="flex text-base w-full font-medium text-black outline-black outline bg-transparent">
+              <Button className="flex text-base w-full font-medium text-black border border-black bg-transparent">
                 View Meter
               </Button>
             </DialogTrigger>

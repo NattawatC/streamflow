@@ -44,14 +44,15 @@ interface EditMeterDialogProps {
   children: React.ReactNode
 }
 
-export function EditMeterDialog({
+
+  const EditMeterForm: React.FunctionComponent<EditMeterDialogProps> = ({
   roomNumber,
   electricityNo,
   electrictyUsage,
   waterNo,
   waterUsage,
   children,
-}: EditMeterDialogProps) {
+}) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -243,3 +244,5 @@ export function EditMeterDialog({
     </Dialog>
   )
 }
+
+export default EditMeterForm
