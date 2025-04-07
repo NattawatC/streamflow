@@ -17,26 +17,47 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { useRouter } from "next/navigation"
+import supabase from "@/config/supabaseClient"
+import { toast } from "sonner"
 
 const formSchema = z.object({
-  username: z.string(),
+  room_no: z.string(),
   password: z.string(),
 })
 
 export function LoginResidentForm() {
-  // 1. Define your form.
+  const router = useRouter()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      room_no: "",
       password: "",
     },
   })
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const { data: resident, error } = await supabase
+        .from("tenants")
+        .select("*")
+        .eq("room_no", values.room_no)
+        .single()
+
+      if (error || !resident) {
+        throw new Error("Room number not found")
+      }
+
+      if (resident.password !== values.password) {
+        throw new Error("Incorrect password")
+      }
+
+      router.push("/tenant")
+
+      toast("Login successful")
+    } catch (error) {
+      toast("Login failed")
+    }
   }
 
   return (
@@ -44,23 +65,18 @@ export function LoginResidentForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="username"
+          name="room_no"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-sm">Username</FormLabel>
+              <FormLabel className="text-sm">Room Number</FormLabel>
               <FormControl>
-                <>
-                  <Input
-                    className="text-sm"
-                    placeholder="John"
-                    {...field}
-                    icon={<BiSolidUserRectangle size={24} />}
-                  />
-                </>
+                <Input
+                  className="text-sm"
+                  placeholder="1234"
+                  {...field}
+                  icon={<BiSolidUserRectangle size={24} />}
+                />
               </FormControl>
-              <FormDescription className="text-xs">
-                This is your firstname when you created an account
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -88,14 +104,9 @@ export function LoginResidentForm() {
           )}
         />
 
-        <Link href={"/tenant/home"}>
-          <Button
-            type="submit"
-            className="flex w-full text-base font-bold mt-8"
-          >
-            Login
-          </Button>
-        </Link>
+        <Button type="submit" className="flex w-full text-base font-bold mt-8">
+          Login
+        </Button>
       </form>
     </Form>
   )
