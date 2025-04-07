@@ -40,7 +40,7 @@ const formSchema = z.object({
 interface EditMeterDialogProps {
   roomNumber: string
   electricityNo: string
-  electrictyUsage: number
+  electricityUsage: number  // Fixed typo here
   waterNo: string
   waterUsage: number
   children: React.ReactNode
@@ -49,7 +49,7 @@ interface EditMeterDialogProps {
 const EditMeterForm: React.FunctionComponent<EditMeterDialogProps> = ({
   roomNumber,
   electricityNo,
-  electrictyUsage,
+  electricityUsage,
   waterNo,
   waterUsage,
   children,
@@ -59,7 +59,7 @@ const EditMeterForm: React.FunctionComponent<EditMeterDialogProps> = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       editElecNo: electricityNo,
-      editElecUsage: electrictyUsage,
+      editElecUsage: electricityUsage,
       editWaterNo: waterNo,
       editWaterUsage: waterUsage,
     },
