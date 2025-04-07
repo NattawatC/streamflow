@@ -7,6 +7,7 @@ interface UtilityProps {
   href: string
   color: string
   Icon: React.ElementType
+  room_no: string | undefined
 }
 
 const Utility: React.FunctionComponent<UtilityProps> = ({
@@ -14,12 +15,13 @@ const Utility: React.FunctionComponent<UtilityProps> = ({
   color,
   href,
   Icon,
+  room_no,
 }) => {
   return (
     <>
       {/* Mobile */}
       <Link
-        href={`${href}`}
+        href={`/tenant/${href}?room_no=${room_no}`}
         className={`block w-full h-full ${color} w-auto h-full p-4 justify-start rounded-md`}
       >
         <div className={`flex bg-${color} w-auto flex-col text-left`}>
