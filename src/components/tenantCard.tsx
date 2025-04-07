@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { Suspense } from "react"
 import { Separator } from "./ui/separator"
 import { HiMiniTrash } from "react-icons/hi2"
 import { Button } from "@/components/ui/button"
@@ -142,13 +142,15 @@ const TenantCard: React.FunctionComponent<Tenant> = ({
             <Separator className="h-[2px] rounded-sm w-full justify-center" />
           </div>
 
-          <Link
-            href={`/owner/tenant-info?id=${id}`}
-            className="flex flex-row gap-2 items-center justify-center rounded-full py-1 px-0 w-full border border-custom-purple text-custom-purple"
-          >
-            View Details
-            <IoIosArrowRoundForward size={20} />
-          </Link>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Link
+              href={`/owner/tenant-info?id=${id}`}
+              className="flex flex-row gap-2 items-center justify-center rounded-full py-1 px-0 w-full border border-custom-purple text-custom-purple"
+            >
+              View Details
+              <IoIosArrowRoundForward size={20} />
+            </Link>
+          </Suspense>
         </div>
       </div>
     </>
