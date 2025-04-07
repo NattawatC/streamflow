@@ -69,7 +69,7 @@ export function CalendarForm() {
                   </FormControl>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
+                  {/* <Calendar
                     mode="single"
                     selected={field.value}
                     onSelect={field.onChange}
@@ -77,7 +77,7 @@ export function CalendarForm() {
                       date > new Date() || date < new Date("2020-01-01")
                     }
                     initialFocus
-                  />
+                  /> */}
                 </PopoverContent>
               </Popover>
               <FormMessage />
