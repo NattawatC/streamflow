@@ -1,7 +1,6 @@
 "use client"
 
 import { BiSolidUserRectangle } from "react-icons/bi"
-import { PiGenderNeuterFill } from "react-icons/pi"
 import { MdOutlineElectricBolt } from "react-icons/md"
 import { FaWater } from "react-icons/fa6"
 import { z } from "zod"
@@ -48,6 +47,10 @@ export function AddMeterForm({ userId }: Props) {
   const [error, setError] = useState<string | null>(null)
   const [selectedUtility, setSelectedUtility] = useState("")
 
+  const now = new Date()
+  const formattedDate = now.toISOString().split("T")[0]
+  console.log(formattedDate)
+
   useEffect(() => {
     const fetchUserEstate = async () => {
       try {
@@ -92,6 +95,7 @@ export function AddMeterForm({ userId }: Props) {
           floor_no: values.floor,
           meter_no: values.meter,
           initial_value: values.initialValue,
+          created_at: formattedDate,
         },
       ])
       .select()
