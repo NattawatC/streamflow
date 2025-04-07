@@ -53,8 +53,7 @@ export function LoginResidentForm() {
       }
 
       if (resident) {
-        const userId = resident.id
-        router.push(`/tenant?id=${userId}`)
+        router.push(`/tenant?room_no=${values.room_no}`)
       }
 
       toast("Login successful")
