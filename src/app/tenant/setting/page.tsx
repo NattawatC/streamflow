@@ -8,8 +8,53 @@ import { Separator } from "@/components/ui/separator"
 import { MainLayout } from "@/components/layout"
 import { FiEdit } from "react-icons/fi"
 import { tenantData } from "@/interfaces/tenantData"
+import { useSearchParams } from "next/navigation"
+import { useEffect, useState } from "react"
+import supabase from "@/config/supabaseClient"
+
+interface Tenant {
+  id: string
+  first_name: string
+  last_name: string
+  age: string
+  gender: string
+  year_of_study: string
+  phone_number: string
+  room_no: string
+  building_no: string
+  floor_no: string
+  payment_status: boolean
+  address: string
+  city: string
+  zip_code: string
+  estate_id: number
+}
 
 const setting: NextPage = () => {
+  const searchParams = useSearchParams()
+  const roomNo = searchParams.get("room_no")
+  const [tenant, setTenant] = useState<Tenant | null>(null)
+
+  useEffect(() => {
+    if (roomNo) {
+      const fetchTenant = async () => {
+        const { data, error } = await supabase
+          .from("tenants")
+          .select("*")
+          .eq("room_no", roomNo)
+          .single()
+
+        if (error) {
+          console.error("Error fetching tenant:", error)
+        } else {
+          setTenant(data)
+        }
+      }
+
+      fetchTenant()
+    }
+  }, [roomNo])
+
   return (
     <>
       <MainLayout className="flex flex-col gap-7">
@@ -39,12 +84,12 @@ const setting: NextPage = () => {
               </div>
               <div className="flex flex-col gap-2">
                 <p>
-                  {tenantData.firstname} {tenantData.lastname}
+                  {tenant?.first_name} {tenant?.last_name}
                 </p>
-                <p>{tenantData.age}</p>
-                <p>{tenantData.gender}</p>
-                <p>{tenantData.yearOfStudy}</p>
-                <p>{tenantData.phoneNumber}</p>
+                <p>{tenant?.age}</p>
+                <p>{tenant?.gender}</p>
+                <p>{tenant?.year_of_study}</p>
+                <p>{tenant?.phone_number}</p>
               </div>
             </div>
           </div>
@@ -61,7 +106,7 @@ const setting: NextPage = () => {
             <div className="flex flex-col gap-2">
               <div className="flex flex-col gap-1">
                 <p className="font-medium">Address:</p>
-                <p>{tenantData.address}</p>
+                <p>{tenant?.address}</p>
               </div>
               <div className="flex flex-row gap-4">
                 <div className="flex flex-col font-medium gap-2">
@@ -69,8 +114,8 @@ const setting: NextPage = () => {
                   <p>Zip Code:</p>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <p>{tenantData.city}</p>
-                  <p>{tenantData.zipCode}</p>
+                  <p>{tenant?.city}</p>
+                  <p>{tenant?.zip_code}</p>
                 </div>
               </div>
             </div>
@@ -92,9 +137,9 @@ const setting: NextPage = () => {
                 <p>Room Numnber:</p>
               </div>
               <div className="flex flex-col gap-2">
-                <p>{tenantData.building}</p>
-                <p>{tenantData.floor}</p>
-                <p>{tenantData.roomNumber}</p>
+                <p>{tenant?.building_no}</p>
+                <p>{tenant?.floor_no}</p>
+                <p>{tenant?.room_no}</p>
               </div>
             </div>
           </div>
@@ -113,16 +158,25 @@ const setting: NextPage = () => {
                 <p>Status:</p>
               </div>
               <div className="flex flex-col gap-2">
-                <p>{tenantData.status}</p>
+                <p>
+                  {tenant?.payment_status
+                    ? "Payment Completed"
+                    : "Payment Incomplete"}
+                </p>
               </div>
             </div>
           </div>
         </div>
 
-        <CautionCard yearOfStudy={tenantData.yearOfStudy} />
+        <CautionCard yearOfStudy={tenant?.year_of_study} />
 
         <div className="flex flex-col gap-3">
-          <Link href={"/tenant/home"}>
+          <Link
+            href={{
+              pathname: `/tenant`,
+              query: { room_no: roomNo },
+            }}
+          >
             <Button className="font-bold bg-custom-green text-black w-full text-base gap-2">
               Return to Home
             </Button>
