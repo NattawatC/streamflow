@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from "react"
 import { MdOutlineElectricBolt } from "react-icons/md"
 import { FaWater } from "react-icons/fa6"
