@@ -38,11 +38,11 @@ const UtilityInfo: React.FunctionComponent<InfoProps> = ({
             <p>Date</p>
           </div>
           <div className="flex flex-row justify-between items-center font-bold">
-            <p className="font-bold">{usage}</p>
+            <li className="font-bold">{usage}</li>
             <p>Usage ({unit})</p>
           </div>
           <div className="flex flex-row justify-between items-center font-bold">
-            <p>{cost}</p>
+            <li>{cost}</li>
             <p>Cost (per {unit})</p>
           </div>
         </div>
