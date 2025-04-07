@@ -21,7 +21,7 @@ const listOfMeter: NextPage = async () => {
           <EstateStatus userId={userId} />
         </div>
 
-        <RetrieveMeters userId={userId} />
+        {/* <RetrieveMeters userId={userId} /> */}
       </MainLayout>
     </>
   )
