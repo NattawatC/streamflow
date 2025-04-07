@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import supabase from "@/config/supabaseClient"
 import { NextPage } from "next"
 import Link from "next/link"
-import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 
 interface Tenant {
@@ -22,8 +21,14 @@ interface Tenant {
 }
 
 const result: NextPage = () => {
-  const searchParams = useSearchParams()
-  const id = searchParams.get("id")
+
+  const [id, setId] = useState<string | null>(null)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const id = params.get("id")
+    setId(id)
+  }, [])
 
   const [tenant, setTenant] = useState<Tenant | null>(null)
 
