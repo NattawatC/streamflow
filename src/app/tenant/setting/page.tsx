@@ -30,8 +30,13 @@ interface Tenant {
 }
 
 const setting: NextPage = () => {
-  const searchParams = useSearchParams()
-  const roomNo = searchParams.get("room_no")
+  const [roomNo, setRoomNo] = useState<string | null>(null)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const room_no = params.get("room_no")
+    setRoomNo(room_no)
+  }, [])
   const [tenant, setTenant] = useState<Tenant | null>(null)
 
   useEffect(() => {

@@ -46,9 +46,17 @@ const electricity: NextPage = () => {
   const [electricityData, setElectricityData] =
     useState<ElectricityData | null>(null)
   const [estateInfo, setEstateInfo] = useState<EstateInfo | null>(null)
-  const searchParams = useSearchParams()
-  const roomNo = searchParams.get("room_no")
-  const estateId = searchParams.get("id")
+
+  const [roomNo, setRoomNo] = useState<string | null>(null)
+  const [estateId, setEstateId] = useState<string | null>(null)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const room_no = params.get("room_no")
+    const estateId = params.get("id")
+    setRoomNo(room_no)
+    setEstateId(estateId)
+  }, [])
 
   useEffect(() => {
     const fetchEstate = async () => {

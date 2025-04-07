@@ -2,12 +2,16 @@
 import { NextPage } from "next"
 import { MainLayout } from "@/components/layout"
 import { EditTenantProfile } from "@/components/editTenantProfile"
-import { useSearchParams } from "next/navigation"
+import { useEffect, useState } from "react"
 
 const editProfile: NextPage = () => {
-  const searchParams = useSearchParams()
-  const roomNo = searchParams.get("room_no")
+  const [roomNo, setRoomNo] = useState<string | null>(null)
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const room_no = params.get("room_no")
+    setRoomNo(room_no)
+  }, [])
   return (
     <>
       <MainLayout className="flex flex-col gap-7">
