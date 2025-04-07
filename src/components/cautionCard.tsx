@@ -1,13 +1,14 @@
 import { PiWarningCircleFill } from "react-icons/pi"
+import { ZodUndefinedDef } from "zod"
 
 interface HealthScore {
-  yearOfStudy: number
+  yearOfStudy: string | undefined
 }
 
 const CautionCard: React.FunctionComponent<HealthScore> = ({ yearOfStudy }) => {
   return (
     <>
-      {yearOfStudy === 4 ? (
+      {yearOfStudy == "4" || yearOfStudy == ">4" ? (
         <div
           className="flex flex-col gap-2 bg-white rounded-md p-5 text-red-700
          shadow-lg"
