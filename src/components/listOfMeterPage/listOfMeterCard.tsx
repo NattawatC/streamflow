@@ -5,7 +5,6 @@ import { MdOutlineElectricBolt } from "react-icons/md"
 import { FaWater } from "react-icons/fa6"
 import { BsThreeDots } from "react-icons/bs"
 import { Button } from "@/components/ui/button"
-import { z } from "zod"
 import {
   Dialog,
   DialogContent,
@@ -14,8 +13,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import EditMeterForm from "./editMeterForm"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
 import Image from "next/image"
 import { ScrollArea } from "../ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
@@ -30,13 +27,6 @@ interface Props {
   waterImageUrl: string
 }
 
-const formSchema = z.object({
-  editElecNo: z.string(),
-  editElecUsage: z.coerce.number(),
-  editWaterNo: z.string(),
-  editWaterUsage: z.coerce.number(),
-})
-
 const ListOfMeterCard: React.FunctionComponent<Props> = ({
   roomNumber,
   electricityUsage,
@@ -47,16 +37,6 @@ const ListOfMeterCard: React.FunctionComponent<Props> = ({
   waterImageUrl,
 }) => {
   const [showOptions, setShowOptions] = useState(false)
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      editElecNo: electricityNo,
-      editElecUsage: electricityUsage,
-      editWaterNo: waterNo,
-      editWaterUsage: waterUsage,
-    },
-  })
 
   return (
     <div className="flex flex-col w-full rounded-lg border border-black p-3 gap-5 relative">
@@ -107,17 +87,17 @@ const ListOfMeterCard: React.FunctionComponent<Props> = ({
       {/* 2 buttons */}
       {showOptions && (
         <div className="flex flex-row justify-center gap-3">
-          {/* <EditMeterForm
+          <EditMeterForm
             roomNumber={roomNumber}
             electricityNo={electricityNo}
-            electrictyUsage={electricityUsage}
+            electricityUsage={electricityUsage} // Note: prop name has typo
             waterNo={waterNo}
             waterUsage={waterUsage}
           >
             <Button className="flex text-base w-full font-medium bg-custom-green text-black">
               Edit
             </Button>
-          </EditMeterForm> */}
+          </EditMeterForm>
 
           <Dialog>
             <DialogTrigger asChild>
