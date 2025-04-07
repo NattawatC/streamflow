@@ -31,6 +31,7 @@ import { useSearchParams } from "next/navigation"
 
 interface EstateInfo {
   water_cost: number
+  is_ready: boolean
 }
 
 interface WaterData {
@@ -72,6 +73,7 @@ const water: NextPage = () => {
         console.error("Error fetching water data:", error)
       } else {
         setEstateInfo({
+          is_ready: estate.is_ready,
           water_cost: estate.water_cost,
         })
       }
@@ -151,18 +153,22 @@ const water: NextPage = () => {
                 Water Meter (Image)
               </AccordionTrigger>
               <AccordionContent>
-                {waterData?.image_url ? (
-                  <Image
-                    src={waterData.image_url}
-                    width={300}
-                    height={300}
-                    alt="qrcode"
-                    priority
-                  />
+                {estateInfo?.is_ready ? (
+                  waterData?.image_url ? (
+                    <Image
+                      src={waterData.image_url}
+                      width={300}
+                      height={300}
+                      alt="qrcode"
+                      priority
+                    />
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      No image available for this water meter
+                    </p>
+                  )
                 ) : (
-                  <p className="text-sm text-muted-foreground">
-                    No image available for this water meter.
-                  </p>
+                  <p>Waiting for the Owner to double-check the meters...</p>
                 )}
               </AccordionContent>
             </AccordionItem>

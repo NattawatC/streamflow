@@ -31,6 +31,7 @@ import Image from "next/image"
 
 interface EstateInfo {
   electricity_cost: number
+  is_ready: boolean
 }
 
 interface ElectricityData {
@@ -68,12 +69,11 @@ const electricity: NextPage = () => {
         .eq("id", estateId)
         .single()
 
-      console.log(estate)
-
       if (error) {
         console.error("Error fetching electricity data:", error)
       } else {
         setEstateInfo({
+          is_ready: estate.is_ready,
           electricity_cost: estate.electricity_cost,
         })
       }
@@ -156,18 +156,22 @@ const electricity: NextPage = () => {
                 Electric Meter (Image)
               </AccordionTrigger>
               <AccordionContent>
-                {electricityData?.image_url ? (
-                  <Image
-                    src={electricityData.image_url}
-                    width={300}
-                    height={300}
-                    alt="qrcode"
-                    priority
-                  />
+                {estateInfo?.is_ready ? (
+                  electricityData?.image_url ? (
+                    <Image
+                      src={electricityData.image_url}
+                      width={300}
+                      height={300}
+                      alt="qrcode"
+                      priority
+                    />
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      No image available for this water meter
+                    </p>
+                  )
                 ) : (
-                  <p className="text-sm text-muted-foreground">
-                    No image available for this water meter.
-                  </p>
+                  <p>Waiting for the Owner to double-check the meters...</p>
                 )}
               </AccordionContent>
             </AccordionItem>
