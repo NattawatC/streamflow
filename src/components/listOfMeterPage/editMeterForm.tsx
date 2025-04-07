@@ -81,6 +81,7 @@ const EditMeterForm: React.FunctionComponent<EditMeterDialogProps> = ({
               kWh: formValues.editElecUsage,
             },
           ])
+          .eq("room_no", roomNumber)
           .select()
 
         const { data: waterData, error } = await supabase
@@ -91,6 +92,7 @@ const EditMeterForm: React.FunctionComponent<EditMeterDialogProps> = ({
               usage: formValues.editWaterUsage,
             },
           ])
+          .eq("room_no", roomNumber)
           .select()
 
         if (error) {
@@ -98,6 +100,7 @@ const EditMeterForm: React.FunctionComponent<EditMeterDialogProps> = ({
         }
 
         toast.success("Meter records updated successfully")
+        window.location.reload()
         setIsOpen(false)
       } catch (error) {
         toast.error("Failed to update meter records")
