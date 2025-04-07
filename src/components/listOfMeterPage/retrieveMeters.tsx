@@ -16,7 +16,7 @@ interface Props {
 interface ElectricityMeter {
   id: number
   floor_no: string
-  room_no: string // Confirmed as string from Supabase
+  room_no: string // Changed from number to string to match WaterMeter
   meter_no: string
   initial_value: number
   kWh: number
@@ -85,7 +85,13 @@ export function RetrieveMeters({ userId }: Props) {
           return
         }
 
-        setElecMeterNum(electricity)
+        // Convert room_no to string if it comes as number from API
+        const formattedElectricity = electricity.map((meter) => ({
+          ...meter,
+          room_no: meter.room_no.toString(),
+        }))
+
+        setElecMeterNum(formattedElectricity)
       } catch (err) {
         setError("Failed to fetch electricity data")
         console.error(err)
@@ -119,15 +125,14 @@ export function RetrieveMeters({ userId }: Props) {
   }, [estateId])
 
   const groupedMeters = elecMeterNum.reduce((acc, meter) => {
-    const floorKey = meter.floor_no
-    if (!acc[floorKey]) acc[floorKey] = []
+    if (!acc[meter.floor_no]) acc[meter.floor_no] = []
 
     const waterMeter = waterMeterNum.find(
       (wMeter) =>
         wMeter.room_no === meter.room_no && wMeter.floor_no === meter.floor_no
     )
 
-    acc[floorKey].push({
+    acc[meter.floor_no].push({
       roomNumber: meter.room_no,
       electricityNo: meter.meter_no,
       electricityUsage: meter.kWh || 0,
@@ -164,7 +169,7 @@ export function RetrieveMeters({ userId }: Props) {
             <div className="flex flex-col gap-2">
               {meters.map((meter, index) => (
                 <ListOfMeterCard
-                  key={`${floor}-${meter.roomNumber}-${index}`}
+                  key={index}
                   roomNumber={meter.roomNumber}
                   electricityUsage={meter.electricityUsage}
                   electricityNo={meter.electricityNo}
