@@ -52,7 +52,10 @@ export function LoginResidentForm() {
         throw new Error("Incorrect password")
       }
 
-      router.push("/tenant")
+      if (resident) {
+        const userId = resident.id
+        router.push(`/tenant?id=${userId}`)
+      }
 
       toast("Login successful")
     } catch (error) {
