@@ -101,7 +101,7 @@ const water: NextPage = () => {
   return (
     <>
       <MainLayout className="flex flex-col gap-7">
-        <Link href="/tenant/home">
+        <Link href={`/tenant?room_no=${roomNo}`}>
           <IoIosArrowBack size={24} className="text-black" />
         </Link>
         <div className="flex flex-row items-center gap-2">
