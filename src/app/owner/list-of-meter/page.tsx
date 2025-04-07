@@ -10,6 +10,10 @@ import { EstateStatus } from "@/components/listOfMeterPage/estateStatus"
 const listOfMeter: NextPage = async () => {
   const user = await getUser()
   const userId = user?.id
+  if (!user) {
+    console.error("No user found") // Check server logs
+    return <div>Not authenticated</div>
+  }
 
   return (
     <>
