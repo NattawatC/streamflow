@@ -12,8 +12,13 @@ import { useEffect, useState } from "react"
 import supabase from "@/config/supabaseClient"
 
 const tenantInfo: NextPage = () => {
-  const searchParams = useSearchParams()
-  const id = searchParams.get("id")
+  const [id, setId] = useState<string | null>(null)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const id = params.get("id")
+    setId(id)
+  }, [])
 
   const [tenant, setTenant] = useState<any>(null)
 
