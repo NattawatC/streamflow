@@ -16,7 +16,7 @@ interface Props {
 interface ElectricityMeter {
   id: number
   floor_no: string
-  room_no: string // Changed from number to string to match WaterMeter
+  room_no: string
   meter_no: string
   initial_value: number
   kWh: number
@@ -85,7 +85,6 @@ export function RetrieveMeters({ userId }: Props) {
           return
         }
 
-        // Convert room_no to string if it comes as number from API
         const formattedElectricity = electricity.map((meter) => ({
           ...meter,
           room_no: meter.room_no.toString(),
