@@ -27,8 +27,9 @@ import {
   updateWaterMeter,
 } from "@/api/services/meterService"
 import { toast } from "sonner"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { DialogDescription } from "@radix-ui/react-dialog"
+import supabase from "@/config/supabaseClient"
 
 const formSchema = z.object({
   editElecNo: z.string().min(1, "Electricity meter number is required"),
@@ -55,6 +56,8 @@ const EditMeterForm: React.FunctionComponent<EditMeterDialogProps> = ({
   children,
 }) => {
   const [isOpen, setIsOpen] = useState(false)
+  const [shouldUpdate, setShouldUpdate] = useState(false)
+  const [formValues, setFormValues] = useState<z.infer<typeof formSchema> | null>(null)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -65,8 +68,75 @@ const EditMeterForm: React.FunctionComponent<EditMeterDialogProps> = ({
     },
   })
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  useEffect(() => {
+    if (!shouldUpdate || !formValues) return
+
+    const updateMeters = async () => {
+      try {
+        const { data: electricityData } = await supabase
+          .from("electricity")
+          .update([
+            {
+              meter_no: formValues.editElecNo,
+              kWh: formValues.editElecUsage,
+            },
+          ])
+          .select()
+
+        const { data: waterData, error } = await supabase
+          .from("water")
+          .update([
+            {
+              meter_no: formValues.editWaterNo,
+              usage: formValues.editWaterUsage,
+            },
+          ])
+          .select()
+
+        if (error) {
+          throw new Error(error.message)
+        }
+
+        toast.success("Meter records updated successfully")
+        setIsOpen(false)
+      } catch (error) {
+        toast.error("Failed to update meter records")
+        console.error("Error updating meter records:", error)
+      } finally {
+        setShouldUpdate(false)
+      }
+    }
+
+    updateMeters()
+  }, [shouldUpdate, formValues])
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
     console.log("Form submitted with values:", values)
+    setFormValues(values)
+    setShouldUpdate(true)
+  }
+
+  // async function onSubmit(values: z.infer<typeof formSchema>) {
+  //   const { data: electricityData } = await supabase
+  //     .from("electricity")
+  //     .update([
+  //       {
+  //         meter_no: values.editElecNo,
+  //         kWh: values.editElecUsage,
+  //       },
+  //     ])
+  //     .select()
+
+  //   const { data: waterData, error } = await supabase
+  //     .from("water")
+  //     .update([
+  //       {
+  //         meter_no: values.editWaterNo,
+  //         usage: values.editWaterUsage,
+  //       },
+  //     ])
+  //     .select()
+
     // try {
     //   // Update electricity meter
     //   const elecResponse = await updateElectricityMeter({
@@ -95,150 +165,146 @@ const EditMeterForm: React.FunctionComponent<EditMeterDialogProps> = ({
     //   toast.error("Failed to update meter records")
     //   console.error("Error updating meter records:", error)
     // }
-  }
+  // }
 
   return (
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogTrigger asChild>{children}</DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle className="text-white">
-              Meter Room {roomNumber}
-            </DialogTitle>
-          </DialogHeader>
-          <DialogDescription></DialogDescription>
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="flex flex-col gap-8"
-            >
-              <div className="flex flex-col gap-3">
-                <div className="flex flex-row gap-2">
-                  <p className="whitespace-nowrap text-base font-bold text-white">
-                    Electricity
-                  </p>
-                  <div className="flex w-full items-center">
-                    <Separator className="h-[2px] rounded-sm w-full justify-center" />
-                  </div>
-                </div>
-                <div className="flex flex-col gap-5">
-                  <FormField
-                    control={form.control}
-                    name="editElecNo"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel
-                          htmlFor="editElecNo"
-                          className="text-sm text-white"
-                        >
-                          Meter No.
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            id="editElecNo"
-                            type="text"
-                            className="text-sm"
-                            {...field}
-                            icon={<BiSolidUserRectangle size={24} />}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="editElecUsage"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm text-white">
-                          Usage (kWh)
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            id="editElecUsage"
-                            type="number"
-                            min="0"
-                            step="0.01"
-                            className="text-sm"
-                            {...field}
-                            icon={<BiSolidUserRectangle size={24} />}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="flex flex-row gap-2">
-                  <p className="whitespace-nowrap text-base font-bold text-white">
-                    Water
-                  </p>
-                  <div className="flex w-full items-center">
-                    <Separator className="h-[2px] rounded-sm w-full justify-center" />
-                  </div>
-                </div>
-                <div className="flex flex-col gap-5">
-                  <FormField
-                    control={form.control}
-                    name="editWaterNo"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm text-white">
-                          Meter No.
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            id="editWaterNo"
-                            type="text"
-                            className="text-sm"
-                            {...field}
-                            icon={<BiSolidUserRectangle size={24} />}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="editWaterUsage"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel
-                          htmlFor="editWaterUsage"
-                          className="text-sm text-white"
-                        >
-                          Usage (m³)
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            id="editWaterUsage"
-                            type="number"
-                            min="0"
-                            step="0.01"
-                            className="text-sm"
-                            {...field}
-                            icon={<BiSolidUserRectangle size={24} />}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle className="text-white">
+            Meter Room {roomNumber}
+          </DialogTitle>
+        </DialogHeader>
+        <DialogDescription></DialogDescription>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-8"
+          >
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-row gap-2">
+                <p className="whitespace-nowrap text-base font-bold text-white">
+                  Electricity
+                </p>
+                <div className="flex w-full items-center">
+                  <Separator className="h-[2px] rounded-sm w-full justify-center" />
                 </div>
               </div>
-              <Button
-                type="submit"
-                className="flex w-full text-base font-bold bg-custom-pink text-white"
-                disabled={form.formState.isSubmitting}
-              >
-                {form.formState.isSubmitting ? "Saving..." : "Save"}
-              </Button>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
+              <div className="flex flex-col gap-5">
+                <FormField
+                  control={form.control}
+                  name="editElecNo"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel
+                        htmlFor="editElecNo"
+                        className="text-sm text-white"
+                      >
+                        Meter No.
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          id="editElecNo"
+                          type="text"
+                          className="text-sm"
+                          {...field}
+                          icon={<BiSolidUserRectangle size={24} />}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="editElecUsage"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm text-white">
+                        Usage (kWh)
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          id="editElecUsage"
+                          type="number"
+                          className="text-sm"
+                          {...field}
+                          icon={<BiSolidUserRectangle size={24} />}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex flex-row gap-2">
+                <p className="whitespace-nowrap text-base font-bold text-white">
+                  Water
+                </p>
+                <div className="flex w-full items-center">
+                  <Separator className="h-[2px] rounded-sm w-full justify-center" />
+                </div>
+              </div>
+              <div className="flex flex-col gap-5">
+                <FormField
+                  control={form.control}
+                  name="editWaterNo"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm text-white">
+                        Meter No.
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          id="editWaterNo"
+                          type="text"
+                          className="text-sm"
+                          {...field}
+                          icon={<BiSolidUserRectangle size={24} />}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="editWaterUsage"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel
+                        htmlFor="editWaterUsage"
+                        className="text-sm text-white"
+                      >
+                        Usage (m³)
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          id="editWaterUsage"
+                          type="number"
+                          className="text-sm"
+                          {...field}
+                          icon={<BiSolidUserRectangle size={24} />}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+            <Button
+              type="submit"
+              className="flex w-full text-base font-bold bg-custom-pink text-white"
+              disabled={form.formState.isSubmitting}
+            >
+              {form.formState.isSubmitting ? "Saving..." : "Save"}
+            </Button>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   )
 }
 
