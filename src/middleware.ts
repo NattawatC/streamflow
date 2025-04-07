@@ -10,16 +10,35 @@ export async function middleware(request: NextRequest) {
 
   const path = new URL(request.url).pathname
 
-  const ownerRoutes = ["/owner"]
+  const ownerRoutes = [
+    "/owner",
+    "/owner/add-meter",
+    "/owner/addTenant",
+    "/owner/edit",
+    "/owner/edit-tenant",
+    "/owner/list-of-meter",
+    "/owner/result",
+    "/owner/setting",
+    "/owner/tenant-info",
+  ]
+  const tenantRoutes = [
+    "/tenant",
+    "/tenant/edit",
+    "/tenant/electricity",
+    "/tenant/payment",
+    "/tenant/setting",
+    "/tenant/water",
+  ]
   const authRoutes = ["/login", "/register"]
 
   const isOwnerRoute = ownerRoutes.includes(path)
+  const isTenantRoute = tenantRoutes.includes(path)
   const isAuthRoute = authRoutes.includes(path)
 
   if (isOwnerRoute || isAuthRoute) {
     const user = await getUser(request, response)
 
-    if (isOwnerRoute && !user) {
+    if (isOwnerRoute && isTenantRoute && !user) {
       return NextResponse.redirect(new URL("/login", request.url))
     }
 
