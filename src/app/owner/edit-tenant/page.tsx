@@ -8,7 +8,7 @@ import { IoIosArrowBack } from "react-icons/io"
 import { EditTenantForm } from "@/components/editTenantForm"
 import { tenantData } from "@/api/interfaces/tenantData"
 import { useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 import supabase from "@/config/supabaseClient"
 
 const editTenantInfo: NextPage = () => {
@@ -44,9 +44,11 @@ const editTenantInfo: NextPage = () => {
     <>
       <MainLayout className="flex flex-col gap-5">
         {/* change path */}
-        <Link href={`/owner/tenant-info?id=${id}`}>
-          <IoIosArrowBack size={24} className="text-black" />
-        </Link>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Link href={`/owner/tenant-info?id=${id}`}>
+            <IoIosArrowBack size={24} className="text-black" />
+          </Link>
+        </Suspense>
         <div className="flex flex-row justify-left gap-2">
           <h1 className="font-bold text-2xl">Edit Tenant</h1>
         </div>
