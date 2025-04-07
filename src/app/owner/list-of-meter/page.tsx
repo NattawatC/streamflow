@@ -2,7 +2,6 @@ import { NextPage } from "next"
 import Link from "next/link"
 import { MainLayout } from "@/components/layout"
 import { IoIosArrowBack } from "react-icons/io"
-// import { CalendarForm } from "@/components/calendarForm"
 import { getUser } from "@/auth/server"
 import { RetrieveMeters } from "@/components/listOfMeterPage/retrieveMeters"
 import { EstateStatus } from "@/components/listOfMeterPage/estateStatus"
@@ -10,10 +9,6 @@ import { EstateStatus } from "@/components/listOfMeterPage/estateStatus"
 const listOfMeter: NextPage = async () => {
   const user = await getUser()
   const userId = user?.id
-  if (!user) {
-    console.error("No user found") // Check server logs
-    return <div>Not authenticated</div>
-  }
 
   return (
     <>
