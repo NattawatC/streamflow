@@ -158,7 +158,7 @@ const electricity: NextPage = () => {
                   />
                 ) : (
                   <p className="text-sm text-muted-foreground">
-                    No QR code uploaded
+                    No image available for this water meter.
                   </p>
                 )}
               </AccordionContent>
