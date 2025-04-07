@@ -26,9 +26,9 @@ const register: NextPage = () => {
             <TabsTrigger className="w-full" value="owner">
               Owner
             </TabsTrigger>
-            <TabsTrigger className="w-full" value="tenant">
+            {/* <TabsTrigger className="w-full" value="tenant">
               Tenant
-            </TabsTrigger>
+            </TabsTrigger> */}
           </TabsList>
           <TabsContent value="owner">
             <RegOwnerForm />
