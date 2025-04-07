@@ -12,15 +12,9 @@ import { FaWater } from "react-icons/fa6"
 import { VscGraphLine } from "react-icons/vsc"
 import { IoIosArrowForward } from "react-icons/io"
 import Utility from "@/components/utilityButton"
-
-const mockData = {
-  firstname: "Nattawat",
-  lastname: "Chaokraisith",
-  roomNumber: 123,
-  floorNumber: 123,
-  BuildingNumber: 123,
-  status: false,
-}
+import { useSearchParams } from "next/navigation"
+import { useEffect, useState } from "react"
+import supabase from "@/config/supabaseClient"
 
 const utilities = [
   {
@@ -35,15 +29,52 @@ const utilities = [
     color: "bg-custom-purple",
     href: "/water",
   },
-  {
-    icon: VscGraphLine,
-    title: "Utility Graph",
-    color: "bg-custom-pink",
-    href: "/graph",
-  },
+  // {
+  //   icon: VscGraphLine,
+  //   title: "Utility Graph",
+  //   color: "bg-custom-pink",
+  //   href: "/graph",
+  // },
 ]
 
+interface Resident {
+  id: string
+  first_name: string
+  last_name: string
+  room_no: string
+  building_no: string
+  floor_no: string
+  payment_status: boolean
+}
+
 const home: NextPage = () => {
+  const searchParams = useSearchParams()
+  const tenantId = searchParams.get("id")
+  const [resident, setResident] = useState<Resident | null>(null)
+
+  // Then fetch the resident data using this ID
+  useEffect(() => {
+    if (tenantId) {
+      const fetchResident = async () => {
+        const { data, error } = await supabase
+          .from("tenants")
+          .select("*")
+          .eq("id", tenantId)
+          .single()
+
+        if (error) {
+          console.error("Error fetching resident:", error)
+        } else {
+          setResident(data)
+        }
+      }
+
+      fetchResident()
+    }
+  }, [tenantId])
+
+  console.log(resident)
+
   return (
     <>
       <MainLayout>
@@ -57,30 +88,30 @@ const home: NextPage = () => {
               </Avatar>
 
               <div className="flex flex-row gap-2 text-xl font-bold justify-center">
-                <p>{mockData.firstname}</p>
-                <p>{mockData.lastname}</p>
+                <p>{resident?.first_name}</p>
+                <p>{resident?.last_name}</p>
               </div>
             </div>
 
             <div className="flex flex-row justify-between">
               <div className="flex flex-col items-center gap-1">
-                <p className="font-bold text-base">{mockData.roomNumber}</p>
+                <p className="font-bold text-base">{resident?.room_no}</p>
                 <p className="text-sm">Room Number</p>
               </div>
               <div className="flex flex-col items-center gap-1">
-                <p className="font-bold text-base">{mockData.BuildingNumber}</p>
+                <p className="font-bold text-base">{resident?.building_no}</p>
                 <p className="text-sm">Building</p>
               </div>
               <div className="flex flex-col items-center gap-1">
-                <p className="font-bold text-base">{mockData.floorNumber}</p>
+                <p className="font-bold text-base">{resident?.floor_no}</p>
                 <p className="text-sm">Floor/Level</p>
               </div>
             </div>
 
             <div className="flex flex-row gap-2 items-center justify-center px-3 py-3 rounded-md bg-custom-gray">
               <p className="text-base font-bold">Payment Status</p>
-              {mockData.status ? (
-                <div className="font-bold text-gray-700 rounded-full flex items-center justify-center bg-[#D7FC6E] w-5 h-5"></div>
+              {resident?.payment_status ? (
+                <div className="font-bold text-gray-700 rounded-full flex items-center justify-center bg-[#D7FC6E] w-3 h-3"></div>
               ) : (
                 <div className="rounded-full flex items-center justify-center bg-[#FF0000] w-3 h-3"></div>
               )}
@@ -97,6 +128,7 @@ const home: NextPage = () => {
                     color={util.color}
                     href={util.href}
                     Icon={util.icon}
+                    room_no={resident?.room_no}
                   />
                 ))}
               </div>
