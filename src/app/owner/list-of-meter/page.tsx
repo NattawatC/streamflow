@@ -18,7 +18,7 @@ const listOfMeter: NextPage = async () => {
         </Link>
         <div className="flex flex-row justify-between w-full">
           <h1 className="font-bold text-2xl">List of Meter</h1>
-          {/* <EstateStatus userId={userId} /> */}
+          <EstateStatus userId={userId} />
         </div>
 
         <RetrieveMeters userId={userId} />
