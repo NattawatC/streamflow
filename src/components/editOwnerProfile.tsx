@@ -4,7 +4,7 @@ import { BiSolidUserRectangle } from "react-icons/bi"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useRouter, useServerInsertedHTML } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import {
@@ -421,7 +421,6 @@ export function EditOwnerProfile({ userId }: Props) {
         .select()
 
       if (estateError) throw estateError
-
     })
     router.push("/owner/setting")
   }
