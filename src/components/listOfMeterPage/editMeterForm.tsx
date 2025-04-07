@@ -22,10 +22,6 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import {
-  updateElectricityMeter,
-  updateWaterMeter,
-} from "@/api/services/meterService"
 import { toast } from "sonner"
 import { useEffect, useState } from "react"
 import { DialogDescription } from "@radix-ui/react-dialog"
@@ -118,57 +114,6 @@ const EditMeterForm: React.FunctionComponent<EditMeterDialogProps> = ({
     setFormValues(values)
     setShouldUpdate(true)
   }
-
-  // async function onSubmit(values: z.infer<typeof formSchema>) {
-  //   const { data: electricityData } = await supabase
-  //     .from("electricity")
-  //     .update([
-  //       {
-  //         meter_no: values.editElecNo,
-  //         kWh: values.editElecUsage,
-  //       },
-  //     ])
-  //     .select()
-
-  //   const { data: waterData, error } = await supabase
-  //     .from("water")
-  //     .update([
-  //       {
-  //         meter_no: values.editWaterNo,
-  //         usage: values.editWaterUsage,
-  //       },
-  //     ])
-  //     .select()
-
-    // try {
-    //   // Update electricity meter
-    //   const elecResponse = await updateElectricityMeter({
-    //     room_no: roomNumber,
-    //     meter_no: values.editElecNo,
-    //     kWh: values.editElecUsage,
-    //   })
-
-    //   // Update water meter
-    //   const waterResponse = await updateWaterMeter({
-    //     room_no: roomNumber,
-    //     meter_no: values.editWaterNo,
-    //     usage: values.editWaterUsage,
-    //   })
-
-    //   if (elecResponse.error || waterResponse.error) {
-    //     throw new Error(elecResponse.error || waterResponse.error)
-    //   }
-
-    //   toast.success("Meter records updated successfully")
-    //   setIsOpen(false)
-
-    //   // Optional: if you need to refresh the page
-    //   // window.location.reload()
-    // } catch (error) {
-    //   toast.error("Failed to update meter records")
-    //   console.error("Error updating meter records:", error)
-    // }
-  // }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
