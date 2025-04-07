@@ -7,7 +7,6 @@ import CautionCard from "@/components/cautionCard"
 import { Separator } from "@/components/ui/separator"
 import { MainLayout } from "@/components/layout"
 import { FiEdit } from "react-icons/fi"
-import { tenantData } from "@/interfaces/tenantData"
 import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import supabase from "@/config/supabaseClient"
@@ -63,7 +62,12 @@ const setting: NextPage = () => {
         </div>
         <div className="flex flex-col gap-5 items-center bg-custom-gray-background p-4 rounded-lg">
           <div className="flex justify-end w-full">
-            <Link href={"/tenant/editProfile"}>
+            <Link
+              href={{
+                pathname: `/tenant/edit`,
+                query: { room_no: roomNo },
+              }}
+            >
               <FiEdit size={24} />
             </Link>
           </div>
