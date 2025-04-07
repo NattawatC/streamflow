@@ -37,7 +37,7 @@ const utilities = [
   // },
 ]
 
-interface Resident {
+interface Tenant {
   id: string
   first_name: string
   last_name: string
@@ -51,11 +51,11 @@ interface Resident {
 const home: NextPage = () => {
   const searchParams = useSearchParams()
   const roomNo = searchParams.get("room_no")
-  const [resident, setResident] = useState<Resident | null>(null)
+  const [tenant, setTenant] = useState<Tenant | null>(null)
 
   useEffect(() => {
     if (roomNo) {
-      const fetchResident = async () => {
+      const fetchTenant = async () => {
         const { data, error } = await supabase
           .from("tenants")
           .select("*")
@@ -63,17 +63,15 @@ const home: NextPage = () => {
           .single()
 
         if (error) {
-          console.error("Error fetching resident:", error)
+          console.error("Error fetching tenant:", error)
         } else {
-          setResident(data)
+          setTenant(data)
         }
       }
 
-      fetchResident()
+      fetchTenant()
     }
   }, [roomNo])
-
-  console.log(resident)
 
   return (
     <>
@@ -88,29 +86,29 @@ const home: NextPage = () => {
               </Avatar>
 
               <div className="flex flex-row gap-2 text-xl font-bold justify-center">
-                <p>{resident?.first_name}</p>
-                <p>{resident?.last_name}</p>
+                <p>{tenant?.first_name}</p>
+                <p>{tenant?.last_name}</p>
               </div>
             </div>
 
             <div className="flex flex-row justify-between">
               <div className="flex flex-col items-center gap-1">
-                <p className="font-bold text-base">{resident?.room_no}</p>
+                <p className="font-bold text-base">{tenant?.room_no}</p>
                 <p className="text-sm">Room Number</p>
               </div>
               <div className="flex flex-col items-center gap-1">
-                <p className="font-bold text-base">{resident?.building_no}</p>
+                <p className="font-bold text-base">{tenant?.building_no}</p>
                 <p className="text-sm">Building</p>
               </div>
               <div className="flex flex-col items-center gap-1">
-                <p className="font-bold text-base">{resident?.floor_no}</p>
+                <p className="font-bold text-base">{tenant?.floor_no}</p>
                 <p className="text-sm">Floor/Level</p>
               </div>
             </div>
 
             <div className="flex flex-row gap-2 items-center justify-center px-3 py-3 rounded-md bg-custom-gray">
               <p className="text-base font-bold">Payment Status</p>
-              {resident?.payment_status ? (
+              {tenant?.payment_status ? (
                 <div className="font-bold text-gray-700 rounded-full flex items-center justify-center bg-[#D7FC6E] w-3 h-3"></div>
               ) : (
                 <div className="rounded-full flex items-center justify-center bg-[#FF0000] w-3 h-3"></div>
@@ -128,8 +126,8 @@ const home: NextPage = () => {
                     color={util.color}
                     href={util.href}
                     Icon={util.icon}
-                    room_no={resident?.room_no}
-                    estate_id={resident?.estate_id}
+                    room_no={tenant?.room_no}
+                    estate_id={tenant?.estate_id}
                   />
                 ))}
               </div>
@@ -138,7 +136,13 @@ const home: NextPage = () => {
 
           <div className="flex flex-col">
             <Separator className="h-[2px] rounded-sm" />
-            <Link href={"/tenant/setting"}>
+
+            <Link
+              href={{
+                pathname: `/tenant/setting`,
+                query: { room_no: roomNo },
+              }}
+            >
               <Button className="w-full bg-white text-black text-base font-bold justify-between">
                 Account Setting
                 <IoIosArrowForward size={20} />
@@ -154,7 +158,7 @@ const home: NextPage = () => {
               <p className="text-base font-bold">Payment</p>
               <p className="text-sm font-normal">Scan barcode and Pay</p>
             </div>
-            <Link href={"/payment"} className="flex items-center">
+            <Link href={"/tenant/payment"} className="flex items-center">
               <Button className="rounded-full bg-custom-pink text-black font-bold">
                 Pay Now
               </Button>
