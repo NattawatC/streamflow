@@ -5,7 +5,7 @@ import {
   getUserEstateId,
   getAllElectricityMeterById,
   getAllWaterMeterById,
-} from "@/services/ownerService"
+} from "@/api/services/ownerService"
 import { Separator } from "../ui/separator"
 import ListOfMeterCard from "./listOfMeterCard"
 

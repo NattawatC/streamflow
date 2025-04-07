@@ -11,7 +11,7 @@ import { useState, useEffect } from "react"
 import {
   getUserEstateId,
   getAllWaterMeterById,
-} from "@/services/ownerService"
+} from "@/api/services/ownerService"
 import { Separator } from "../ui/separator"
 import WaterMeterCard from "./waterMeterCard"
 

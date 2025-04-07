@@ -29,10 +29,10 @@ import {
   getUserBanks,
   getUserEstate,
   getUserProfile,
-} from "@/services/ownerService"
+} from "@/api/services/ownerService"
 import supabase from "@/config/supabaseClient"
 import Image from "next/image"
-import { convertBlobUrlToFile } from "@/lib/utils"
+import { convertBlobUrlToFile } from "@/api/lib/utils"
 import { deleteImage, uploadImage } from "@/auth/storage/client"
 import { Loader2 } from "lucide-react"
 

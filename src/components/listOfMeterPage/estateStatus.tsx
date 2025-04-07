@@ -1,6 +1,6 @@
 "use client"
 
-import { getUserEstate } from "@/services/ownerService"
+import { getUserEstate } from "@/api/services/ownerService"
 import { Switch } from "@/components/ui/switch"
 import { useEffect, useState } from "react"
 import supabase from "@/config/supabaseClient"

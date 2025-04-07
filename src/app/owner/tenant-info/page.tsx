@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { MainLayout } from "@/components/layout"
 import { IoIosArrowBack } from "react-icons/io"
-import { tenantData } from "@/interfaces/tenantData"
+import { tenantData } from "@/api/interfaces/tenantData"
 import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import supabase from "@/config/supabaseClient"
@@ -138,7 +138,7 @@ const tenantInfo: NextPage = () => {
 
         {/* change path */}
         <div className="flex flex-col gap-3">
-        <Link href={`/owner/edit-tenant?id=${id}`}>
+          <Link href={`/owner/edit-tenant?id=${id}`}>
             <Button className="font-bold bg-custom-green text-black w-full text-base gap-2">
               Edit Tenant Information
             </Button>

@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/api/lib/utils"
 import React, { ComponentProps } from "react"
 
 export const MainLayout: React.FunctionComponent<ComponentProps<"main">> = ({

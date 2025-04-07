@@ -4,7 +4,7 @@ import {
   getAllElectricityMeterById,
   getAllWaterMeterById,
   getUserEstateId,
-} from "@/services/ownerService"
+} from "@/api/services/ownerService"
 import { useEffect, useState } from "react"
 
 interface Props {

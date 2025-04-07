@@ -26,8 +26,8 @@ import {
 } from "@/components/ui/dialog"
 // import { ownerData } from "@/interfaces/ownerData"
 import { getUser } from "@/auth/server"
-import { getEstate, getTenants } from "@/services/tenantService"
-import { getUserProfile } from "@/services/ownerService"
+import { getEstate, getTenants } from "@/api/services/tenantService"
+import { getUserProfile } from "@/api/services/ownerService"
 
 const home: NextPage = async () => {
   const user = await getUser()

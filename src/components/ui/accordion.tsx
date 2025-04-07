@@ -1,9 +1,9 @@
 import * as React from "react"
 import * as AccordionPrimitive from "@radix-ui/react-accordion"
-import { IoIosArrowDown } from "react-icons/io";
+import { IoIosArrowDown } from "react-icons/io"
 
-import { cn } from "@/lib/utils"
-import { boolean } from "zod";
+import { cn } from "@/api/lib/utils"
+import { boolean } from "zod"
 
 const Accordion = AccordionPrimitive.Root
 const isNeeded = boolean
@@ -34,7 +34,10 @@ const AccordionTrigger = React.forwardRef<
       {...props}
     >
       {children}
-      <IoIosArrowDown size={20} className="shrink-0 transition-transform duration-200" />
+      <IoIosArrowDown
+        size={20}
+        className="shrink-0 transition-transform duration-200"
+      />
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ))

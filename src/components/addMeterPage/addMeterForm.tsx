@@ -27,7 +27,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
-import { getUserEstateId } from "@/services/ownerService"
+import { getUserEstateId } from "@/api/services/ownerService"
 import supabase from "@/config/supabaseClient"
 
 const formSchema = z.object({
@@ -80,7 +80,7 @@ export function AddMeterForm({ userId }: Props) {
     },
   })
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {  
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     const tableName = values.utility === "electricity" ? "electricity" : "water"
 
     const { data, error } = await supabase
@@ -101,7 +101,7 @@ export function AddMeterForm({ userId }: Props) {
     } else {
       console.log(`${tableName} meter inserted successfully:`, data)
       // router.refresh()
-      window.location.reload() 
+      window.location.reload()
     }
   }
 

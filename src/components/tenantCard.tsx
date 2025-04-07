@@ -18,7 +18,7 @@ import {
 import { PiWarningCircleFill } from "react-icons/pi"
 import { Badge } from "@/components/ui/badge"
 import { IoIosArrowRoundForward } from "react-icons/io"
-import { Tenant } from "@/interfaces/tenant"
+import { Tenant } from "@/api/interfaces/tenant"
 import supabase from "@/config/supabaseClient"
 import { useRouter } from "next/navigation"
 
@@ -27,7 +27,7 @@ const TenantCard: React.FunctionComponent<Tenant> = ({
   room,
   firstname,
   lastname,
-  rentalcost,
+  //   rentalcost,
   pStatus,
   rStatus,
 }) => {
@@ -104,7 +104,7 @@ const TenantCard: React.FunctionComponent<Tenant> = ({
               </Dialog>
             </div>
 
-            <p className="text-xl font-bold">{rentalcost}</p>
+            {/* <p className="text-xl font-bold">{rentalcost}</p> */}
             <div className="flex flex-row gap-2">
               <p className="font-medium">Room:</p>
               <p>{room}</p>

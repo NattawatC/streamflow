@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/accordion"
 import Receipt from "@/components/receipt"
 import BankInfo from "@/components/bankInfo"
-import { ownerData } from "@/interfaces/ownerData"
+import { ownerData } from "@/api/interfaces/ownerData"
 
 const data = {
   startDate: "2021/10/01",

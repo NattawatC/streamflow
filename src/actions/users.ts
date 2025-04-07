@@ -1,6 +1,6 @@
 "use server"
 import { createSupabaseClient } from "../auth/server"
-import { getErrorMessage } from "@/lib/utils"
+import { getErrorMessage } from "@/api/lib/utils"
 
 export const createAccountAction = async (values: {
   email: string

@@ -1,5 +1,5 @@
 import supabase from "@/config/supabaseClient"
-import { OwnerProfile } from "@/interfaces/ownerProfile"
+import { OwnerProfile } from "@/api/interfaces/ownerProfile"
 
 export const getUserProfile = async (
   userId: string | undefined

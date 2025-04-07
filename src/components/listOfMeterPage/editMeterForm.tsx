@@ -20,7 +20,10 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { updateElectricityMeter, updateWaterMeter } from "@/services/meterService"
+import {
+  updateElectricityMeter,
+  updateWaterMeter,
+} from "@/api/services/meterService"
 import { toast } from "sonner"
 
 const formSchema = z.object({
@@ -58,42 +61,41 @@ export function EditMeterDialog({
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-      try {
-        // Update electricity meter
-        const elecResponse = await updateElectricityMeter({
-          room_no: roomNumber,
-          meter_no: values.editElecNo,
-          kWh: values.editElecUsage,
-        })
+    try {
+      // Update electricity meter
+      const elecResponse = await updateElectricityMeter({
+        room_no: roomNumber,
+        meter_no: values.editElecNo,
+        kWh: values.editElecUsage,
+      })
 
-        // Update water meter
-        const waterResponse = await updateWaterMeter({
-          room_no: roomNumber,
-          meter_no: values.editWaterNo,
-          usage: values.editWaterUsage,
-        })
+      // Update water meter
+      const waterResponse = await updateWaterMeter({
+        room_no: roomNumber,
+        meter_no: values.editWaterNo,
+        usage: values.editWaterUsage,
+      })
 
-        if (elecResponse.error || waterResponse.error) {
-          throw new Error(elecResponse.error || waterResponse.error)
-        }
-
-        toast("success", {
-          description: "Meter records updated successfully"
-        })
-
-        form.reset({
-          editElecNo: values.editElecNo,
-          editElecUsage: values.editElecUsage,
-          editWaterNo: values.editWaterNo,
-          editWaterUsage: values.editWaterUsage,
-        })
-
-        window.location.reload()
-
-      } catch (error) {
-        return error
+      if (elecResponse.error || waterResponse.error) {
+        throw new Error(elecResponse.error || waterResponse.error)
       }
+
+      toast("success", {
+        description: "Meter records updated successfully",
+      })
+
+      form.reset({
+        editElecNo: values.editElecNo,
+        editElecUsage: values.editElecUsage,
+        editWaterNo: values.editWaterNo,
+        editWaterUsage: values.editWaterUsage,
+      })
+
+      window.location.reload()
+    } catch (error) {
+      return error
     }
+  }
 
   return (
     <Dialog>
@@ -150,9 +152,7 @@ export function EditMeterDialog({
                   name="editElecUsage"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel
-                        className="text-sm text-white"
-                      >
+                      <FormLabel className="text-sm text-white">
                         Usage
                       </FormLabel>
                       <FormControl>
@@ -184,9 +184,7 @@ export function EditMeterDialog({
                   name="editWaterNo"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel
-                        className="text-sm text-white"
-                      >
+                      <FormLabel className="text-sm text-white">
                         Meter No.
                       </FormLabel>
                       <FormControl>

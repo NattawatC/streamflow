@@ -15,14 +15,14 @@ import {
 import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
 
-import { BankInfo } from "@/interfaces/bank"
+import { BankInfo } from "@/api/interfaces/bank"
 import { useRouter } from "next/navigation"
 import { logOutAction } from "@/actions/users"
 import {
   getUserBanks,
   getUserEstate,
   getUserProfile,
-} from "@/services/ownerService"
+} from "@/api/services/ownerService"
 import { useEffect, useState, useTransition } from "react"
 import Image from "next/image"
 
