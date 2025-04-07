@@ -27,12 +27,14 @@ import {
   updateWaterMeter,
 } from "@/api/services/meterService"
 import { toast } from "sonner"
+import { useState } from "react"
+import { DialogDescription } from "@radix-ui/react-dialog"
 
 const formSchema = z.object({
-  editElecNo: z.string(),
-  editElecUsage: z.coerce.number(),
-  editWaterNo: z.string(),
-  editWaterUsage: z.coerce.number(),
+  editElecNo: z.string().min(1, "Electricity meter number is required"),
+  editElecUsage: z.coerce.number().min(0, "Usage must be a positive number"),
+  editWaterNo: z.string().min(1, "Water meter number is required"),
+  editWaterUsage: z.coerce.number().min(0, "Usage must be a positive number"),
 })
 
 interface EditMeterDialogProps {
@@ -44,8 +46,7 @@ interface EditMeterDialogProps {
   children: React.ReactNode
 }
 
-
-  const EditMeterForm: React.FunctionComponent<EditMeterDialogProps> = ({
+const EditMeterForm: React.FunctionComponent<EditMeterDialogProps> = ({
   roomNumber,
   electricityNo,
   electrictyUsage,
@@ -53,6 +54,7 @@ interface EditMeterDialogProps {
   waterUsage,
   children,
 }) => {
+  const [isOpen, setIsOpen] = useState(false)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -83,25 +85,19 @@ interface EditMeterDialogProps {
         throw new Error(elecResponse.error || waterResponse.error)
       }
 
-      toast("success", {
-        description: "Meter records updated successfully",
-      })
+      toast.success("Meter records updated successfully")
+      setIsOpen(false)
 
-      form.reset({
-        editElecNo: values.editElecNo,
-        editElecUsage: values.editElecUsage,
-        editWaterNo: values.editWaterNo,
-        editWaterUsage: values.editWaterUsage,
-      })
-
-      window.location.reload()
+      // Optional: if you need to refresh the page
+      // window.location.reload()
     } catch (error) {
-      return error
+      toast.error("Failed to update meter records")
+      console.error("Error updating meter records:", error)
     }
   }
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -109,7 +105,7 @@ interface EditMeterDialogProps {
             Meter Room {roomNumber}
           </DialogTitle>
         </DialogHeader>
-        {/* <DialogDescription> */}
+        <DialogDescription></DialogDescription>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -141,7 +137,6 @@ interface EditMeterDialogProps {
                           id="editElecNo"
                           type="text"
                           className="text-sm"
-                          placeholder={electricityNo}
                           {...field}
                           icon={<BiSolidUserRectangle size={24} />}
                         />
@@ -156,14 +151,15 @@ interface EditMeterDialogProps {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm text-white">
-                        Usage
+                        Usage (kWh)
                       </FormLabel>
                       <FormControl>
                         <Input
                           id="editElecUsage"
                           type="number"
+                          min="0"
+                          step="0.01"
                           className="text-sm"
-                          placeholder={electrictyUsage.toString()}
                           {...field}
                           icon={<BiSolidUserRectangle size={24} />}
                         />
@@ -195,7 +191,6 @@ interface EditMeterDialogProps {
                           id="editWaterNo"
                           type="text"
                           className="text-sm"
-                          placeholder={waterNo}
                           {...field}
                           icon={<BiSolidUserRectangle size={24} />}
                         />
@@ -213,14 +208,15 @@ interface EditMeterDialogProps {
                         htmlFor="editWaterUsage"
                         className="text-sm text-white"
                       >
-                        Usage
+                        Usage (m³)
                       </FormLabel>
                       <FormControl>
                         <Input
                           id="editWaterUsage"
                           type="number"
+                          min="0"
+                          step="0.01"
                           className="text-sm"
-                          placeholder={waterUsage.toString()}
                           {...field}
                           icon={<BiSolidUserRectangle size={24} />}
                         />
@@ -234,12 +230,12 @@ interface EditMeterDialogProps {
             <Button
               type="submit"
               className="flex w-full text-base font-bold bg-custom-pink text-white"
+              disabled={form.formState.isSubmitting}
             >
-              Save
+              {form.formState.isSubmitting ? "Saving..." : "Save"}
             </Button>
           </form>
         </Form>
-        {/* </DialogDescription> */}
       </DialogContent>
     </Dialog>
   )
