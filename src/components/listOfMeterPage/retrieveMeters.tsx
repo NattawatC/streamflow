@@ -162,7 +162,7 @@ export function RetrieveMeters({ userId }: Props) {
               </div>
             </div>
             <div className="flex flex-col gap-2">
-              {/* {meters.map((meter, index) => (
+              {meters.map((meter, index) => (
                 <ListOfMeterCard
                   key={`${floor}-${meter.roomNumber}-${index}`}
                   roomNumber={meter.roomNumber}
@@ -173,7 +173,7 @@ export function RetrieveMeters({ userId }: Props) {
                   waterNo={meter.waterNo}
                   waterImageUrl={meter.waterImageUrl}
                 />
-              ))} */}
+              ))}
             </div>
           </div>
         </div>
