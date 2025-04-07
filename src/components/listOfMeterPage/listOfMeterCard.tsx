@@ -107,7 +107,7 @@ const ListOfMeterCard: React.FunctionComponent<Props> = ({
       {/* 2 buttons */}
       {showOptions && (
         <div className="flex flex-row justify-center gap-3">
-          <EditMeterForm
+          {/* <EditMeterForm
             roomNumber={roomNumber}
             electricityNo={electricityNo}
             electrictyUsage={electricityUsage}
@@ -117,7 +117,7 @@ const ListOfMeterCard: React.FunctionComponent<Props> = ({
             <Button className="flex text-base w-full font-medium bg-custom-green text-black">
               Edit
             </Button>
-          </EditMeterForm>
+          </EditMeterForm> */}
 
           <Dialog>
             <DialogTrigger asChild>
