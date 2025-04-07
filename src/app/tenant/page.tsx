@@ -45,21 +45,21 @@ interface Resident {
   building_no: string
   floor_no: string
   payment_status: boolean
+  estate_id: number
 }
 
 const home: NextPage = () => {
   const searchParams = useSearchParams()
-  const tenantId = searchParams.get("id")
+  const roomNo = searchParams.get("room_no")
   const [resident, setResident] = useState<Resident | null>(null)
 
-  // Then fetch the resident data using this ID
   useEffect(() => {
-    if (tenantId) {
+    if (roomNo) {
       const fetchResident = async () => {
         const { data, error } = await supabase
           .from("tenants")
           .select("*")
-          .eq("id", tenantId)
+          .eq("room_no", roomNo)
           .single()
 
         if (error) {
@@ -71,7 +71,7 @@ const home: NextPage = () => {
 
       fetchResident()
     }
-  }, [tenantId])
+  }, [roomNo])
 
   console.log(resident)
 
@@ -129,6 +129,7 @@ const home: NextPage = () => {
                     href={util.href}
                     Icon={util.icon}
                     room_no={resident?.room_no}
+                    estate_id={resident?.estate_id}
                   />
                 ))}
               </div>
