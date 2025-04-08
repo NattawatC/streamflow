@@ -118,25 +118,31 @@ const tenantInfo: NextPage = () => {
                 <Separator className="h-[2px] rounded-sm w-full justify-center" />
               </div>
             </div>
-            <div className="flex flex-row gap-4">
-              <div className="flex flex-col font-medium gap-2">
-                <p>Status:</p>
+            {tenantData.status ? (
+              <div className="flex flex-row gap-4">
+                <div className="flex flex-col font-medium gap-2">
+                  <p>Status:</p>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <p>Payment Completed</p>
+                </div>
               </div>
-              <div className="flex flex-col gap-2">
-                <p>{tenantData.status}</p>
-              </div>
-            </div>
-            {/* Review Page */}
-            {tenantData.status === "Payment Incomplete" ? (
+            ) : (
               <>
-                <Link href="/owner/review">
+                <div className="flex flex-row gap-4">
+                  <div className="flex flex-col font-medium gap-2">
+                    <p>Status:</p>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <p>Payment Incompleted</p>
+                  </div>
+                </div>
+                <Link href={`/owner/review?id=${id}`}>
                   <div className="flex bg-custom-pink text-black py-1 px-2 rounded-sm justify-center font-medium text-sm">
                     Review
                   </div>
                 </Link>
               </>
-            ) : (
-              <></>
             )}
           </div>
         </div>
