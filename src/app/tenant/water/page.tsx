@@ -67,8 +67,6 @@ const water: NextPage = () => {
         .eq("id", estateId)
         .single()
 
-      console.log(estate)
-
       if (error) {
         console.error("Error fetching water data:", error)
       } else {
