@@ -18,12 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import Receipt from "@/components/receipt"
-import {
-  ChangeEvent,
-  useEffect,
-  useState,
-  useTransition,
-} from "react"
+import { ChangeEvent, useEffect, useState, useTransition } from "react"
 import supabase from "@/config/supabaseClient"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
@@ -35,6 +30,9 @@ import { Input } from "@/components/ui/input"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { IoIosArrowBack } from "react-icons/io"
 
 interface EstateInfo {
   waterInitialCost: number | undefined
@@ -66,6 +64,7 @@ const formSchema = z.object({
 })
 
 const Payment: NextPage = () => {
+  const router = useRouter()
   const [roomNo, setRoomNo] = useState<string | null>(null)
   const [estateId, setEstateId] = useState<string | null>(null)
   const [estateInfo, setEstateInfo] = useState<EstateInfo | null>(null)
@@ -263,7 +262,7 @@ const Payment: NextPage = () => {
         .from("tenants")
         .update({
           receipt_url: imageUrl,
-          paymnent_status: true,
+          // payment_status: true,
         })
         .eq("room_no", roomNo)
         .select()
@@ -271,6 +270,8 @@ const Payment: NextPage = () => {
       if (profileError) throw profileError
 
       setTenant((prev: any) => ({ ...prev, receipt_url: imageUrl }))
+
+      router.push(`/tenant?room_no=${roomNo}`)
     })
   }
 
@@ -283,7 +284,10 @@ const Payment: NextPage = () => {
   }
 
   return (
-    <MainLayout className="flex flex-col gap-8 items-center">
+    <MainLayout className="flex flex-col gap-8">
+      <Link href={`/tenant?room_no=${roomNo}`}>
+        <IoIosArrowBack size={24} className="text-black" />
+      </Link>
       <h1 className="flex text-2xl font-bold justify-center">Payment</h1>
       <div className="flex flex-col gap-5 items-center bg-custom-gray-background p-4 rounded-lg w-full">
         <div className="flex flex-col bg-white w-full text-base p-3 gap-5 rounded-md">
@@ -302,7 +306,7 @@ const Payment: NextPage = () => {
             </span>
           </div>
         </div>
-        
+
         <Accordion type="single" collapsible className="flex-grow-0 w-full">
           <AccordionItem value="item-1">
             <AccordionTrigger className="flex gap-3 font-medium w-full text-base items-center justify-center">
@@ -363,7 +367,8 @@ const Payment: NextPage = () => {
             ) : (
               <>
                 <p className="text-sm text-muted-foreground">
-                  No receipt uploaded. Please upload a receipt using the form below.
+                  No receipt uploaded. Please upload a receipt using the form
+                  below.
                 </p>
                 <FormField
                   control={form.control}
@@ -373,7 +378,7 @@ const Payment: NextPage = () => {
                       <FormControl>
                         <Input
                           id="receipt_url"
-                          icon={<BiSolidUserRectangle size={24}/>}
+                          icon={<BiSolidUserRectangle size={24} />}
                           type="file"
                           accept="image/*"
                           onChange={(e) => {
@@ -399,7 +404,11 @@ const Payment: NextPage = () => {
             className="flex w-full text-base font-bold bg-custom-green text-black"
             disabled={isPending}
           >
-            {isPending ? <Loader2 className="animate-spin" /> : "Upload Receipt"}
+            {isPending ? (
+              <Loader2 className="animate-spin" />
+            ) : (
+              "Upload Receipt"
+            )}
           </Button>
         </form>
       </Form>
