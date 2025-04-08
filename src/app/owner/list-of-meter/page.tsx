@@ -5,6 +5,13 @@ import { IoIosArrowBack } from "react-icons/io"
 import { getUser } from "@/auth/server"
 import { RetrieveMeters } from "@/components/listOfMeterPage/retrieveMeters"
 import { EstateStatus } from "@/components/listOfMeterPage/estateStatus"
+import { GetAllMeterImage } from "@/components/listOfMeterPage/getAllMeterImage"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 const listOfMeter: NextPage = async () => {
   const user = await getUser()
@@ -20,6 +27,16 @@ const listOfMeter: NextPage = async () => {
           <h1 className="font-bold text-2xl">List of Meter</h1>
           <EstateStatus userId={userId} />
         </div>
+        <Accordion type="single" collapsible>
+          <AccordionItem value="item-1">
+            <AccordionTrigger className="flex font-bold w-full justify-between">
+              All Meter Image
+            </AccordionTrigger>
+            <AccordionContent>
+              <GetAllMeterImage userId={userId} />
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
 
         <RetrieveMeters userId={userId} />
       </MainLayout>
