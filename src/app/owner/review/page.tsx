@@ -8,8 +8,8 @@ import { IoIosArrowBack } from "react-icons/io"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Button } from "@/components/ui/button"
-import { useState } from "react"
-import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import {
   Dialog,
   DialogClose,
@@ -20,24 +20,76 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import supabase from "@/config/supabaseClient"
+import Image from "next/image"
+
 const review: NextPage = () => {
-  const [selectedValue, setSelectedValue] = useState<string>("")
+  const [id, setId] = useState<string | null>(null)
   const router = useRouter()
-  const handleSubmit = () => {
-    console.log("Selected Value:", selectedValue || "No option selected")
-    router.push("/tenantInfo")
+  const [selectedValue, setSelectedValue] = useState<string>("")
+  const [tenant, setTenant] = useState<any>(null)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const id = params.get("id")
+    setId(id)
+  }, [])
+
+  useEffect(() => {
+    const fetchTenant = async () => {
+      if (!id) return
+      const { data, error } = await supabase
+        .from("tenants")
+        .select("*")
+        .eq("id", id)
+        .single()
+
+      if (error) {
+        console.error("Error fetching tenant:", error.message)
+      } else {
+        setTenant(data)
+      }
+    }
+
+    fetchTenant()
+  }, [id])
+
+  async function handleSubmit() {
+    if (selectedValue === "Approve") {
+      const { data: tenantData, error: profileError } = await supabase
+        .from("tenants")
+        .update({
+          payment_status: true,
+          // payment_status: true,
+        })
+        .eq("id", id)
+        .select()
+    }
+
+    router.push(`/owner/tenant-info?id=${id}`)
   }
   return (
     <>
       <MainLayout className="flex flex-col gap-7">
-        <Link href="/tenantInfo">
+        <Link href={`/owner/tenant-info?id=${id}`}>
           <IoIosArrowBack size={24} className="text-black" />
         </Link>
         <div className="flex flex-row justify-left gap-2">
           <h1 className="font-bold text-2xl">Review Receipt</h1>
         </div>
         <div className="flex flex-col gap-5 items-center bg-custom-gray-background p-4 rounded-lg">
-          <div>*Image here*</div>
+          {tenant?.receipt_url ? (
+            <Image
+              className="rounded-md"
+              src={tenant.receipt_url}
+              width={300}
+              height={300}
+              alt="receipt"
+              priority
+            />
+          ) : (
+            <></>
+          )}
           <div className="flex w-full items-center">
             <Separator className="h-[2px] rounded-sm w-full justify-center" />
           </div>
@@ -93,15 +145,15 @@ const review: NextPage = () => {
                 Approval
               </DialogTitle>
               <DialogDescription>
-                <div className="flex flex-col gap-2">
-                  <p className="text-white text-left">
+                <span className="flex flex-col gap-2">
+                  <span className="text-white text-left">
                     You have choose {selectedValue}. Are you sure?
-                  </p>
-                </div>
+                  </span>
+                </span>
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="sm:justify-start">
-              <div className="flex flex-row gap-4">
+              <span className="flex flex-row gap-4">
                 <Button
                   onClick={handleSubmit}
                   className="w-full bg-custom-pink text-black "
@@ -117,7 +169,7 @@ const review: NextPage = () => {
                     Cancel
                   </Button>
                 </DialogClose>
-              </div>
+              </span>
             </DialogFooter>
           </DialogContent>
         </Dialog>
