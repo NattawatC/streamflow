@@ -15,6 +15,12 @@ import Utility from "@/components/utilityButton"
 import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import supabase from "@/config/supabaseClient"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 const utilities = [
   {
@@ -46,6 +52,7 @@ interface Tenant {
   floor_no: string
   payment_status: boolean
   estate_id: number
+  receipt_url: string
 }
 
 const home: NextPage = () => {
@@ -123,6 +130,28 @@ const home: NextPage = () => {
               )}
             </div>
 
+            {tenant?.receipt_url ? (
+              <Accordion type="single" collapsible>
+                <AccordionItem value="item-1">
+                  <AccordionTrigger className="flex font-bold w-full justify-between">
+                    E-Receipt
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <span className="flex flex-col gap-2">
+                      <span className="text-base">Waiting for the owner to review...</span>
+                      <img
+                        src={tenant?.receipt_url}
+                        alt="Meter image"
+                        className="w-full h-auto rounded shadow"
+                      />
+                    </span>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            ) : (
+              <></>
+            )}
+
             <div className="flex flex-col gap-3">
               <p className="font-bold">Utility Usage</p>
 
@@ -144,7 +173,6 @@ const home: NextPage = () => {
 
           <div className="flex flex-col">
             <Separator className="h-[2px] rounded-sm" />
-
             <Link
               href={{
                 pathname: `/tenant/setting`,
