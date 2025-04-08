@@ -32,8 +32,8 @@ const Receipt: React.FunctionComponent<ReceiptProps> = ({
           <span className="flex flex-row gap-2">
             <span className="whitespace-nowrap">You spend</span>
             <span className="flex w-full items-center">
-            <Separator className="h-[2px] rounded-sm w-full justify-center" />
-          </span>
+              <Separator className="h-[2px] rounded-sm w-full justify-center" />
+            </span>
           </span>
 
           <span className="flex flex-row justify-between items-center font-medium">
@@ -46,8 +46,8 @@ const Receipt: React.FunctionComponent<ReceiptProps> = ({
           <span className="flex flex-row gap-2">
             <span className="whitespace-nowrap">Electricity</span>
             <span className="flex w-full items-center">
-            <Separator className="h-[2px] rounded-sm w-full justify-center" />
-          </span>
+              <Separator className="h-[2px] rounded-sm w-full justify-center" />
+            </span>
           </span>
           <span className="flex flex-row justify-between items-center font-medium">
             <li>{eUsed}</li>
@@ -61,8 +61,8 @@ const Receipt: React.FunctionComponent<ReceiptProps> = ({
           <span className="flex flex-row gap-2">
             <span className="whitespace-nowrap">Water</span>
             <span className="flex w-full items-center">
-            <Separator className="h-[2px] rounded-sm w-full justify-center" />
-          </span>
+              <Separator className="h-[2px] rounded-sm w-full justify-center" />
+            </span>
           </span>
           <span className="flex flex-row justify-between items-center font-medium">
             <li>{wUsed}</li>
@@ -83,8 +83,8 @@ const Receipt: React.FunctionComponent<ReceiptProps> = ({
               Accomodation Fee
             </span>
             <span className="flex w-full items-center">
-            <Separator className="h-[2px] rounded-sm w-full justify-center" />
-          </span>
+              <Separator className="h-[2px] rounded-sm w-full justify-center" />
+            </span>
           </span>
           <span className="flex flex-row justify-between items-center font-medium">
             <li>{furniture}</li>
