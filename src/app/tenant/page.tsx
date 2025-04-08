@@ -49,8 +49,8 @@ interface Tenant {
 }
 
 const home: NextPage = () => {
-
   const [roomNo, setRoomNo] = useState<string | null>(null)
+  const [estateId, setEstateId] = useState<string | null>(null)
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -72,6 +72,7 @@ const home: NextPage = () => {
         if (error) {
           console.error("Error fetching tenant:", error)
         } else {
+          setEstateId(data.estate_id)
           setTenant(data)
         }
       }
@@ -165,7 +166,13 @@ const home: NextPage = () => {
               <p className="text-base font-bold">Payment</p>
               <p className="text-sm font-normal">Scan barcode and Pay</p>
             </div>
-            <Link href={"/tenant/payment"} className="flex items-center">
+            <Link
+              href={{
+                pathname: `/tenant/payment`,
+                query: { room_no: roomNo, estate_id: estateId },
+              }}
+              className="flex items-center"
+            >
               <Button className="rounded-full bg-custom-pink text-black font-bold">
                 Pay Now
               </Button>
