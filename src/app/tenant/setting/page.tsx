@@ -22,7 +22,7 @@ interface Tenant {
   room_no: string
   building_no: string
   floor_no: string
-  payment_status: boolean
+  payment_status: string
   address: string
   city: string
   zip_code: string
@@ -168,9 +168,13 @@ const setting: NextPage = () => {
               </div>
               <div className="flex flex-col gap-2">
                 <p>
-                  {tenant?.payment_status
-                    ? "Payment Completed"
-                    : "Payment Incomplete"}
+                  {tenant?.payment_status == "true" ? (
+                    <span>Payment Completed</span>
+                  ) : tenant?.payment_status == "waiting" ? (
+                    <span>Waiting for Review</span>
+                  ) : (
+                    <span>Payment Incompleted</span>
+                  )}
                 </p>
               </div>
             </div>
@@ -191,10 +195,7 @@ const setting: NextPage = () => {
             </Button>
           </Link>
 
-          <Link
-            href={"/"}
-            className="flex font-bold justify-center underline"
-          >
+          <Link href={"/"} className="flex font-bold justify-center underline">
             Log Out
           </Link>
         </div>
