@@ -128,15 +128,25 @@ const TenantCard: React.FunctionComponent<Tenant> = ({
                 Room Detail
               </Badge>
             )}
-            {pStatus == false ? (
-              <Badge className="flex w-full items-center justify-center text-center text-white font-normal bg-red-700 ">
-                Payment Incomplete
-              </Badge>
-            ) : (
-              <Badge className="flex w-full items-center justify-center text-center text-black font-normal bg-custom-green">
-                Payment Complete
-              </Badge>
-            )}
+            {
+              {
+                true: (
+                  <Badge className="flex w-full items-center justify-center text-center text-black font-normal bg-custom-green">
+                    Payment Complete
+                  </Badge>
+                ),
+                waiting: (
+                  <Badge className="flex w-full items-center justify-center text-center text-white font-normal bg-yellow-600">
+                    Waiting Approval
+                  </Badge>
+                ),
+                false: (
+                  <Badge className="flex w-full items-center justify-center text-center text-white font-normal bg-red-700">
+                    Payment Incomplete
+                  </Badge>
+                ),
+              }[pStatus]
+            }
           </div>
 
           <div className="flex w-full items-center">
