@@ -279,9 +279,9 @@ export function ProfileOwnerCard({ userId }: Props) {
             </div>
           </div>
           <div className="flex flex-row gap-2">
-            {profile?.qrcode_url ? (
+            {estate?.qrcode_url ? (
               <Image
-                src={profile.qrcode_url}
+                src={estate.qrcode_url}
                 width={300}
                 height={300}
                 alt="qrcode"
