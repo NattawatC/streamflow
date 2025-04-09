@@ -50,7 +50,7 @@ interface Tenant {
   room_no: string
   building_no: string
   floor_no: string
-  payment_status: boolean
+  payment_status: string
   estate_id: number
   receipt_url: string
 }
@@ -122,11 +122,13 @@ const home: NextPage = () => {
             </div>
 
             <div className="flex flex-row gap-2 items-center justify-center px-3 py-3 rounded-md bg-custom-gray">
-              <p className="text-base font-bold">Payment Status</p>
-              {tenant?.payment_status ? (
-                <div className="font-bold text-gray-700 rounded-full flex items-center justify-center bg-[#D7FC6E] w-3 h-3"></div>
+              <p className="text-base font-bold">Payment Status:</p>
+              {tenant?.payment_status == "true" ? (
+                <p>Completed</p>
+              ) : tenant?.payment_status == "waiting" ? (
+                <p>Waiting for Review</p>
               ) : (
-                <div className="rounded-full flex items-center justify-center bg-[#FF0000] w-3 h-3"></div>
+                <p>Incompleted</p>
               )}
             </div>
 
@@ -138,7 +140,9 @@ const home: NextPage = () => {
                   </AccordionTrigger>
                   <AccordionContent>
                     <span className="flex flex-col gap-2">
-                      <span className="text-base">Waiting for the owner to review...</span>
+                      <span className="text-base">
+                        Waiting for the owner to review...
+                      </span>
                       <img
                         src={tenant?.receipt_url}
                         alt="Meter image"
