@@ -39,7 +39,7 @@ const TenantCard: React.FunctionComponent<Tenant> = ({
       console.error("Error deleting tenant:", error.message)
     } else {
       console.log("Tenant deleted successfully")
-      router.refresh()
+      window.location.reload()
     }
   }
   return (
