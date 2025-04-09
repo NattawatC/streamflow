@@ -27,7 +27,7 @@ const TenantCard: React.FunctionComponent<Tenant> = ({
   room,
   firstname,
   lastname,
-  //   rentalcost,
+  rentalCost,
   pStatus,
   rStatus,
 }) => {
@@ -49,6 +49,7 @@ const TenantCard: React.FunctionComponent<Tenant> = ({
           <div className="flex flex-col gap-2">
             <div className="flex flex-row gap-2 items-center">
               <p className="whitespace-nowrap font-bold">Rental Cost</p>
+              {/* <p className="whitespace-nowrap font-bold">{rentalCost}</p> */}
               <div className="flex w-full items-center">
                 <Separator className="h-[2px] rounded-sm w-full justify-center" />
               </div>
@@ -104,7 +105,7 @@ const TenantCard: React.FunctionComponent<Tenant> = ({
               </Dialog>
             </div>
 
-            {/* <p className="text-xl font-bold">{rentalcost}</p> */}
+            <p className="text-xl font-bold">{rentalCost}</p>
             <div className="flex flex-row gap-2">
               <p className="font-medium">Room:</p>
               <p>{room}</p>
