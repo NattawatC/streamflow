@@ -73,9 +73,14 @@ export async function calculateRentalCost(tenant: any) {
 
   // Calculate usage
   const electricUsage = electricity
-    ? (electricity.kWh || 0) - (electricity.initial_value || 0)
+    ? Math.max(0, (electricity.kWh || 0) - (electricity.initial_value || 0))
     : 0
-  const waterUsage = water ? (water.usage || 0) - (water.initial_value || 0) : 0
+
+  console.log("Electricity Usage:", electricUsage)
+
+  const waterUsage = water
+    ? Math.max(0, (water.usage || 0) - (water.initial_value || 0))
+    : 0
 
   // Calculate total cost
   const electricCost = (estate.electricity_cost || 0) * electricUsage
@@ -86,7 +91,6 @@ export async function calculateRentalCost(tenant: any) {
       (estate.furniture_cost || 0) +
       (estate.room_charge || 0)
   )
-
   // Update tenant record
   const { error: updateError } = await supabase
     .from("tenants")
@@ -96,6 +100,5 @@ export async function calculateRentalCost(tenant: any) {
   if (updateError) {
     console.error("Error updating tenant rental cost:", updateError)
   }
-
   return totalCost
 }
