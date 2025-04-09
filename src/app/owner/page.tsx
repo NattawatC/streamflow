@@ -109,7 +109,7 @@ const home: NextPage = async () => {
             <Separator className="h-[2px] rounded-sm" />
 
             {/* Estate Information: Occupied */}
-            <Accordion type="single" collapsible>
+            {/* <Accordion type="single" collapsible>
               <AccordionItem value="item-1">
                 <AccordionTrigger className="flex font-bold w-full justify-between">
                   Room Occupancy Overview
@@ -127,7 +127,7 @@ const home: NextPage = async () => {
                   </div>
                 </AccordionContent>
               </AccordionItem>
-            </Accordion>
+            </Accordion> */}
 
             {/* Meter Setup */}
             <Accordion type="single" collapsible>
@@ -193,7 +193,7 @@ const home: NextPage = async () => {
                     room={tenant.room_no}
                     firstname={tenant.first_name}
                     lastname={tenant.last_name}
-                    // rentalCost={tenant.rentalCost}
+                    rentalCost={6000}
                     pStatus={tenant.payment_status}
                     rStatus={tenant.room_status}
                   />
