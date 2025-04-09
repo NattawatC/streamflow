@@ -4,6 +4,6 @@ export interface Tenant {
   lastname: string
   rentalCost: number
   room: number
-  pStatus: boolean
+  pStatus: string
   rStatus: boolean
 }
