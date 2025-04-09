@@ -118,7 +118,7 @@ const tenantInfo: NextPage = () => {
                 <Separator className="h-[2px] rounded-sm w-full justify-center" />
               </div>
             </div>
-            {tenantData.status ? (
+            {tenant.payment_status === "true" ? (
               <div className="flex flex-row gap-4">
                 <div className="flex flex-col font-medium gap-2">
                   <p>Status:</p>
@@ -127,6 +127,24 @@ const tenantInfo: NextPage = () => {
                   <p>Payment Completed</p>
                 </div>
               </div>
+            ) : tenant.payment_status === "waiting" ? (
+              <>
+                <div className="flex flex-row gap-4">
+                  <div className="flex flex-col font-medium gap-2">
+                    <p>Status:</p>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <p>Waiting Approval</p>
+                  </div>
+                </div>
+                {tenant.receipt_url && (
+                  <Link href={`/owner/review?id=${id}`}>
+                    <div className="flex bg-custom-pink text-black py-1 px-2 rounded-sm justify-center font-medium text-sm">
+                      Review
+                    </div>
+                  </Link>
+                )}
+              </>
             ) : (
               <>
                 <div className="flex flex-row gap-4">
@@ -134,14 +152,9 @@ const tenantInfo: NextPage = () => {
                     <p>Status:</p>
                   </div>
                   <div className="flex flex-col gap-2">
-                    <p>Payment Incompleted</p>
+                    <p>Payment Incomplete</p>
                   </div>
                 </div>
-                <Link href={`/owner/review?id=${id}`}>
-                  <div className="flex bg-custom-pink text-black py-1 px-2 rounded-sm justify-center font-medium text-sm">
-                    Review
-                  </div>
-                </Link>
               </>
             )}
           </div>
