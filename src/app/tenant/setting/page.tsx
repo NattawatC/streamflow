@@ -192,7 +192,7 @@ const setting: NextPage = () => {
           </Link>
 
           <Link
-            href={"/login"}
+            href={"/"}
             className="flex font-bold justify-center underline"
           >
             Log Out
