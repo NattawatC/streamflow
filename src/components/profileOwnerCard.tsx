@@ -117,7 +117,7 @@ export function ProfileOwnerCard({ userId }: Props) {
       if (errorMessage) {
         toast(errorMessage)
       } else {
-        router.push("/login")
+        router.push("/")
         toast("Successfully logged out")
       }
     })
