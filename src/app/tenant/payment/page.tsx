@@ -40,6 +40,7 @@ interface EstateInfo {
   furniture: number
   roomCharge: number
   is_ready: boolean
+  qrcode_url: string
 }
 
 interface ReceiptData {
@@ -58,6 +59,13 @@ interface TotalInfo {
   totalFinalCost: number
 }
 
+interface Bank {
+  acct_no: string
+  id: number
+  name: string
+  holder_name: string
+}
+
 const formSchema = z.object({
   totalCost: z.number(),
   receipt_url: z.instanceof(File).optional(),
@@ -69,6 +77,7 @@ const Payment: NextPage = () => {
   const [estateId, setEstateId] = useState<string | null>(null)
   const [estateInfo, setEstateInfo] = useState<EstateInfo | null>(null)
   const [tenant, setTenant] = useState<any>(null)
+  const [bank, setBank] = useState<Bank[]>()
   const [receiptInfo, setReceiptInfo] = useState<ReceiptData | null>(null)
   const [totalInfo, setTotalInfo] = useState<TotalInfo | null>(null)
   const [isClient, setIsClient] = useState(false)
@@ -112,11 +121,31 @@ const Payment: NextPage = () => {
           waterInitialCost: estate.water_cost,
           furniture: estate.furniture_cost,
           roomCharge: estate.room_charge,
+          qrcode_url: estate.qrcode_url,
         })
       }
     }
 
     fetchEstate()
+  }, [estateId])
+
+  useEffect(() => {
+    const fetchBanks = async () => {
+      if (!estateId) return
+
+      const { data: banks, error } = await supabase
+        .from("bank_info")
+        .select("*")
+        .eq("estate_id", estateId)
+
+      if (error) {
+        console.error("Error fetching bank data:", error)
+      } else {
+        setBank(banks || [])
+      }
+    }
+
+    fetchBanks()
   }, [estateId])
 
   useEffect(() => {
@@ -261,6 +290,7 @@ const Payment: NextPage = () => {
       const { data: tenantData, error: profileError } = await supabase
         .from("tenants")
         .update({
+          // rental_cost: totalInfo?.totalFinalCost,
           receipt_url: imageUrl,
           // payment_status: true,
         })
@@ -328,6 +358,48 @@ const Payment: NextPage = () => {
             </AccordionContent>
           </AccordionItem>
         </Accordion>
+      </div>
+
+      <div className="flex flex-col gap-5 items-center bg-custom-gray-background p-4 rounded-lg w-full">
+        <div className="flex flex-col bg-white w-full text-base p-3 gap-5 rounded-md">
+          <div className="flex flex-col gap-2 items-center">
+            <span className="whitespace-nowrap font-bold">
+              Scan QRcode to pay
+            </span>
+            {estateInfo?.qrcode_url ? (
+              <Image
+                src={imageUrls[0] || estateInfo.qrcode_url}
+                alt="Receipt"
+                width={300}
+                height={300}
+                className="rounded-lg shadow"
+              />
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+
+        <Separator className="h-[2px] rounded-sm w-full justify-center" />
+
+        <div className="flex flex-col bg-white w-full text-base p-3 gap-2 rounded-md">
+          <h3 className="font-bold">Bank Accounts</h3>
+          <Separator className="h-[2px] rounded-sm w-full justify-center" />
+
+          {bank?.length ? (
+            bank.map((account) => (
+              <div key={account.id} className="flex p-4 bg-custom-gray-background rounded-sm">
+                <div className="flex flex-col justify-between gap-2">
+                  <span className="font-medium">{account.name}</span>
+                  <li className="text-base">Number: {account.acct_no}</li>
+                  <li className="text-base">Name: {account.holder_name}</li>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500">No bank accounts available</p>
+          )}
+        </div>
       </div>
 
       <Form {...form}>
