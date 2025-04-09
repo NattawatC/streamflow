@@ -76,7 +76,7 @@ const ListOfMeterCard: React.FunctionComponent<Props> = ({
         <div className="flex flex-col gap-2 w-full">
           <div className="flex flex-row w-full justify-between text-base font-bold">
             <p>Water Usage</p>
-            <p>{waterUsage} m^3</p>
+            <p>{waterUsage} m³</p>
           </div>
           <div className="flex flex-row text-sm font-normal w-full justify-between">
             <p>Water meter no.</p>
