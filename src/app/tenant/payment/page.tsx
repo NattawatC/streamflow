@@ -33,6 +33,7 @@ import { Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { IoIosArrowBack } from "react-icons/io"
+import { EstateStatus } from "@/components/listOfMeterPage/estateStatus"
 
 interface EstateInfo {
   waterInitialCost: number | undefined
@@ -333,44 +334,54 @@ const Payment: NextPage = () => {
       </Link>
       <h1 className="flex text-2xl font-bold justify-center">Payment</h1>
       <div className="flex flex-col gap-5 items-center bg-custom-gray-background p-4 rounded-lg w-full">
-        <div className="flex flex-col bg-white w-full text-base p-3 gap-5 rounded-md">
-          <div className="flex flex-row gap-2">
-            <span className="whitespace-nowrap font-medium">
-              Total Cost (Baht)
-            </span>
-            <div className="flex w-full items-center">
-              <Separator className="h-[2px] rounded-sm w-full justify-center" />
+        {estateInfo?.is_ready ? (
+          <>
+            <div className="flex flex-col bg-white w-full text-base p-3 gap-5 rounded-md">
+              <div className="flex flex-row gap-2">
+                <span className="whitespace-nowrap font-medium">
+                  Total Cost (Baht)
+                </span>
+                <div className="flex w-full items-center">
+                  <Separator className="h-[2px] rounded-sm w-full justify-center" />
+                </div>
+              </div>
+
+              <div className="flex flex-row justify-between items-center font-bold">
+                <span className="font-bold text-2xl">
+                  {totalInfo?.totalFinalCost ?? "Loading..."}
+                </span>
+              </div>
             </div>
-          </div>
 
-          <div className="flex flex-row justify-between items-center font-bold">
-            <span className="font-bold text-2xl">
-              {totalInfo?.totalFinalCost ?? "Loading..."}
+            <Accordion type="single" collapsible className="flex-grow-0 w-full">
+              <AccordionItem value="item-1">
+                <AccordionTrigger className="flex gap-3 font-medium w-full text-base items-center justify-center">
+                  View more Details
+                </AccordionTrigger>
+                <AccordionContent className="gap-4 p-0 pb-4">
+                  {receiptInfo && estateInfo && totalInfo && (
+                    <Receipt
+                      startDate="2025-04-01"
+                      endDate={receiptInfo.endDate}
+                      eUsed={receiptInfo.kWh - receiptInfo.elecInitial}
+                      eCost={totalInfo.totalElectricCost}
+                      wUsed={receiptInfo.usage - receiptInfo.waterInitial}
+                      wCost={totalInfo.totalWaterCost}
+                      furniture={estateInfo.furniture}
+                      roomCharge={estateInfo.roomCharge}
+                    />
+                  )}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </>
+        ) : (
+          <div className="flex flex-col gap-2 justify-center">
+            <span className="font-bold text-center">
+              The Owner hasn't reviewed the meter.
             </span>
           </div>
-        </div>
-
-        <Accordion type="single" collapsible className="flex-grow-0 w-full">
-          <AccordionItem value="item-1">
-            <AccordionTrigger className="flex gap-3 font-medium w-full text-base items-center justify-center">
-              View more Details
-            </AccordionTrigger>
-            <AccordionContent className="gap-4 p-0 pb-4">
-              {receiptInfo && estateInfo && totalInfo && (
-                <Receipt
-                  startDate="2025-04-01"
-                  endDate={receiptInfo.endDate}
-                  eUsed={receiptInfo.kWh - receiptInfo.elecInitial}
-                  eCost={totalInfo.totalElectricCost}
-                  wUsed={receiptInfo.usage - receiptInfo.waterInitial}
-                  wCost={totalInfo.totalWaterCost}
-                  furniture={estateInfo.furniture}
-                  roomCharge={estateInfo.roomCharge}
-                />
-              )}
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+        )}
       </div>
 
       <div className="flex flex-col gap-5 items-center bg-custom-gray-background p-4 rounded-lg w-full">
@@ -388,7 +399,7 @@ const Payment: NextPage = () => {
                 className="rounded-lg shadow"
               />
             ) : (
-              <></>
+              <span className="text-center">The Owner hasn't uploaded the qrcode</span>
             )}
           </div>
         </div>
@@ -442,18 +453,17 @@ const Payment: NextPage = () => {
                   height={300}
                   className="rounded-lg shadow"
                 />
-                {
-                  imageUrls.length > 0 && (
-                    <Button
+                {imageUrls.length > 0 && (
+                  <Button
                     type="button"
                     variant="destructive"
                     className="w-fit"
                     onClick={handleDeleteImage}
                     disabled={isPending}
-                    >
-                  Delete Receipt
-                </Button>
-               ) }
+                  >
+                    Delete Receipt
+                  </Button>
+                )}
               </div>
             ) : (
               <>
