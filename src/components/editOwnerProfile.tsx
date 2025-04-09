@@ -362,6 +362,7 @@ export function EditOwnerProfile({ userId }: Props) {
 
       setProfile((prev: any) => ({ ...prev, qrcode_url: null }))
       setImageUrls([])
+      form.resetField("qrCodeImage")
     } catch (error) {
       console.error("Error deleting QR code:", error)
     }
@@ -776,7 +777,7 @@ export function EditOwnerProfile({ userId }: Props) {
           </div>
 
           {/* Conditionally render based on whether profile already has a qrcode_url */}
-          {estate?.qrcode_url || imageUrls.length > 0 ? (
+          {estate?.qrcode_url ? (
             <div className="flex flex-col gap-2 items-center ">
               <Image
                 src={imageUrls[0] || estate.qrcode_url}
@@ -785,15 +786,17 @@ export function EditOwnerProfile({ userId }: Props) {
                 height={300}
                 className="rounded-lg shadow"
               />
-              <Button
-                type="button"
-                variant="destructive"
-                className="w-fit"
-                onClick={handleDeleteImage}
-                disabled={isPending}
-              >
-                Delete QR Code
-              </Button>
+              {imageUrls.length > 0 && (
+                <Button
+                  type="button"
+                  variant="destructive"
+                  className="w-fit"
+                  onClick={handleDeleteImage}
+                  disabled={isPending}
+                >
+                  Delete QR Code
+                </Button>
+              )}
             </div>
           ) : (
             <>
