@@ -86,7 +86,7 @@ export function EditOwnerProfile({ userId }: Props) {
   const [estate, setEstate] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
   const [imageUrls, setImageUrls] = useState<string[]>(
-    profile?.qrcode_url ? [profile.qrcode_url] : []
+    estate?.qrcode_url ? [estate.qrcode_url] : []
   )
   const imageInputRef = useRef<HTMLInputElement>(null)
   const [isPending, startTransition] = useTransition()
@@ -331,13 +331,13 @@ export function EditOwnerProfile({ userId }: Props) {
         accountName: bank[0]?.holder_name || "",
         waterCost: estate.water_cost || 0,
         elecCost: estate.elec_cost || 0,
-        qrCodeImage: profile.qrcode_url
+        qrCodeImage: estate.qrcode_url
           ? new File([], "existing-qr-code")
           : undefined,
       })
       // Initialize imageUrls with existing QR code
-      if (profile.qrcode_url) {
-        setImageUrls([profile.qrcode_url])
+      if (estate.qrcode_url) {
+        setImageUrls([estate.qrcode_url])
       }
     }
   }, [profile, estate, bank, form])
@@ -347,16 +347,16 @@ export function EditOwnerProfile({ userId }: Props) {
   }
 
   const handleDeleteImage = async () => {
-    if (!profile?.qrcode_url) return
+    if (!estate?.qrcode_url) return
 
     try {
-      const { error: deleteError } = await deleteImage(profile.qrcode_url)
+      const { error: deleteError } = await deleteImage(estate.qrcode_url)
       if (deleteError) throw deleteError
 
       const { error: updateError } = await supabase
-        .from("profile")
+        .from("estates")
         .update({ qrcode_url: null })
-        .eq("user_id", userId)
+        .eq("id", estate.id)
 
       if (updateError) throw updateError
 
@@ -369,9 +369,9 @@ export function EditOwnerProfile({ userId }: Props) {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     startTransition(async () => {
-      let imageUrl = profile?.qrcode_url || ""
+      let imageUrl = estate?.qrcode_url || ""
 
-      if (imageUrls.length > 0 && imageUrls[0] !== profile?.qrcode_url) {
+      if (imageUrls.length > 0 && imageUrls[0] !== estate?.qrcode_url) {
         const imageFile = await convertBlobUrlToFile(imageUrls[0])
         const result = await uploadImage({
           file: imageFile,
@@ -397,7 +397,6 @@ export function EditOwnerProfile({ userId }: Props) {
           gender: values.gender,
           phone_no: values.phoneNumber,
           age: values.age,
-          qrcode_url: imageUrl,
         })
         .eq("user_id", userId)
         .select()
@@ -415,9 +414,10 @@ export function EditOwnerProfile({ userId }: Props) {
           room_charge: values.roomCharge,
           furniture_cost: values.furnitureCost,
           water_cost: values.waterCost,
-          elec_cost: values.elecCost,
+          electricity_cost: values.elecCost,
+          qrcode_url: imageUrl,
         })
-        .eq("user_id", userId)
+        .eq("id", estate.id)
         .select()
 
       if (estateError) throw estateError
@@ -776,10 +776,10 @@ export function EditOwnerProfile({ userId }: Props) {
           </div>
 
           {/* Conditionally render based on whether profile already has a qrcode_url */}
-          {profile?.qrcode_url || imageUrls.length > 0 ? (
+          {estate?.qrcode_url || imageUrls.length > 0 ? (
             <div className="flex flex-col gap-2 items-center ">
               <Image
-                src={imageUrls[0] || profile.qrcode_url}
+                src={imageUrls[0] || estate.qrcode_url}
                 alt="QR code"
                 width={300}
                 height={300}
