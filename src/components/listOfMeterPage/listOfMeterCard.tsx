@@ -38,8 +38,13 @@ const ListOfMeterCard: React.FunctionComponent<Props> = ({
 }) => {
   const [showOptions, setShowOptions] = useState(false)
 
+  const hasZeroUsage = electricityUsage === 0 || waterUsage === 0
+  const borderColor = hasZeroUsage ? "border-red-500" : "border-black"
+
   return (
-    <div className="flex flex-col w-full rounded-lg border border-black p-3 gap-5 relative">
+    <div
+      className={`flex flex-col w-full rounded-lg border border-solid p-3 gap-5 relative ${borderColor}`}
+    >
       {/* first row */}
       <button
         className="absolute top-2 right-2"
