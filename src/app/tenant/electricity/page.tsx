@@ -97,7 +97,7 @@ const electricity: NextPage = () => {
       } else {
         setElectricityData({
           startDate: data.created_at,
-          endDate: data.created_at,
+          endDate: data.updated_at,
           used: data.kWh,
           initial_value: data.initial_value,
           image_url: data.image_url,
