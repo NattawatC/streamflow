@@ -254,12 +254,13 @@ const Payment: NextPage = () => {
       // Delete the image from storage
       const { error: deleteError } = await deleteImage(tenant.receipt_url)
       if (deleteError) throw deleteError
- 
+
+      // Update the tenant record in the database
       const { error: updateError } = await supabase
         .from("tenants")
         .update({
           receipt_url: null,
-          payment_status: "false",
+          payment_status: "false", // Reset payment status if needed
         })
         .eq("room_no", roomNo)
 
@@ -441,17 +442,18 @@ const Payment: NextPage = () => {
                   height={300}
                   className="rounded-lg shadow"
                 />
-                {imageUrls.length > 0 && (
-                  <Button
+                {
+                  imageUrls.length > 0 && (
+                    <Button
                     type="button"
                     variant="destructive"
                     className="w-fit"
                     onClick={handleDeleteImage}
                     disabled={isPending}
-                  >
-                    Delete Receipt
-                  </Button>
-                )}
+                    >
+                  Delete Receipt
+                </Button>
+               ) }
               </div>
             ) : (
               <>
