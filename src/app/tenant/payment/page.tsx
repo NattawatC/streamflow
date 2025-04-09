@@ -251,18 +251,31 @@ const Payment: NextPage = () => {
     if (!tenant?.receipt_url) return
 
     try {
+      // Delete the image from storage
       const { error: deleteError } = await deleteImage(tenant.receipt_url)
       if (deleteError) throw deleteError
 
+      // Update the tenant record in the database
       const { error: updateError } = await supabase
         .from("tenants")
-        .update({ receipt_url: null })
+        .update({
+          receipt_url: null,
+          payment_status: "false", // Reset payment status if needed
+        })
         .eq("room_no", roomNo)
 
       if (updateError) throw updateError
 
-      setTenant((prev: any) => ({ ...prev, receipt_url: null }))
+      // Update local state
+      setTenant((prev: any) => ({
+        ...prev,
+        receipt_url: null,
+        payment_status: "false",
+      }))
       setImageUrls([])
+
+      // Reset the form field
+      form.resetField("receipt_url")
     } catch (error) {
       console.error("Error deleting receipt:", error)
     }
@@ -292,7 +305,7 @@ const Payment: NextPage = () => {
         .update({
           // rental_cost: totalInfo?.totalFinalCost,
           receipt_url: imageUrl,
-          // payment_status: true,
+          payment_status: "waiting",
         })
         .eq("room_no", roomNo)
         .select()
@@ -388,7 +401,10 @@ const Payment: NextPage = () => {
 
           {bank?.length ? (
             bank.map((account) => (
-              <div key={account.id} className="flex p-4 bg-custom-gray-background rounded-sm">
+              <div
+                key={account.id}
+                className="flex p-4 bg-custom-gray-background rounded-sm"
+              >
                 <div className="flex flex-col justify-between gap-2">
                   <span className="font-medium">{account.name}</span>
                   <li className="text-base">Number: {account.acct_no}</li>
@@ -470,18 +486,27 @@ const Payment: NextPage = () => {
               </>
             )}
           </div>
-
-          <Button
-            type="submit"
-            className="flex w-full text-base font-bold bg-custom-green text-black"
-            disabled={isPending}
-          >
-            {isPending ? (
-              <Loader2 className="animate-spin" />
-            ) : (
-              "Upload Receipt"
-            )}
-          </Button>
+          <div className="flex flex-col gap-2">
+            <Button
+              type="submit"
+              className="flex w-full text-base font-bold bg-custom-green text-black"
+              disabled={isPending}
+            >
+              {isPending ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                "Upload Receipt"
+              )}
+            </Button>
+            <Link href={`/tenant?room_no=${roomNo}`}>
+              <Button
+                variant={"outline"}
+                className="font-bold border-black outline-black bg-white text-black w-full text-base gap-2 underline"
+              >
+                Cancle
+              </Button>
+            </Link>
+          </div>
         </form>
       </Form>
     </MainLayout>
