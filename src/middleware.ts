@@ -29,7 +29,7 @@ export async function middleware(request: NextRequest) {
     "/tenant/setting",
     "/tenant/water",
   ]
-  const authRoutes = ["/login", "/register"]
+  const authRoutes = ["/", "/register", "/login"]
 
   const isOwnerRoute = ownerRoutes.includes(path)
   const isTenantRoute = tenantRoutes.includes(path)
@@ -39,7 +39,7 @@ export async function middleware(request: NextRequest) {
     const user = await getUser(request, response)
 
     if (isOwnerRoute && isTenantRoute && !user) {
-      return NextResponse.redirect(new URL("/login", request.url))
+      return NextResponse.redirect(new URL("/", request.url))
     }
 
     if (isAuthRoute && user) {
