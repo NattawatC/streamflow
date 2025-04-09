@@ -24,9 +24,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-// import { ownerData } from "@/interfaces/ownerData"
 import { getUser } from "@/auth/server"
-import { getEstate, getTenants } from "@/api/services/tenantService"
+import {
+  calculateRentalCost,
+  getEstate,
+  getTenants,
+} from "@/api/services/tenantService"
 import { getUserProfile } from "@/api/services/ownerService"
 
 const home: NextPage = async () => {
@@ -36,6 +39,16 @@ const home: NextPage = async () => {
   const profile = await getUserProfile(userId)
   const estate = await getEstate(userId)
   const tenants = (await getTenants(userId)) || []
+
+  const tenantsWithCost = await Promise.all(
+    tenants.tenants.map(async (tenant) => {
+      const rentalCost = await calculateRentalCost(tenant)
+      return {
+        ...tenant,
+        rentalCost,
+      }
+    })
+  )
 
   const estateRecord = estate.estates.length > 0 ? estate.estates[0] : null
 
@@ -184,16 +197,16 @@ const home: NextPage = async () => {
               </Dialog>
             </div>
 
-            {tenants?.tenants?.length > 0 ? (
+            {tenantsWithCost?.length > 0 ? (
               <div className="flex flex-col gap-4">
-                {tenants.tenants.map((tenant, index) => (
+                {tenantsWithCost.map((tenant, index) => (
                   <TenantCard
                     id={tenant.id}
                     key={index}
                     room={tenant.room_no}
                     firstname={tenant.first_name}
                     lastname={tenant.last_name}
-                    rentalCost={6000}
+                    rentalCost={tenant.rentalCost}
                     pStatus={tenant.payment_status}
                     rStatus={tenant.room_status}
                   />
