@@ -181,9 +181,9 @@ const electricity: NextPage = () => {
               startDate={electricityData.startDate}
               endDate={electricityData.endDate}
               unit="kWh"
-              usage={electricityData.used}
+              usage={Math.round(electricityData.used - electricityData.initial_value)} 
               cost={estateInfo.electricity_cost}
-              total={electricityData.used * estateInfo.electricity_cost}
+              total={Math.round(electricityData.used - electricityData.initial_value) * estateInfo.electricity_cost}
             />
           ) : (
             <p className="text-center text-gray-500">Loading Data...</p>

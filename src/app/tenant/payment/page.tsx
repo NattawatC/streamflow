@@ -219,9 +219,10 @@ const Payment: NextPage = () => {
       estateInfo.electricityInitialCost !== undefined &&
       estateInfo.waterInitialCost !== undefined
     ) {
-      const totalElectricCost =
+      const totalElectricCost = Math.round(
         estateInfo.electricityInitialCost *
-        (receiptInfo.kWh - receiptInfo.elecInitial)
+          (receiptInfo.kWh - receiptInfo.elecInitial)
+      )
       const totalWaterCost =
         estateInfo.waterInitialCost *
         (receiptInfo.usage - receiptInfo.waterInitial)
@@ -230,6 +231,8 @@ const Payment: NextPage = () => {
         totalWaterCost +
         estateInfo.furniture +
         estateInfo.roomCharge
+
+      console.log(totalWaterCost)
 
       setTotalInfo({
         totalElectricCost,
@@ -348,7 +351,7 @@ const Payment: NextPage = () => {
 
               <div className="flex flex-row justify-between items-center font-bold">
                 <span className="font-bold text-2xl">
-                  {totalInfo?.totalFinalCost ?? "Loading..."}
+                  {Math.round(totalInfo?.totalFinalCost ?? 0)}
                 </span>
               </div>
             </div>
@@ -363,9 +366,13 @@ const Payment: NextPage = () => {
                     <Receipt
                       startDate="2025-04-01"
                       endDate={receiptInfo.endDate}
-                      eUsed={receiptInfo.kWh - receiptInfo.elecInitial}
-                      eCost={totalInfo.totalElectricCost}
-                      wUsed={receiptInfo.usage - receiptInfo.waterInitial}
+                      eUsed={Math.round(
+                        receiptInfo.kWh - receiptInfo.elecInitial
+                      )}
+                      eCost={Math.round(totalInfo.totalElectricCost)}
+                      wUsed={Math.round(
+                        receiptInfo.usage - receiptInfo.waterInitial
+                      )}
                       wCost={totalInfo.totalWaterCost}
                       furniture={estateInfo.furniture}
                       roomCharge={estateInfo.roomCharge}
@@ -399,7 +406,9 @@ const Payment: NextPage = () => {
                 className="rounded-lg shadow"
               />
             ) : (
-              <span className="text-center">The Owner hasn't uploaded the qrcode</span>
+              <span className="text-center">
+                The Owner hasn't uploaded the qrcode
+              </span>
             )}
           </div>
         </div>
