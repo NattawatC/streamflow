@@ -153,7 +153,7 @@ const electricity: NextPage = () => {
           <Accordion type="single" collapsible>
             <AccordionItem value="item-1">
               <AccordionTrigger className="flex font-bold w-full justify-between">
-                Electric Meter (Image)
+                Electricity Meter (Image)
               </AccordionTrigger>
               <AccordionContent>
                 {estateInfo?.is_ready ? (
